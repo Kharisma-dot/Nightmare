@@ -56,30 +56,20 @@ public class TargetHUD extends Module{
 		
 		if(target == null && !(mc.currentScreen instanceof ClickGUI)) {
 			return;
-		}
-		
-		if(mc.currentScreen instanceof ClickGUI) {
-			if(mc.thePlayer.getHealth() <= 20 && mc.thePlayer.getHealth() > 12) {
-				hpColor = new Color(110, 230, 125).getRGB();
-			}else if(mc.thePlayer.getHealth() <= 12 && mc.thePlayer.getHealth() > 4) {
-				hpColor = new Color(210, 230, 125).getRGB();
-			}else if(mc.thePlayer.getHealth() <= 4 && mc.thePlayer.getHealth() > 0) {
-				hpColor = new Color(220, 150, 110).getRGB();
-			}
-		}else {
-			if(target.getHealth() <= 20 && target.getHealth() > 12) {
-				hpColor = new Color(110, 230, 125).getRGB();
-			}else if(target.getHealth() <= 12 && target.getHealth() > 4) {
-				hpColor = new Color(210, 230, 125).getRGB();
-			}else if(target.getHealth() <= 4 && target.getHealth() > 0) {
-				hpColor = new Color(220, 150, 110).getRGB();
-			}
-		}
+		}		
 		
 		if(mc.currentScreen instanceof ClickGUI) {
 			Gui.drawRect(x - 2, y - 17, x + 130, y - 2, ColorUtils.getClientColor());
 			Fonts.REGULAR.REGULAR_23.REGULAR_23.drawString("TargetHUD", x, y - 13, -1, false);
 			target = mc.thePlayer;
+		}
+		
+		if(target.getHealth() <= 20 && target.getHealth() > 12) {
+			hpColor = new Color(110, 230, 125).getRGB();
+		}else if(target.getHealth() <= 12 && target.getHealth() > 4) {
+			hpColor = new Color(210, 230, 125).getRGB();
+		}else if(target.getHealth() <= 4 && target.getHealth() > 0) {
+			hpColor = new Color(220, 150, 110).getRGB();
 		}
 		
 		if(!(mc.currentScreen instanceof ClickGUI) && target.getName().equals(mc.thePlayer.getName())) {
