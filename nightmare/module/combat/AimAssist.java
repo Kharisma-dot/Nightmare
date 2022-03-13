@@ -147,7 +147,7 @@ public class AimAssist extends Module{
 			return null;
 		}
 		return (Entity) getEntity(distance, 0.0, 0.0f)[0];
-	}
+	}a
 	
 	public static Object[] getEntity(double distance, double expand, float partialTicks) {
 		Entity entityView = mc.getRenderViewEntity();
