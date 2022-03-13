@@ -35,6 +35,7 @@ import nightmare.module.render.Fullbright;
 import nightmare.module.render.HUD;
 import nightmare.module.render.Inventory;
 import nightmare.module.render.ItemPhysic;
+import nightmare.module.render.PotionStatus;
 import nightmare.module.render.TargetHUD;
 import nightmare.module.render.ViewClip;
 import nightmare.module.world.AutoHypixel;
@@ -75,6 +76,7 @@ public class ModuleManager {
     	modules.add(new HUD());
     	modules.add(new Inventory());
     	modules.add(new ItemPhysic());
+    	modules.add(new PotionStatus());
     	modules.add(new TargetHUD());
     	modules.add(new ViewClip());
     	

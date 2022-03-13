@@ -30,6 +30,12 @@ public class ClickGUI extends GuiScreen {
 	private int dragTargethudX;
 	private int dragTargethudY;
 	
+	private boolean draggingPotionStatus = false;
+	private int potionstatusX;
+	private int potionstatusY;
+	private int dragpotionstatusX;
+	private int dragpotionstatusY;
+	
 	public ClickGUI() {
 		this.frames = new ArrayList<Frame>();
 		int frameX = 20;
@@ -47,6 +53,7 @@ public class ClickGUI extends GuiScreen {
 		//Drag System
     	this.draggingInventory = false;
     	this.draggingTargetHUD = false;
+    	this.draggingPotionStatus = false;
     	
     	//Blur
     	if(Nightmare.instance.moduleManager.getModuleByName("Blur").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Blur"), "ClickGUI").getValBoolean()) {
@@ -64,13 +71,18 @@ public class ClickGUI extends GuiScreen {
 		
 		//Drag System
     	if(this.draggingInventory == true) {
-    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Inventory"), "X").setValDouble(mouseX + dragInventoryX);
-    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Inventory"), "Y").setValDouble(mouseY + dragInventoryY);
+    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Inventory"), "X").setValDouble(mouseX + this.dragInventoryX);
+    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Inventory"), "Y").setValDouble(mouseY + this.dragInventoryY);
     	}
 
     	if(this.draggingTargetHUD == true) {
-    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("TargetHUD"), "X").setValDouble(mouseX + dragTargethudX);
-    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("TargetHUD"), "Y").setValDouble(mouseY + dragTargethudY);
+    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("TargetHUD"), "X").setValDouble(mouseX + this.dragTargethudX);
+    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("TargetHUD"), "Y").setValDouble(mouseY + this.dragTargethudY);
+    	}
+    	
+    	if(this.draggingPotionStatus == true) {
+    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("PotionStatus"), "X").setValDouble(mouseX + this.dragpotionstatusX);
+    		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("PotionStatus"), "Y").setValDouble(mouseY + this.dragpotionstatusY);
     	}
 
 		for(Frame frame : frames) {
@@ -103,17 +115,25 @@ public class ClickGUI extends GuiScreen {
         this.targethudX = (int) Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("TargetHUD"), "X").getValDouble();
         this.targethudY = (int) Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("TargetHUD"), "Y").getValDouble();
         
+        this.potionstatusX = (int) Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("PotionStatus"), "X").getValDouble();
+        this.potionstatusY = (int) Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("PotionStatus"), "Y").getValDouble();
         
         if(MouseUtils.isInside(mouseX, mouseY, inventoryX, inventoryY - 15, inventoryX + 185, inventoryY) && Nightmare.instance.moduleManager.getModuleByName("Inventory").isToggled() && mouseButton == 0) {
         	this.draggingInventory = true;
-        	this.dragInventoryX = inventoryX - mouseX;
-        	this.dragInventoryY = inventoryY - mouseY;
+        	this.dragInventoryX = this.inventoryX - mouseX;
+        	this.dragInventoryY = this.inventoryY - mouseY;
         }
         
         if(MouseUtils.isInside(mouseX, mouseY, targethudX - 2, targethudY - 17, targethudX + 130, targethudY - 2) && Nightmare.instance.moduleManager.getModuleByName("TargetHUD").isToggled() && mouseButton == 0) {
         	this.draggingTargetHUD = true;
-        	this.dragTargethudX = targethudX - mouseX;
-        	this.dragTargethudY = targethudY - mouseY;
+        	this.dragTargethudX = this.targethudX - mouseX;
+        	this.dragTargethudY = this.targethudY - mouseY;
+        }
+        
+        if(MouseUtils.isInside(mouseX, mouseY, potionstatusX, potionstatusY - 15, potionstatusX + 110, potionstatusY) && Nightmare.instance.moduleManager.getModuleByName("PotionStatus").isToggled() && mouseButton == 0) {
+        	this.draggingPotionStatus = true;
+        	this.dragpotionstatusX = this.potionstatusX - mouseX;
+        	this.dragpotionstatusY = this.potionstatusY - mouseY;
         }
         
 		for(Frame frame : frames) {
@@ -158,6 +178,7 @@ public class ClickGUI extends GuiScreen {
 		//Drag System
         this.draggingInventory = false;
         this.draggingTargetHUD = false;
+        this.draggingPotionStatus = false;
         
 		for(Frame frame : frames) {
 			frame.setDrag(false);

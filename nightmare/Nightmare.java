@@ -34,6 +34,8 @@ public class Nightmare {
     public CommandManager commandManager = new CommandManager();
     public FontManager fontManager = SimpleFontManager.create();
 
+    private long playTime = 0;
+    
 	public void startClient() {
 	    settingsManager = new SettingsManager();
 	    eventManager = new EventManager();
@@ -68,5 +70,13 @@ public class Nightmare {
     
     public String getVersion() {
     	return this.version;
+    }
+    
+    public long getPlayTime() {
+    	return this.playTime;
+    }
+    
+    private long setPlayTime(long time) {
+    	return this.playTime = time;
     }
 }
