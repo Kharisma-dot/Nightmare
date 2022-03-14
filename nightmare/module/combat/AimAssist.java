@@ -60,6 +60,10 @@ public class AimAssist extends Module{
 			return;
 		}
 		
+		if(Nightmare.instance.moduleManager.getModuleByName("Spin").isToggled()) {
+			return;
+		}
+		
 		if(mc.theWorld != null) {
 			for (Object e : this.mc.theWorld.getLoadedEntityList()) {
 				double yawdistance;
