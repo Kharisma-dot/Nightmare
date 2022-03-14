@@ -39,6 +39,7 @@ public class TargetHUD extends Module{
 	public TargetHUD() {
 		super("TargetHUD", 0, Category.RENDER);
 		
+		Nightmare.instance.settingsManager.rSetting(new Setting("Distance", this, 6.5F, 3, 15, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("X", this, 20, 0, 5000, true));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Y", this, 20, 0, 5000, true));
 	}
@@ -52,7 +53,7 @@ public class TargetHUD extends Module{
 		int armor = target == null ? 0 : target.getTotalArmorValue();
 		int hpColor = new Color(110, 230, 125).getRGB();
 		
-		target = getClosest(6.5F);
+		target = getClosest((float) Nightmare.instance.settingsManager.getSettingByName(this, "Distance").getValDouble());
 		
 		if(target == null && !(mc.currentScreen instanceof ClickGUI)) {
 			return;
@@ -122,7 +123,7 @@ public class TargetHUD extends Module{
 			return false;
 		}
 
-		return player != mc.thePlayer && player.isEntityAlive() && mc.thePlayer.getDistanceToEntity(player) <= 6.5F;
+		return player != mc.thePlayer && player.isEntityAlive() && mc.thePlayer.getDistanceToEntity(player) <= (float) Nightmare.instance.settingsManager.getSettingByName(this, "Distance").getValDouble();
 	}
 	
     protected NetworkPlayerInfo getPlayerInfo()
