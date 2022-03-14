@@ -86,6 +86,10 @@ public class Blink extends Module{
 			return;
 		}
 	
+		if(Nightmare.instance.moduleManager.getModuleByName("Freecam").isToggled()) {
+			return;
+		}
+		
         mc.theWorld.removeEntityFromWorld(blinkEntity.getEntityId());
 
         if (!packetList.isEmpty()) {
