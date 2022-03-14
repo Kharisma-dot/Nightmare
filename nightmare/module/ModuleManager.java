@@ -24,6 +24,7 @@ import nightmare.module.player.AutoFish;
 import nightmare.module.player.AutoRespawn;
 import nightmare.module.player.AutoRod;
 import nightmare.module.player.AutoTool;
+import nightmare.module.player.ChatBypass;
 import nightmare.module.player.FastBow;
 import nightmare.module.player.Freecam;
 import nightmare.module.player.InvManager;
@@ -88,6 +89,7 @@ public class ModuleManager {
     	modules.add(new AutoRespawn());
     	modules.add(new AutoRod());
     	modules.add(new AutoTool());
+    	modules.add(new ChatBypass());
     	modules.add(new FastBow());
     	modules.add(new Freecam());
     	modules.add(new InvManager());

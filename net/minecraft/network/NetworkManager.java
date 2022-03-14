@@ -42,6 +42,7 @@ import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.CryptManager;
@@ -534,4 +535,13 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             this.futureListeners = inFutureListeners;
         }
     }
+
+	public void sendPacketNoEvent(Packet packet) {
+		if (channel != null && channel.isOpen()) {
+			flushOutboundQueue();
+			dispatchPacket(packet, null);
+		} else {
+			outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(packet, (GenericFutureListener[]) null));
+		}
+	}
 }
