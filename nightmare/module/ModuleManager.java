@@ -13,6 +13,7 @@ import nightmare.module.misc.NameProtect;
 import nightmare.module.misc.NoPotionShift;
 import nightmare.module.misc.OldAnimation;
 import nightmare.module.misc.Spin;
+import nightmare.module.movement.Blink;
 import nightmare.module.movement.FastBridge;
 import nightmare.module.movement.GuiMove;
 import nightmare.module.movement.KeepSprint;
@@ -60,6 +61,7 @@ public class ModuleManager {
     	modules.add(new Velocity());
     	
     	//Movement
+    	modules.add(new Blink());
     	modules.add(new FastBridge());
     	modules.add(new GuiMove());
     	modules.add(new KeepSprint());
