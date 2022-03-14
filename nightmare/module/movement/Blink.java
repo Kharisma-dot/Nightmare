@@ -8,22 +8,37 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import nightmare.Nightmare;
 import nightmare.event.EventTarget;
-import nightmare.event.impl.EventReceivePacket;
 import nightmare.event.impl.EventSendPacket;
+import nightmare.event.impl.EventTick;
 import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
+import nightmare.utils.TimerUtils;
 
 public class Blink extends Module{
 
     private EntityOtherPlayerMP blinkEntity;
     private final ArrayList<Packet> packetList = new ArrayList();
     
+    private TimerUtils timer = new TimerUtils();
+    
 	public Blink() {
 		super("Blink", 0, Category.MOVEMENT);
+		
+		Nightmare.instance.settingsManager.rSetting(new Setting("AutoDisable", this, false));
+		Nightmare.instance.settingsManager.rSetting(new Setting("Delay", this, 1.5, 1, 5, false));
+	}
+	
+	@EventTarget
+	public void onTick(EventTick event) {
+		if(Nightmare.instance.settingsManager.getSettingByName(this, "AutoDisable").getValBoolean()) {
+			if(timer.delay(Nightmare.instance.settingsManager.getSettingByName(this, "Delay").getValDouble() * 1000)) {
+				this.setToggled(false);
+				timer.reset();
+			}
+		}
 	}
 	
     @EventTarget
@@ -45,7 +60,7 @@ public class Blink extends Module{
 	@Override
 	public void onEnable() {
 		super.onEnable();
-		if(mc.thePlayer == null || mc.theWorld == null) {
+		if(mc.thePlayer == null || mc.theWorld == null || mc.isSingleplayer()) {
 			this.setToggled(false);
 			return;
 		}
@@ -59,6 +74,7 @@ public class Blink extends Module{
         blinkEntity.copyLocationAndAnglesFrom(mc.thePlayer);
         blinkEntity.setRotationYawHead(mc.thePlayer.rotationYawHead);
         mc.theWorld.addEntityToWorld(blinkEntity.getEntityId(), blinkEntity);
+        timer.reset();
 	}
 	
 	@Override
@@ -66,7 +82,7 @@ public class Blink extends Module{
 		
         super.onDisable();
         
-		if(mc.thePlayer == null || mc.theWorld == null) {
+		if(mc.thePlayer == null || mc.theWorld == null || mc.isSingleplayer()) {
 			return;
 		}
 	
