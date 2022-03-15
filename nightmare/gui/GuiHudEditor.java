@@ -37,7 +37,7 @@ public class GuiHudEditor extends GuiScreen{
 	
     @Override
     public void initGui() {
-        this.buttonList.add(new GuiButton(0, 5, ScreenUtils.getScreenHeight() - 25, 120, 20, "Go to ClickGUI"));
+        this.buttonList.add(new GuiButton(0, 5, ScreenUtils.getHeight() - 25, 120, 20, "Go to ClickGUI"));
     	this.draggingInventory = false;
     	this.draggingTargetHUD = false;
     	this.draggingPotionStatus = false;

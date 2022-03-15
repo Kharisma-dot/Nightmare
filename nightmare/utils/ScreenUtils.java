@@ -4,11 +4,11 @@ import net.minecraft.client.Minecraft;
 
 public class ScreenUtils {
 	
-    public static int getScreenWidth() {
+    public static int getWitdh() {
         return Minecraft.getMinecraft().displayWidth / getScaleFactor();
     }
 
-    public static int getScreenHeight() {
+    public static int getHeight() {
         return Minecraft.getMinecraft().displayHeight / getScaleFactor();
     }
     

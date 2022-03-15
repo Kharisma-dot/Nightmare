@@ -33,7 +33,7 @@ public class ClickGUI extends GuiScreen {
 	
 	@Override
 	public void initGui() {	
-        this.buttonList.add(new GuiButton(0, 5, ScreenUtils.getScreenHeight() - 25, 120, 20, "Go to EditHUD"));
+        this.buttonList.add(new GuiButton(0, 5, ScreenUtils.getHeight() - 25, 120, 20, "Go to EditHUD"));
     	//Blur
     	if(Nightmare.instance.moduleManager.getModuleByName("Blur").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Blur"), "ClickGUI").getValBoolean()) {
     		if (OpenGlHelper.shadersSupported && mc.getRenderViewEntity() instanceof EntityPlayer) {

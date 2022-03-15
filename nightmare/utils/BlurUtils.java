@@ -43,8 +43,8 @@ public class BlurUtils {
     public static void drawBlurRect(float x, float y, float width, float height) {
     	
         int factor = ScreenUtils.getScaleFactor();
-        int factor2 = ScreenUtils.getScreenWidth();
-        int factor3 = ScreenUtils.getScreenHeight();
+        int factor2 = ScreenUtils.getWitdh();
+        int factor3 = ScreenUtils.getHeight();
         
         float scale = 1;
         
