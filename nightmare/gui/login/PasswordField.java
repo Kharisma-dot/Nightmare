@@ -1,4 +1,4 @@
-package nightmare.gui;
+package nightmare.gui.login;
 
 import net.minecraft.util.*;
 import net.minecraft.client.gui.*;

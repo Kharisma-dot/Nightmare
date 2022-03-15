@@ -1,4 +1,4 @@
-package nightmare.gui;
+package nightmare.gui.login;
 
 import java.io.IOException;
 

@@ -16,11 +16,11 @@ import nightmare.Nightmare;
 import nightmare.event.EventTarget;
 import nightmare.event.impl.EventRenderGUI;
 import nightmare.fonts.impl.Fonts;
+import nightmare.gui.GuiHudEditor;
 import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
 import nightmare.utils.ColorUtils;
-import nightmare.clickgui.ClickGUI;
 
 public class PotionStatus extends Module{
 
@@ -88,7 +88,7 @@ public class PotionStatus extends Module{
             }
         }
 		
-		if(mc.currentScreen instanceof ClickGUI) {
+		if(mc.currentScreen instanceof GuiHudEditor) {
 			Gui.drawRect(x, y, x + 110, y - 15, ColorUtils.getClientColor());
 	        Fonts.REGULAR.REGULAR_23.REGULAR_23.drawString("PotionStatus", x + 5, y - 11, -1, false);
 		}

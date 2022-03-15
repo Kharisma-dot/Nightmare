@@ -1,9 +1,7 @@
 package net.minecraft.client.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 import com.google.common.base.Predicate;
@@ -48,7 +46,10 @@ import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import nightmare.Nightmare;
 import nightmare.event.impl.EventRenderGUI;
+import nightmare.fonts.impl.Fonts;
+import nightmare.gui.GuiHudEditor;
 import nightmare.utils.BlurUtils;
+import nightmare.utils.ColorUtils;
 
 public class GuiIngame extends Gui
 {
@@ -103,6 +104,11 @@ public class GuiIngame extends Gui
     private int blurY;
     private int blurX1;
     private int blurY1;
+    
+    public static int scoreboardX;
+    public static int scoreboardY;
+    public static int scoreboardX1;
+    public static int scoreboardY1;
     
     public GuiIngame(Minecraft mcIn)
     {
@@ -568,10 +574,18 @@ public class GuiIngame extends Gui
         int j;
         int k = 0;
         
-        k1 = (int) (p_180475_2_.getScaledHeight() / 2 + j1 / 3);
-    	j = (int) (p_180475_2_.getScaledWidth() - i - b0);
-
-    	//BlurUtils.drawBlurRect(blurX, blurY, blurX1, blurY1);
+        k1 = (int) (Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("HUD"), "Y").getValDouble() + j1 / 3);
+    	j = (int) (Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("HUD"), "X").getValDouble() - i - b0);
+    	
+    	if(mc.currentScreen instanceof GuiHudEditor) {
+			Gui.drawRect(scoreboardX, scoreboardY, scoreboardX1, scoreboardY - 15, ColorUtils.getClientColor());
+	        Fonts.REGULAR.REGULAR_23.REGULAR_23.drawString("Scoreboard", scoreboardX + 5, scoreboardY - 11, -1, false);
+    	}
+    	
+    	if(Nightmare.instance.moduleManager.getModuleByName("Blur").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Blur"), "Scoreboard").getValBoolean()) {
+    		BlurUtils.drawBlurRect(blurX, blurY, blurX1, blurY1);
+    	}
+    	
         for (Object score1 : arraylist1)
         {
             ++k;
@@ -581,7 +595,7 @@ public class GuiIngame extends Gui
             int l = k1 - k * this.getFontRenderer().FONT_HEIGHT;
             int i1;
             
-            i1 = (int) (p_180475_2_.getScaledWidth() - b0 + 2);
+            i1 = (int) (Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("HUD"), "X").getValDouble() - b0 + 2);
             
             drawRect(j - 2, l, i1, l + this.getFontRenderer().FONT_HEIGHT, 1342177280);
             
@@ -592,6 +606,11 @@ public class GuiIngame extends Gui
             blurY = l - this.getFontRenderer().FONT_HEIGHT - 1;
             blurX1 = i1;
             blurY1 = l + this.getFontRenderer().FONT_HEIGHT * arraylist1.size();
+            
+            scoreboardX = j - 2;
+            scoreboardY = l - this.getFontRenderer().FONT_HEIGHT - 1;
+            scoreboardX1 = i1;
+            scoreboardY1 = l + this.getFontRenderer().FONT_HEIGHT * arraylist1.size();
             
             if (k == arraylist1.size())
             {

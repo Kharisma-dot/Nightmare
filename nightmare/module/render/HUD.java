@@ -33,6 +33,9 @@ public class HUD extends Module{
 		
 		Nightmare.instance.settingsManager.rSetting(new Setting("ArmorStatus", this, true));	
 		Nightmare.instance.settingsManager.rSetting(new Setting("ClientInfo", this, true));
+		Nightmare.instance.settingsManager.rSetting(new Setting("Scoreboard", this, true));
+		Nightmare.instance.settingsManager.rSetting(new Setting("X", this, 20, 0, 5000, true));
+		Nightmare.instance.settingsManager.rSetting(new Setting("Y", this, 20, 0, 5000, true));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Red", this, 0, 0, 255, true));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Green", this, 210, 0, 255, true));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Blue", this, 255, 0, 255, true));

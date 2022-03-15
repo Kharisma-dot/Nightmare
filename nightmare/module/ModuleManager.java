@@ -42,6 +42,7 @@ import nightmare.module.render.TargetHUD;
 import nightmare.module.render.ViewClip;
 import nightmare.module.world.AutoHypixel;
 import nightmare.module.world.ChestStealer;
+import nightmare.module.world.FastBreak;
 import nightmare.module.world.FastPlace;
 import nightmare.module.world.LightningTracker;
 import nightmare.module.world.TimeChanger;
@@ -97,6 +98,7 @@ public class ModuleManager {
     	//World
     	modules.add(new AutoHypixel());
     	modules.add(new ChestStealer());
+    	modules.add(new FastBreak());
     	modules.add(new FastPlace());
     	modules.add(new LightningTracker());
     	modules.add(new TimeChanger());

@@ -25,6 +25,7 @@ import nightmare.clickgui.ClickGUI;
 import nightmare.event.EventTarget;
 import nightmare.event.impl.EventRenderGUI;
 import nightmare.fonts.impl.Fonts;
+import nightmare.gui.GuiHudEditor;
 import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
@@ -55,11 +56,11 @@ public class TargetHUD extends Module{
 		
 		target = getClosest((float) Nightmare.instance.settingsManager.getSettingByName(this, "Distance").getValDouble());
 		
-		if(target == null && !(mc.currentScreen instanceof ClickGUI)) {
+		if(target == null && !(mc.currentScreen instanceof GuiHudEditor)) {
 			return;
 		}		
 		
-		if(mc.currentScreen instanceof ClickGUI) {
+		if(mc.currentScreen instanceof GuiHudEditor) {
 			Gui.drawRect(x - 2, y - 17, x + 130, y - 2, ColorUtils.getClientColor());
 			Fonts.REGULAR.REGULAR_23.REGULAR_23.drawString("TargetHUD", x, y - 13, -1, false);
 			target = mc.thePlayer;
@@ -72,8 +73,7 @@ public class TargetHUD extends Module{
 		}else if(target.getHealth() <= 4 && target.getHealth() > 0) {
 			hpColor = new Color(220, 150, 110).getRGB();
 		}
-		
-		if(!(mc.currentScreen instanceof ClickGUI) && target.getName().equals(mc.thePlayer.getName())) {
+		if(!(mc.currentScreen instanceof GuiHudEditor) && target.getName().equals(mc.thePlayer.getName())) {
 			return;
 		}
 		
