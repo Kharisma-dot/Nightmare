@@ -365,6 +365,11 @@ public abstract class GuiContainer extends GuiScreen
         this.doubleClick = this.lastClickSlot == slot && i - this.lastClickTime < 250L && this.lastClickButton == mouseButton;
         this.ignoreMouseUp = false;
 
+        if (mouseButton - 100 == mc.gameSettings.keyBindInventory.getKeyCode()) {
+            mc.thePlayer.closeScreen();
+            return;
+        }
+        
         if (mouseButton == 0 || mouseButton == 1 || flag)
         {
             int j = this.guiLeft;
@@ -457,6 +462,7 @@ public abstract class GuiContainer extends GuiScreen
         this.lastClickSlot = slot;
         this.lastClickTime = i;
         this.lastClickButton = mouseButton;
+        checkHotbarKeys(mouseButton - 100);
     }
 
     /**
