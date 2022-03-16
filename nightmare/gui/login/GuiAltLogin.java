@@ -60,7 +60,7 @@ public final class GuiAltLogin extends GuiScreen {
         this.drawDefaultBackground();
         this.username.drawTextBox();
         this.password.drawTextBox();
-        this.drawCenteredString(this.mc.fontRendererObj, "Alt Login", width / 2, 20, -1);
+        this.drawCenteredString(this.mc.fontRendererObj, "Account Login", width / 2, 20, -1);
         this.drawCenteredString(this.mc.fontRendererObj, ChatUtils.GRAY + info, width / 2, 29, -1);
         if (this.username.getText().isEmpty()) {
             this.drawString(this.mc.fontRendererObj, "Username / E-Mail", width / 2 - 96, 66, -7829368);
