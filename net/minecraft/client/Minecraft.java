@@ -1532,7 +1532,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     default:
                         if (this.playerController.isNotCreative())
                         {
-                            this.leftClickCounter = 10;
+                            this.leftClickCounter = 0;
                         }
                 }
             }

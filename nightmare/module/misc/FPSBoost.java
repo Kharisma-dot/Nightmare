@@ -11,6 +11,7 @@ public class FPSBoost extends Module{
 		super("FPSBoost", 0, Category.MISC);
 		
 		Nightmare.instance.settingsManager.rSetting(new Setting("HideArmorStand", this, false));
+		Nightmare.instance.settingsManager.rSetting(new Setting("HideBat", this, false));
 	}
 
 }

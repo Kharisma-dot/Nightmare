@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -112,7 +113,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
      */
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-    	if (Nightmare.instance.moduleManager.getModuleByName("FPSBoost").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("FPSBoost"), "HideArmorStand").getValBoolean() && entity instanceof EntityArmorStand) {
+    	if (Nightmare.instance.moduleManager.getModuleByName("FPSBoost").isToggled() && ((Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("FPSBoost"), "HideArmorStand").getValBoolean() && entity instanceof EntityArmorStand) || (Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("FPSBoost"), "HideBat").getValBoolean() && entity instanceof EntityBat))) {
     		return;
     	}
     	
