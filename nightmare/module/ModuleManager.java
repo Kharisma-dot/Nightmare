@@ -20,6 +20,7 @@ import nightmare.module.movement.KeepSprint;
 import nightmare.module.movement.NoSlow;
 import nightmare.module.movement.SafeWalk;
 import nightmare.module.movement.Sprint;
+import nightmare.module.player.AutoArmor;
 import nightmare.module.player.AutoFish;
 import nightmare.module.player.AutoRespawn;
 import nightmare.module.player.AutoRod;
@@ -86,6 +87,7 @@ public class ModuleManager {
     	modules.add(new ViewClip());
     	
     	//Player
+    	modules.add(new AutoArmor());
     	modules.add(new AutoFish());
     	modules.add(new AutoRespawn());
     	modules.add(new AutoRod());

@@ -931,4 +931,14 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.sendPlayerAbilities();
         }
     }
+
+    
+    public void shiftClick(int slot) {
+        mc.playerController.windowClick(this.inventoryContainer.windowId, slot, 0, 1, this);
+    }
+    
+
+    public void drop(int slot) {
+        mc.playerController.windowClick(this.inventoryContainer.windowId, slot, 1, 4, this);
+    }
 }

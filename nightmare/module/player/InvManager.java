@@ -37,12 +37,14 @@ public class InvManager extends Module{
 		
 		Nightmare.instance.settingsManager.rSetting(new Setting("Sword Slot", this, 1.0D, 1.0D, 10.0D, true));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Delay", this, 250.0D, 0.0D, 1000.0D, false));
+		Nightmare.instance.settingsManager.rSetting(new Setting("InvOnly", this, false));
 	}
 
 
    	@EventTarget
 	public void onPreMotion(EventUpdate event) {
-      if ((mc.currentScreen instanceof GuiInventory)) {
+   		
+      if ((Nightmare.instance.settingsManager.getSettingByName(this, "InvOnly").getValBoolean() && mc.currentScreen instanceof GuiInventory) || !Nightmare.instance.settingsManager.getSettingByName(this, "InvOnly").getValBoolean()) {
          this.collectItems();
          this.collectBestArmor();
          this.collectTrash();
