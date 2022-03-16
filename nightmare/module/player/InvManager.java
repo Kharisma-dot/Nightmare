@@ -42,7 +42,7 @@ public class InvManager extends Module{
 
 
    	@EventTarget
-	public void onPreMotion(EventUpdate event) {
+	public void onUpdate(EventUpdate event) {
    		
       if ((Nightmare.instance.settingsManager.getSettingByName(this, "InvOnly").getValBoolean() && mc.currentScreen instanceof GuiInventory) || !Nightmare.instance.settingsManager.getSettingByName(this, "InvOnly").getValBoolean()) {
          this.collectItems();
