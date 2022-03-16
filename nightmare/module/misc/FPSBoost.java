@@ -12,6 +12,7 @@ public class FPSBoost extends Module{
 		
 		Nightmare.instance.settingsManager.rSetting(new Setting("HideArmorStand", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("HideBat", this, false));
+		Nightmare.instance.settingsManager.rSetting(new Setting("ChunkDelay", this, 3, 0, 5, true));
 	}
 
 }
