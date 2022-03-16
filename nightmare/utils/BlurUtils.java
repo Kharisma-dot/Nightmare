@@ -52,16 +52,6 @@ public class BlurUtils {
             reinitShader();
         }
         
-        if(mc.gameSettings.guiScale == 1) {
-        	scale = 0.5F;
-        }else if(mc.gameSettings.guiScale == 2) {
-        	scale = 1;
-        }else if(mc.gameSettings.guiScale == 3) {
-        	scale = 1.5F;
-        }else if(mc.gameSettings.guiScale == 0) {
-        	scale = 2;
-        }
-        
         lastScale = factor;
         lastScaleWidth = factor2;
         lastScaleHeight = factor3;
