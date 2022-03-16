@@ -3,17 +3,15 @@ package net.minecraft.client.resources.model;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import java.util.Map;
+
+import net.minecraft.client.renderer.block.model.ITransformation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.client.model.IModelPart;
-import net.minecraftforge.client.model.IModelState;
-import net.minecraftforge.client.model.ITransformation;
-import net.minecraftforge.client.model.TRSRTransformation;
 import net.optifine.reflect.Reflector;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-public enum ModelRotation implements IModelState, ITransformation
+public enum ModelRotation implements ITransformation
 {
     X0_Y0(0, 0),
     X0_Y90(0, 90),
@@ -68,17 +66,11 @@ public enum ModelRotation implements IModelState, ITransformation
         EnumFacing enumfacing = p_177523_1_;
 
         for (int i = 0; i < this.quartersX; ++i)
-        {
             enumfacing = enumfacing.rotateAround(EnumFacing.Axis.X);
-        }
 
         if (enumfacing.getAxis() != EnumFacing.Axis.Y)
-        {
             for (int j = 0; j < this.quartersY; ++j)
-            {
                 enumfacing = enumfacing.rotateAround(EnumFacing.Axis.Y);
-            }
-        }
 
         return enumfacing;
     }
@@ -88,38 +80,27 @@ public enum ModelRotation implements IModelState, ITransformation
         int i = vertexIndex;
 
         if (facing.getAxis() == EnumFacing.Axis.X)
-        {
             i = (vertexIndex + this.quartersX) % 4;
-        }
 
         EnumFacing enumfacing = facing;
 
         for (int j = 0; j < this.quartersX; ++j)
-        {
             enumfacing = enumfacing.rotateAround(EnumFacing.Axis.X);
-        }
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
             i = (i + this.quartersY) % 4;
-        }
 
         return i;
     }
 
     public static ModelRotation getModelRotation(int p_177524_0_, int p_177524_1_)
     {
-        return (ModelRotation)mapRotations.get(Integer.valueOf(combineXY(MathHelper.normalizeAngle(p_177524_0_, 360), MathHelper.normalizeAngle(p_177524_1_, 360))));
-    }
-
-    public Optional<TRSRTransformation> apply(Optional <? extends IModelPart > p_apply_1_)
-    {
-        return (Optional)Reflector.call(Reflector.ForgeHooksClient_applyTransform, new Object[] {this.getMatrix(), p_apply_1_});
+        return (ModelRotation)mapRotations.get(combineXY(MathHelper.normalizeAngle(p_177524_0_, 360), MathHelper.normalizeAngle(p_177524_1_, 360)));
     }
 
     public javax.vecmath.Matrix4f getMatrix()
     {
-        return Reflector.ForgeHooksClient_getMatrix.exists() ? (javax.vecmath.Matrix4f)Reflector.call(Reflector.ForgeHooksClient_getMatrix, new Object[] {this}): new javax.vecmath.Matrix4f();
+        return new javax.vecmath.Matrix4f();
     }
 
     public EnumFacing rotate(EnumFacing p_rotate_1_)
@@ -135,7 +116,7 @@ public enum ModelRotation implements IModelState, ITransformation
     static {
         for (ModelRotation modelrotation : values())
         {
-            mapRotations.put(Integer.valueOf(modelrotation.combinedXY), modelrotation);
+            mapRotations.put(modelrotation.combinedXY, modelrotation);
         }
     }
 }

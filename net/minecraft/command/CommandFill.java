@@ -33,8 +33,6 @@ public class CommandFill extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -43,15 +41,12 @@ public class CommandFill extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 7)
         {
-            throw new WrongUsageException("commands.fill.usage", new Object[0]);
+            throw new WrongUsageException("commands.fill.usage");
         }
         else
         {
@@ -72,7 +67,7 @@ public class CommandFill extends CommandBase
 
             if (j > 32768)
             {
-                throw new CommandException("commands.fill.tooManyBlocks", new Object[] {Integer.valueOf(j), Integer.valueOf(32768)});
+                throw new CommandException("commands.fill.tooManyBlocks", j, 32768);
             }
             else if (blockpos2.getY() >= 0 && blockpos3.getY() < 256)
             {
@@ -84,7 +79,7 @@ public class CommandFill extends CommandBase
                     {
                         if (!world.isBlockLoaded(new BlockPos(l, blockpos3.getY() - blockpos2.getY(), k)))
                         {
-                            throw new CommandException("commands.fill.outOfWorld", new Object[0]);
+                            throw new CommandException("commands.fill.outOfWorld");
                         }
                     }
                 }
@@ -213,17 +208,17 @@ public class CommandFill extends CommandBase
 
                 if (j <= 0)
                 {
-                    throw new CommandException("commands.fill.failed", new Object[0]);
+                    throw new CommandException("commands.fill.failed");
                 }
                 else
                 {
                     sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, j);
-                    notifyOperators(sender, this, "commands.fill.success", new Object[] {Integer.valueOf(j)});
+                    notifyOperators(sender, this, "commands.fill.success", j);
                 }
             }
             else
             {
-                throw new CommandException("commands.fill.outOfWorld", new Object[0]);
+                throw new CommandException("commands.fill.outOfWorld");
             }
         }
     }

@@ -30,8 +30,6 @@ public class CommandGive extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -40,15 +38,12 @@ public class CommandGive extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException("commands.give.usage", new Object[0]);
+            throw new WrongUsageException("commands.give.usage");
         }
         else
         {
@@ -103,7 +98,8 @@ public class CommandGive extends CommandBase
                 }
             }
 
-            notifyOperators(sender, this, "commands.give.success", new Object[] {itemstack.getChatComponent(), Integer.valueOf(i), entityplayer.getName()});
+            notifyOperators(sender, this, "commands.give.success",
+            		new Object[] {itemstack.getChatComponent(), i, entityplayer.getName()});
         }
     }
 
@@ -119,9 +115,6 @@ public class CommandGive extends CommandBase
 
     /**
      * Return whether the specified command parameter index is a username parameter.
-     *  
-     * @param args The arguments that were given
-     * @param index The argument index that we are checking
      */
     public boolean isUsernameIndex(String[] args, int index)
     {

@@ -55,13 +55,13 @@ public class EntityOcelot extends EntityTameable
         this.tasks.addTask(9, new EntityAIMate(this, 0.8D));
         this.tasks.addTask(10, new EntityAIWander(this, 0.8D));
         this.tasks.addTask(11, new EntityAIWatchClosest(this, EntityPlayer.class, 10.0F));
-        this.targetTasks.addTask(1, new EntityAITargetNonTamed(this, EntityChicken.class, false, (Predicate)null));
+        this.targetTasks.addTask(1, new EntityAITargetNonTamed(this, EntityChicken.class, false, null));
     }
 
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(18, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(18, (byte)0);
     }
 
     public void updateAITasks()
@@ -190,8 +190,12 @@ public class EntityOcelot extends EntityTameable
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
     }
 
@@ -218,7 +222,7 @@ public class EntityOcelot extends EntityTameable
 
             if (itemstack.stackSize <= 0)
             {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
 
             if (!this.worldObj.isRemote)
@@ -299,7 +303,7 @@ public class EntityOcelot extends EntityTameable
 
     public void setTameSkin(int skinId)
     {
-        this.dataWatcher.updateObject(18, Byte.valueOf((byte)skinId));
+        this.dataWatcher.updateObject(18, (byte)skinId);
     }
 
     /**
@@ -319,7 +323,7 @@ public class EntityOcelot extends EntityTameable
         {
             BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-            if (blockpos.getY() < this.worldObj.func_181545_F())
+            if (blockpos.getY() < this.worldObj.getSeaLevel())
             {
                 return false;
             }
@@ -336,7 +340,7 @@ public class EntityOcelot extends EntityTameable
     }
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Get the name of this object. For players this returns their username
      */
     public String getName()
     {

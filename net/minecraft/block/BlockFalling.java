@@ -40,9 +40,7 @@ public class BlockFalling extends Block
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (!worldIn.isRemote)
-        {
             this.checkFallable(worldIn, pos);
-        }
     }
 
     private void checkFallable(World worldIn, BlockPos pos)
@@ -66,14 +64,10 @@ public class BlockFalling extends Block
                 BlockPos blockpos;
 
                 for (blockpos = pos.down(); canFallInto(worldIn, blockpos) && blockpos.getY() > 0; blockpos = blockpos.down())
-                {
                     ;
-                }
 
                 if (blockpos.getY() > 0)
-                {
                     worldIn.setBlockState(blockpos.up(), this.getDefaultState());
-                }
             }
         }
     }

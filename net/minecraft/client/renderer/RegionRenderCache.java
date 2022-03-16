@@ -127,7 +127,7 @@ public class RegionRenderCache extends ChunkCache
 
             if (aiblockstate != null && aiblockstate.length >= p_allocateStates_0_)
             {
-                Arrays.fill(aiblockstate, (Object)null);
+                Arrays.fill(aiblockstate, null);
             }
             else
             {

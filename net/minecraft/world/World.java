@@ -55,7 +55,7 @@ import net.minecraft.world.storage.WorldInfo;
 
 public abstract class World implements IBlockAccess
 {
-    private int field_181546_a = 63;
+    private int seaLevel = 63;
 
     /**
      * boolean; if true updates scheduled by scheduleBlockUpdate happen immediately
@@ -226,7 +226,7 @@ public abstract class World implements IBlockAccess
     {
         BlockPos blockpos;
 
-        for (blockpos = new BlockPos(pos.getX(), this.func_181545_F(), pos.getZ()); !this.isAirBlock(blockpos.up()); blockpos = blockpos.up())
+        for (blockpos = new BlockPos(pos.getX(), this.getSeaLevel(), pos.getZ()); !this.isAirBlock(blockpos.up()); blockpos = blockpos.up())
         {
             ;
         }
@@ -245,8 +245,6 @@ public abstract class World implements IBlockAccess
     /**
      * Checks to see if an air block exists at the provided location. Note that this only checks to see if the blocks
      * material is set to air, meaning it is possible for non-vanilla blocks to still pass this check.
-     *  
-     * @param pos The position of the block being checked.
      */
     public boolean isAirBlock(BlockPos pos)
     {
@@ -333,9 +331,6 @@ public abstract class World implements IBlockAccess
 
     /**
      * Returns back a chunk looked up by chunk coordinates Args: x, y
-     *  
-     * @param chunkX Chunk X Coordinate
-     * @param chunkZ Chunk Z Coordinate
      */
     public Chunk getChunkFromChunkCoords(int chunkX, int chunkZ)
     {
@@ -346,9 +341,6 @@ public abstract class World implements IBlockAccess
      * Sets the block state at a given location. Flag 1 will cause a block update. Flag 2 will send the change to
      * clients (you almost always want this). Flag 4 prevents the block from being re-rendered, if this is a client
      * world. Flags can be added together.
-     *  
-     * @param flags Flag 1 will cause a block update. Flag 2 will send the change to clients (you almost always want
-     * this). Flag 4 prevents the block from being re-rendered, if this is a client world. Flags can be added together.
      */
     public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
     {
@@ -554,7 +546,8 @@ public abstract class World implements IBlockAccess
                     {
                         try
                         {
-                            return String.format("ID #%d (%s // %s)", new Object[] {Integer.valueOf(Block.getIdFromBlock(blockIn)), blockIn.getUnlocalizedName(), blockIn.getClass().getCanonicalName()});
+                            return String.format("ID #%d (%s // %s)", 
+                            		new Object[] {Block.getIdFromBlock(blockIn), blockIn.getUnlocalizedName(), blockIn.getClass().getCanonicalName()});
                         }
                         catch (Throwable var2)
                         {
@@ -580,13 +573,13 @@ public abstract class World implements IBlockAccess
 
     public boolean canBlockSeeSky(BlockPos pos)
     {
-        if (pos.getY() >= this.func_181545_F())
+        if (pos.getY() >= this.getSeaLevel())
         {
             return this.canSeeSky(pos);
         }
         else
         {
-            BlockPos blockpos = new BlockPos(pos.getX(), this.func_181545_F(), pos.getZ());
+            BlockPos blockpos = new BlockPos(pos.getX(), this.getSeaLevel(), pos.getZ());
 
             if (!this.canSeeSky(blockpos))
             {
@@ -706,7 +699,7 @@ public abstract class World implements IBlockAccess
         }
         else
         {
-            i = this.func_181545_F() + 1;
+            i = this.getSeaLevel() + 1;
         }
 
         return new BlockPos(pos.getX(), i, pos.getZ());
@@ -731,7 +724,7 @@ public abstract class World implements IBlockAccess
         }
         else
         {
-            return this.func_181545_F() + 1;
+            return this.getSeaLevel() + 1;
         }
     }
 
@@ -1208,12 +1201,12 @@ public abstract class World implements IBlockAccess
     {
         if (entityIn.riddenByEntity != null)
         {
-            entityIn.riddenByEntity.mountEntity((Entity)null);
+            entityIn.riddenByEntity.mountEntity(null);
         }
 
         if (entityIn.ridingEntity != null)
         {
-            entityIn.mountEntity((Entity)null);
+            entityIn.mountEntity(null);
         }
 
         entityIn.setDead();
@@ -1286,11 +1279,11 @@ public abstract class World implements IBlockAccess
         {
             for (int l1 = i1; l1 < j1; ++l1)
             {
-                if (this.isBlockLoaded(blockpos$mutableblockpos.func_181079_c(k1, 64, l1)))
+                if (this.isBlockLoaded(blockpos$mutableblockpos.set(k1, 64, l1)))
                 {
                     for (int i2 = k - 1; i2 < l; ++i2)
                     {
-                        blockpos$mutableblockpos.func_181079_c(k1, i2, l1);
+                        blockpos$mutableblockpos.set(k1, i2, l1);
 
                         if (flag && flag1)
                         {
@@ -1365,7 +1358,7 @@ public abstract class World implements IBlockAccess
         return entityIn.posX > d0 && entityIn.posX < d2 && entityIn.posZ > d1 && entityIn.posZ < d3;
     }
 
-    public List<AxisAlignedBB> func_147461_a(AxisAlignedBB bb)
+    public List<AxisAlignedBB> getCollisionBoxes(AxisAlignedBB bb)
     {
         List<AxisAlignedBB> list = Lists.<AxisAlignedBB>newArrayList();
         int i = MathHelper.floor_double(bb.minX);
@@ -1380,11 +1373,11 @@ public abstract class World implements IBlockAccess
         {
             for (int l1 = i1; l1 < j1; ++l1)
             {
-                if (this.isBlockLoaded(blockpos$mutableblockpos.func_181079_c(k1, 64, l1)))
+                if (this.isBlockLoaded(blockpos$mutableblockpos.set(k1, 64, l1)))
                 {
                     for (int i2 = k - 1; i2 < l; ++i2)
                     {
-                        blockpos$mutableblockpos.func_181079_c(k1, i2, l1);
+                        blockpos$mutableblockpos.set(k1, i2, l1);
                         IBlockState iblockstate;
 
                         if (k1 >= -30000000 && k1 < 30000000 && l1 >= -30000000 && l1 < 30000000)
@@ -1396,7 +1389,7 @@ public abstract class World implements IBlockAccess
                             iblockstate = Blocks.bedrock.getDefaultState();
                         }
 
-                        iblockstate.getBlock().addCollisionBoxesToList(this, blockpos$mutableblockpos, iblockstate, bb, list, (Entity)null);
+                        iblockstate.getBlock().addCollisionBoxesToList(this, blockpos$mutableblockpos, iblockstate, bb, list, null);
                     }
                 }
             }
@@ -1577,8 +1570,6 @@ public abstract class World implements IBlockAccess
 
     /**
      * Finds the highest block on the x and z coordinate that is solid or liquid, and returns its y coord.
-     *  
-     * @param pos The object containing the x and z coordinates to check at
      */
     public BlockPos getTopSolidOrLiquidBlock(BlockPos pos)
     {
@@ -1961,7 +1952,7 @@ public abstract class World implements IBlockAccess
      */
     public boolean checkNoEntityCollision(AxisAlignedBB bb)
     {
-        return this.checkNoEntityCollision(bb, (Entity)null);
+        return this.checkNoEntityCollision(bb, null);
     }
 
     /**
@@ -1969,7 +1960,7 @@ public abstract class World implements IBlockAccess
      */
     public boolean checkNoEntityCollision(AxisAlignedBB bb, Entity entityIn)
     {
-        List<Entity> list = this.getEntitiesWithinAABBExcludingEntity((Entity)null, bb);
+        List<Entity> list = this.getEntitiesWithinAABBExcludingEntity(null, bb);
 
         for (int i = 0; i < list.size(); ++i)
         {
@@ -2003,7 +1994,7 @@ public abstract class World implements IBlockAccess
             {
                 for (int i2 = i1; i2 <= j1; ++i2)
                 {
-                    Block block = this.getBlockState(blockpos$mutableblockpos.func_181079_c(k1, l1, i2)).getBlock();
+                    Block block = this.getBlockState(blockpos$mutableblockpos.set(k1, l1, i2)).getBlock();
 
                     if (block.getMaterial() != Material.air)
                     {
@@ -2035,7 +2026,7 @@ public abstract class World implements IBlockAccess
             {
                 for (int i2 = i1; i2 <= j1; ++i2)
                 {
-                    Block block = this.getBlockState(blockpos$mutableblockpos.func_181079_c(k1, l1, i2)).getBlock();
+                    Block block = this.getBlockState(blockpos$mutableblockpos.set(k1, l1, i2)).getBlock();
 
                     if (block.getMaterial().isLiquid())
                     {
@@ -2067,7 +2058,7 @@ public abstract class World implements IBlockAccess
                 {
                     for (int i2 = i1; i2 < j1; ++i2)
                     {
-                        Block block = this.getBlockState(blockpos$mutableblockpos.func_181079_c(k1, l1, i2)).getBlock();
+                        Block block = this.getBlockState(blockpos$mutableblockpos.set(k1, l1, i2)).getBlock();
 
                         if (block == Blocks.fire || block == Blocks.flowing_lava || block == Blocks.lava)
                         {
@@ -2109,13 +2100,13 @@ public abstract class World implements IBlockAccess
                 {
                     for (int i2 = i1; i2 < j1; ++i2)
                     {
-                        blockpos$mutableblockpos.func_181079_c(k1, l1, i2);
+                        blockpos$mutableblockpos.set(k1, l1, i2);
                         IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos);
                         Block block = iblockstate.getBlock();
 
                         if (block.getMaterial() == materialIn)
                         {
-                            double d0 = (double)((float)(l1 + 1) - BlockLiquid.getLiquidHeightPercent(((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue()));
+                            double d0 = (double)((float)(l1 + 1) - BlockLiquid.getLiquidHeightPercent(iblockstate.getValue(BlockLiquid.LEVEL)));
 
                             if ((double)l >= d0)
                             {
@@ -2159,7 +2150,7 @@ public abstract class World implements IBlockAccess
             {
                 for (int i2 = i1; i2 < j1; ++i2)
                 {
-                    if (this.getBlockState(blockpos$mutableblockpos.func_181079_c(k1, l1, i2)).getBlock().getMaterial() == materialIn)
+                    if (this.getBlockState(blockpos$mutableblockpos.set(k1, l1, i2)).getBlock().getMaterial() == materialIn)
                     {
                         return true;
                     }
@@ -2189,12 +2180,12 @@ public abstract class World implements IBlockAccess
             {
                 for (int i2 = i1; i2 < j1; ++i2)
                 {
-                    IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos.func_181079_c(k1, l1, i2));
+                    IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos.set(k1, l1, i2));
                     Block block = iblockstate.getBlock();
 
                     if (block.getMaterial() == materialIn)
                     {
-                        int j2 = ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue();
+                        int j2 = iblockstate.getValue(BlockLiquid.LEVEL);
                         double d0 = (double)(l1 + 1);
 
                         if (j2 < 8)
@@ -2279,10 +2270,6 @@ public abstract class World implements IBlockAccess
 
     /**
      * Attempts to extinguish a fire
-     *  
-     * @param player The player putting out the fire
-     * @param pos The coordinates of the fire
-     * @param side The side from which the player is putting out the fire from
      */
     public boolean extinguishFire(EntityPlayer player, BlockPos pos, EnumFacing side)
     {
@@ -2434,7 +2421,7 @@ public abstract class World implements IBlockAccess
     {
         IBlockState iblockstate = blockAccess.getBlockState(pos);
         Block block = iblockstate.getBlock();
-        return block.getMaterial().isOpaque() && block.isFullCube() ? true : (block instanceof BlockStairs ? iblockstate.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP : (block instanceof BlockSlab ? iblockstate.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.TOP : (block instanceof BlockHopper ? true : (block instanceof BlockSnow ? ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue() == 7 : false))));
+        return block.getMaterial().isOpaque() && block.isFullCube() ? true : (block instanceof BlockStairs ? iblockstate.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP : (block instanceof BlockSlab ? iblockstate.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.TOP : (block instanceof BlockHopper ? true : (block instanceof BlockSnow ? iblockstate.getValue(BlockSnow.LAYERS) == 7 : false))));
     }
 
     /**
@@ -2704,10 +2691,6 @@ public abstract class World implements IBlockAccess
 
     /**
      * Checks to see if a given block is both water and cold enough to freeze.
-     *  
-     * @param pos The block coordinates
-     * @param noWaterAdj If true, this method will only return true if there is a non-water block immediately adjacent
-     * to the specified block
      */
     public boolean canBlockFreeze(BlockPos pos, boolean noWaterAdj)
     {
@@ -2725,7 +2708,7 @@ public abstract class World implements IBlockAccess
                 IBlockState iblockstate = this.getBlockState(pos);
                 Block block = iblockstate.getBlock();
 
-                if ((block == Blocks.water || block == Blocks.flowing_water) && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
+                if ((block == Blocks.water || block == Blocks.flowing_water) && iblockstate.getValue(BlockLiquid.LEVEL) == 0)
                 {
                     if (!noWaterAdj)
                     {
@@ -2752,9 +2735,6 @@ public abstract class World implements IBlockAccess
 
     /**
      * Checks to see if a given block can accumulate snow from it snowing
-     *  
-     * @param pos The block coordinates
-     * @param checkLight If false, checking for the correct light values will be skipped
      */
     public boolean canSnowAt(BlockPos pos, boolean checkLight)
     {
@@ -2908,7 +2888,7 @@ public abstract class World implements IBlockAccess
                                     int i4 = i2 + enumfacing.getFrontOffsetX();
                                     int j4 = j2 + enumfacing.getFrontOffsetY();
                                     int k4 = k2 + enumfacing.getFrontOffsetZ();
-                                    blockpos$mutableblockpos.func_181079_c(i4, j4, k4);
+                                    blockpos$mutableblockpos.set(i4, j4, k4);
                                     int l4 = Math.max(1, this.getBlockState(blockpos$mutableblockpos).getBlock().getLightOpacity());
                                     i3 = this.getLightFor(lightType, blockpos$mutableblockpos);
 
@@ -3178,20 +3158,23 @@ public abstract class World implements IBlockAccess
         return axisalignedbb != null && !this.checkNoEntityCollision(axisalignedbb, entityIn) ? false : (block.getMaterial() == Material.circuits && blockIn == Blocks.anvil ? true : block.getMaterial().isReplaceable() && blockIn.canReplace(this, pos, side, itemStackIn));
     }
 
-    public int func_181545_F()
+    public int getSeaLevel()
     {
-        return this.field_181546_a;
+        return this.seaLevel;
     }
 
-    public void func_181544_b(int p_181544_1_)
+    /**
+     * Warning this value may not be respected in all cases as it is still hardcoded in many places.
+     */
+    public void setSeaLevel(int p_181544_1_)
     {
-        this.field_181546_a = p_181544_1_;
+        this.seaLevel = p_181544_1_;
     }
 
     public int getStrongPower(BlockPos pos, EnumFacing direction)
     {
         IBlockState iblockstate = this.getBlockState(pos);
-        return iblockstate.getBlock().isProvidingStrongPower(this, pos, iblockstate, direction);
+        return iblockstate.getBlock().getStrongPower(this, pos, iblockstate, direction);
     }
 
     public WorldType getWorldType()
@@ -3263,7 +3246,7 @@ public abstract class World implements IBlockAccess
     {
         IBlockState iblockstate = this.getBlockState(pos);
         Block block = iblockstate.getBlock();
-        return block.isNormalCube() ? this.getStrongPower(pos) : block.isProvidingWeakPower(this, pos, iblockstate, facing);
+        return block.isNormalCube() ? this.getStrongPower(pos) : block.getWeakPower(this, pos, iblockstate, facing);
     }
 
     public boolean isBlockPowered(BlockPos pos)
@@ -3579,7 +3562,10 @@ public abstract class World implements IBlockAccess
         return (double)this.getRainStrength(1.0F) > 0.2D;
     }
 
-    public boolean canLightningStrike(BlockPos strikePosition)
+    /**
+     * Check if precipitation is currently happening at a position
+     */
+    public boolean isRainingAt(BlockPos strikePosition)
     {
         if (!this.isRaining())
         {
@@ -3596,7 +3582,7 @@ public abstract class World implements IBlockAccess
         else
         {
             BiomeGenBase biomegenbase = this.getBiomeGenForCoords(strikePosition);
-            return biomegenbase.getEnableSnow() ? false : (this.canSnowAt(strikePosition, false) ? false : biomegenbase.canSpawnLightningBolt());
+            return biomegenbase.getEnableSnow() ? false : (this.canSnowAt(strikePosition, false) ? false : biomegenbase.canRain());
         }
     }
 
@@ -3648,7 +3634,7 @@ public abstract class World implements IBlockAccess
 
     public void playAuxSFX(int p_175718_1_, BlockPos pos, int p_175718_3_)
     {
-        this.playAuxSFXAtEntity((EntityPlayer)null, p_175718_1_, pos, p_175718_3_);
+        this.playAuxSFXAtEntity(null, p_175718_1_, pos, p_175718_3_);
     }
 
     public void playAuxSFXAtEntity(EntityPlayer player, int sfxType, BlockPos pos, int p_180498_4_)
@@ -3666,8 +3652,8 @@ public abstract class World implements IBlockAccess
             CrashReportCategory crashreportcategory = crashreport.makeCategory("Level event being played");
             crashreportcategory.addCrashSection("Block coordinates", CrashReportCategory.getCoordinateInfo(pos));
             crashreportcategory.addCrashSection("Event source", player);
-            crashreportcategory.addCrashSection("Event type", Integer.valueOf(sfxType));
-            crashreportcategory.addCrashSection("Event data", Integer.valueOf(p_180498_4_));
+            crashreportcategory.addCrashSection("Event type", sfxType);
+            crashreportcategory.addCrashSection("Event data", p_180498_4_);
             throw new ReportedException(crashreport);
         }
     }

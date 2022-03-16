@@ -34,8 +34,7 @@ public class BlockEndPortal extends BlockContainer
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        float f = 0.0625F;
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.0625f, 1f);
     }
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
@@ -45,8 +44,6 @@ public class BlockEndPortal extends BlockContainer
 
     /**
      * Add all collision boxes of this Block to the list that intersect with the given mask.
-     *  
-     * @param collidingEntity the Entity colliding with this Block
      */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
@@ -79,9 +76,7 @@ public class BlockEndPortal extends BlockContainer
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
         if (entityIn.ridingEntity == null && entityIn.riddenByEntity == null && !worldIn.isRemote)
-        {
             entityIn.travelToDimension(1);
-        }
     }
 
     public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
@@ -92,12 +87,9 @@ public class BlockEndPortal extends BlockContainer
         double d3 = 0.0D;
         double d4 = 0.0D;
         double d5 = 0.0D;
-        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
+        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return null;

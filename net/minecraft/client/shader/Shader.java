@@ -39,8 +39,8 @@ public class Shader
     {
         this.listAuxNames.add(this.listAuxNames.size(), p_148041_1_);
         this.listAuxFramebuffers.add(this.listAuxFramebuffers.size(), p_148041_2_);
-        this.listAuxWidths.add(this.listAuxWidths.size(), Integer.valueOf(p_148041_3_));
-        this.listAuxHeights.add(this.listAuxHeights.size(), Integer.valueOf(p_148041_4_));
+        this.listAuxWidths.add(this.listAuxWidths.size(), p_148041_3_);
+        this.listAuxHeights.add(this.listAuxHeights.size(), p_148041_4_);
     }
 
     private void preLoadShader()
@@ -73,7 +73,7 @@ public class Shader
         for (int i = 0; i < this.listAuxFramebuffers.size(); ++i)
         {
             this.manager.addSamplerTexture((String)this.listAuxNames.get(i), this.listAuxFramebuffers.get(i));
-            this.manager.getShaderUniformOrDefault("AuxSize" + i).set((float)((Integer)this.listAuxWidths.get(i)).intValue(), (float)((Integer)this.listAuxHeights.get(i)).intValue());
+            this.manager.getShaderUniformOrDefault("AuxSize" + i).set((float)this.listAuxWidths.get(i), (float)this.listAuxHeights.get(i));
         }
 
         this.manager.getShaderUniformOrDefault("ProjMat").set(this.projectionMatrix);
@@ -90,10 +90,10 @@ public class Shader
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos(0.0D, (double)f1, 500.0D).func_181669_b(255, 255, 255, 255).endVertex();
-        worldrenderer.pos((double)f, (double)f1, 500.0D).func_181669_b(255, 255, 255, 255).endVertex();
-        worldrenderer.pos((double)f, 0.0D, 500.0D).func_181669_b(255, 255, 255, 255).endVertex();
-        worldrenderer.pos(0.0D, 0.0D, 500.0D).func_181669_b(255, 255, 255, 255).endVertex();
+        worldrenderer.pos(0.0D, (double)f1, 500.0D).color(255, 255, 255, 255).endVertex();
+        worldrenderer.pos((double)f, (double)f1, 500.0D).color(255, 255, 255, 255).endVertex();
+        worldrenderer.pos((double)f, 0.0D, 500.0D).color(255, 255, 255, 255).endVertex();
+        worldrenderer.pos(0.0D, 0.0D, 500.0D).color(255, 255, 255, 255).endVertex();
         tessellator.draw();
         GlStateManager.depthMask(true);
         GlStateManager.colorMask(true, true, true, true);

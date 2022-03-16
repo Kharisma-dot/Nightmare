@@ -18,19 +18,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Plane;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class BlockEnderChest extends BlockContainer
 {
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final PropertyDirection FACING = PropertyDirection.create("facing", Plane.HORIZONTAL);
 
     protected BlockEnderChest()
     {
         super(Material.rock);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         this.setCreativeTab(CreativeTabs.tabDecorations);
-        this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
+        this.setBlockBounds(0.0625F, 0f, 0.0625F, 0.9375F, 0.875F, 0.9375F);
     }
 
     /**
@@ -56,8 +57,6 @@ public class BlockEnderChest extends BlockContainer
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -99,28 +98,17 @@ public class BlockEnderChest extends BlockContainer
         InventoryEnderChest inventoryenderchest = playerIn.getInventoryEnderChest();
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (inventoryenderchest != null && tileentity instanceof TileEntityEnderChest)
+        if (inventoryenderchest != null 
+        	&& tileentity instanceof TileEntityEnderChest 
+        	&& !worldIn.getBlockState(pos.up()).getBlock().isNormalCube() 
+        	&& !worldIn.isRemote)
         {
-            if (worldIn.getBlockState(pos.up()).getBlock().isNormalCube())
-            {
-                return true;
-            }
-            else if (worldIn.isRemote)
-            {
-                return true;
-            }
-            else
-            {
-                inventoryenderchest.setChestTileEntity((TileEntityEnderChest)tileentity);
-                playerIn.displayGUIChest(inventoryenderchest);
-                playerIn.triggerAchievement(StatList.field_181738_V);
-                return true;
-            }
+            inventoryenderchest.setChestTileEntity((TileEntityEnderChest)tileentity);
+            playerIn.displayGUIChest(inventoryenderchest);
+            playerIn.triggerAchievement(StatList.field_181738_V);
         }
-        else
-        {
-            return true;
-        }
+        
+        return true;
     }
 
     /**
@@ -143,7 +131,7 @@ public class BlockEnderChest extends BlockContainer
             double d3 = (double)(rand.nextFloat() * (float)j);
             double d4 = ((double)rand.nextFloat() - 0.5D) * 0.125D;
             double d5 = (double)(rand.nextFloat() * (float)k);
-            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5, new int[0]);
+            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
         }
     }
 
@@ -155,9 +143,7 @@ public class BlockEnderChest extends BlockContainer
         EnumFacing enumfacing = EnumFacing.getFront(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
             enumfacing = EnumFacing.NORTH;
-        }
 
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
@@ -167,7 +153,7 @@ public class BlockEnderChest extends BlockContainer
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((EnumFacing)state.getValue(FACING)).getIndex();
+        return state.getValue(FACING).getIndex();
     }
 
     protected BlockState createBlockState()

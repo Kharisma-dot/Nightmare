@@ -59,12 +59,12 @@ public class ItemPotion extends Item
         }
         else
         {
-            List<PotionEffect> list = (List)this.effectCache.get(Integer.valueOf(stack.getMetadata()));
+            List<PotionEffect> list = (List)this.effectCache.get(stack.getMetadata());
 
             if (list == null)
             {
                 list = PotionHelper.getPotionEffects(stack.getMetadata(), false);
-                this.effectCache.put(Integer.valueOf(stack.getMetadata()), list);
+                this.effectCache.put(stack.getMetadata(), list);
             }
 
             return list;
@@ -73,12 +73,12 @@ public class ItemPotion extends Item
 
     public List<PotionEffect> getEffects(int meta)
     {
-        List<PotionEffect> list = (List)this.effectCache.get(Integer.valueOf(meta));
+        List<PotionEffect> list = (List)this.effectCache.get(meta);
 
         if (list == null)
         {
             list = PotionHelper.getPotionEffects(meta, false);
-            this.effectCache.put(Integer.valueOf(meta), list);
+            this.effectCache.put(meta, list);
         }
 
         return list;
@@ -241,9 +241,6 @@ public class ItemPotion extends Item
 
     /**
      * allows items to add custom lines of information to the mouseover description
-     *  
-     * @param tooltip All lines to display in the Item's tooltip. This is a List of Strings.
-     * @param advanced Whether the setting "Advanced tooltips" is enabled
      */
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
@@ -338,8 +335,6 @@ public class ItemPotion extends Item
 
     /**
      * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     *  
-     * @param subItems The List of sub-items. This is a List of ItemStacks.
      */
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
@@ -382,18 +377,18 @@ public class ItemPotion extends Item
 
                         if (list != null && !list.isEmpty())
                         {
-                            SUB_ITEMS_CACHE.put(list, Integer.valueOf(i1));
+                            SUB_ITEMS_CACHE.put(list, i1);
                         }
                     }
                 }
             }
         }
 
-        Iterator iterator = SUB_ITEMS_CACHE.values().iterator();
+        Iterator<Integer> iterator = SUB_ITEMS_CACHE.values().iterator();
 
         while (iterator.hasNext())
         {
-            int j1 = ((Integer)iterator.next()).intValue();
+            int j1 = iterator.next();
             subItems.add(new ItemStack(itemIn, 1, j1));
         }
     }

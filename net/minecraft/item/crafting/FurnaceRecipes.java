@@ -65,10 +65,6 @@ public class FurnaceRecipes
 
     /**
      * Adds a smelting recipe, where the input item is an instance of Block.
-     *  
-     * @param input The block to be used as the input for the smelting recipe.
-     * @param stack The output for this recipe in the form of an ItemStack.
-     * @param experience The amount of experience this recipe will give the player.
      */
     public void addSmeltingRecipeForBlock(Block input, ItemStack stack, float experience)
     {
@@ -77,10 +73,6 @@ public class FurnaceRecipes
 
     /**
      * Adds a smelting recipe using an Item as the input item.
-     *  
-     * @param input The input Item to be used for this recipe.
-     * @param stack The output ItemStack for this recipe.
-     * @param experience The amount of experience this recipe will give the player.
      */
     public void addSmelting(Item input, ItemStack stack, float experience)
     {
@@ -89,15 +81,11 @@ public class FurnaceRecipes
 
     /**
      * Adds a smelting recipe using an ItemStack as the input for the recipe.
-     *  
-     * @param input The input ItemStack for this recipe.
-     * @param stack The output ItemStack for this recipe.
-     * @param experience The amount of experience this recipe will give the player.
      */
     public void addSmeltingRecipe(ItemStack input, ItemStack stack, float experience)
     {
         this.smeltingList.put(input, stack);
-        this.experienceList.put(stack, Float.valueOf(experience));
+        this.experienceList.put(stack, experience);
     }
 
     /**
@@ -135,7 +123,7 @@ public class FurnaceRecipes
         {
             if (this.compareItemStacks(stack, (ItemStack)entry.getKey()))
             {
-                return ((Float)entry.getValue()).floatValue();
+                return entry.getValue();
             }
         }
 

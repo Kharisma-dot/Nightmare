@@ -97,8 +97,8 @@ public class Cartesian
             private void endOfData()
             {
                 this.index = -1;
-                Arrays.fill(this.iterators, (Object)null);
-                Arrays.fill(this.results, (Object)null);
+                Arrays.fill(this.iterators, null);
+                Arrays.fill(this.results, null);
             }
 
             public boolean hasNext()

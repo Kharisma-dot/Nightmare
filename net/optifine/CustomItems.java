@@ -43,8 +43,8 @@ import net.optifine.util.StrUtils;
 
 public class CustomItems
 {
-    private static CustomItemProperties[][] itemProperties = (CustomItemProperties[][])null;
-    private static CustomItemProperties[][] enchantmentProperties = (CustomItemProperties[][])null;
+    private static CustomItemProperties[][] itemProperties = null;
+    private static CustomItemProperties[][] enchantmentProperties = null;
     private static Map mapPotionIds = null;
     private static ItemModelGenerator itemModelGenerator = new ItemModelGenerator();
     private static boolean useGlint = true;
@@ -65,8 +65,8 @@ public class CustomItems
 
     public static void update()
     {
-        itemProperties = (CustomItemProperties[][])null;
-        enchantmentProperties = (CustomItemProperties[][])null;
+        itemProperties = null;
+        enchantmentProperties = null;
         useGlint = true;
 
         if (Config.isCustomItems())
@@ -84,12 +84,12 @@ public class CustomItems
 
             if (itemProperties.length <= 0)
             {
-                itemProperties = (CustomItemProperties[][])null;
+                itemProperties = null;
             }
 
             if (enchantmentProperties.length <= 0)
             {
-                enchantmentProperties = (CustomItemProperties[][])null;
+                enchantmentProperties = null;
             }
         }
     }
@@ -124,7 +124,7 @@ public class CustomItems
 
     private static void update(IResourcePack rp)
     {
-        String[] astring = ResUtils.collectFiles(rp, (String)"mcpatcher/cit/", (String)".properties", (String[])null);
+        String[] astring = ResUtils.collectFiles(rp, (String)"mcpatcher/cit/", (String)".properties", null);
         Map map = makeAutoImageProperties(rp);
 
         if (map.size() > 0)
@@ -165,6 +165,7 @@ public class CustomItems
 
                     Properties properties = new PropertiesOrdered();
                     properties.load(inputstream);
+                    inputstream.close();
                     customitemproperties = new CustomItemProperties(properties, s);
                 }
 
@@ -489,17 +490,17 @@ public class CustomItems
         return list;
     }
 
-    private static CustomItemProperties[][] propertyListToArray(List lists)
+    private static CustomItemProperties[][] propertyListToArray(List list)
     {
-        CustomItemProperties[][] acustomitemproperties = new CustomItemProperties[lists.size()][];
+        CustomItemProperties[][] acustomitemproperties = new CustomItemProperties[list.size()][];
 
-        for (int i = 0; i < lists.size(); ++i)
+        for (int i = 0; i < list.size(); ++i)
         {
-            List list = (List)lists.get(i);
+            List list1 = (List)list.get(i);
 
-            if (list != null)
+            if (list1 != null)
             {
-                CustomItemProperties[] acustomitemproperties1 = (CustomItemProperties[])((CustomItemProperties[])list.toArray(new CustomItemProperties[list.size()]));
+                CustomItemProperties[] acustomitemproperties1 = (CustomItemProperties[])((CustomItemProperties[])list1.toArray(new CustomItemProperties[list1.size()]));
                 Arrays.sort(acustomitemproperties1, new CustomItemsComparator());
                 acustomitemproperties[i] = acustomitemproperties1;
             }
@@ -545,22 +546,22 @@ public class CustomItems
         }
     }
 
-    private static void addToList(CustomItemProperties cp, List lists, int id)
+    private static void addToList(CustomItemProperties cp, List list, int id)
     {
-        while (id >= lists.size())
+        while (id >= list.size())
         {
-            lists.add(null);
+            list.add(null);
         }
 
-        List list = (List)lists.get(id);
+        List list1 = (List)list.get(id);
 
-        if (list == null)
+        if (list1 == null)
         {
-            list = new ArrayList();
-            list.set(id, list);
+            list1 = new ArrayList();
+            list.set(id, list1);
         }
 
-        list.add(cp);
+        list1.add(cp);
     }
 
     public static IBakedModel getCustomItemModel(ItemStack itemStack, IBakedModel model, ResourceLocation modelLocation, boolean fullModel)
@@ -679,7 +680,7 @@ public class CustomItems
                     {
                         CustomItemProperties customitemproperties = acustomitemproperties[j];
 
-                        if (customitemproperties.type == type && matchesProperties(customitemproperties, itemStack, (int[][])null))
+                        if (customitemproperties.type == type && matchesProperties(customitemproperties, itemStack, null))
                         {
                             return customitemproperties;
                         }
@@ -877,7 +878,7 @@ public class CustomItems
                                     set = new HashSet();
                                 }
 
-                                if (set.add(Integer.valueOf(j)) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
+                                if (set.add(j) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
                                 {
                                     texturemanager.bindTexture(customitemproperties.textureLocation);
                                     float f = customitemproperties.getTextureWidth(texturemanager);
@@ -970,7 +971,7 @@ public class CustomItems
                                     set = new HashSet();
                                 }
 
-                                if (set.add(Integer.valueOf(j)) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
+                                if (set.add(j) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
                                 {
                                     texturemanager.bindTexture(customitemproperties.textureLocation);
                                     float f = customitemproperties.getTextureWidth(texturemanager);

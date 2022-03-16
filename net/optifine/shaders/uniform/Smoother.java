@@ -14,13 +14,12 @@ public class Smoother
     {
         synchronized (mapSmoothValues)
         {
-            Integer integer = Integer.valueOf(id);
-            SmoothFloat smoothfloat = (SmoothFloat)mapSmoothValues.get(integer);
+            SmoothFloat smoothfloat = (SmoothFloat)mapSmoothValues.get(id);
 
             if (smoothfloat == null)
             {
                 smoothfloat = new SmoothFloat(value, timeFadeUpSec, timeFadeDownSec);
-                mapSmoothValues.put(integer, smoothfloat);
+                mapSmoothValues.put(id, smoothfloat);
             }
 
             float f = smoothfloat.getSmoothValue(value, timeFadeUpSec, timeFadeDownSec);

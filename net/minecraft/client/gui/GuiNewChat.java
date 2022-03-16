@@ -9,9 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
-import nightmare.Nightmare;
-import nightmare.utils.ChatUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,77 +18,43 @@ public class GuiNewChat extends Gui
     private final Minecraft mc;
     private final List<String> sentMessages = Lists.<String>newArrayList();
     private final List<ChatLine> chatLines = Lists.<ChatLine>newArrayList();
-    private final List<ChatLine> field_146253_i = Lists.<ChatLine>newArrayList();
+    private final List<ChatLine> drawnChatLines = Lists.<ChatLine>newArrayList();
     private int scrollPos;
     private boolean isScrolled;
-    
-    //BetterChat
-    private float percentComplete;
-    private int newLines;
-    private long prevMillis = System.currentTimeMillis();
-    private boolean configuring;
-    private float animationPercent;
-    private int lineBeingDrawn;
-    
-    //CompactChat
-    private String lastMessage = "";
-    private int sameMessageAmount, line;
-    
+
     public GuiNewChat(Minecraft mcIn)
     {
         this.mc = mcIn;
     }
 
-    private void updatePercentage(long diff) {
-        if (percentComplete < 1) {
-        	percentComplete += 0.004f * diff;
-        }
-        percentComplete = this.clamp(percentComplete, 0, 1);
-    }
-    
-    public void drawChat(int p_146230_1_)
+    public void drawChat(int updateCounter)
     {
-        long current = System.currentTimeMillis();
-        long diff = current - prevMillis;
-        prevMillis = current;
-        updatePercentage(diff);
-        float t = percentComplete;
-        animationPercent = this.clamp(1 - (--t) * t * t * t, 0, 1);
-        
         if (this.mc.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN)
         {
             int i = this.getLineCount();
             boolean flag = false;
             int j = 0;
-            int k = this.field_146253_i.size();
+            int k = this.drawnChatLines.size();
             float f = this.mc.gameSettings.chatOpacity * 0.9F + 0.1F;
 
             if (k > 0)
             {
                 if (this.getChatOpen())
-                {
                     flag = true;
-                }
 
                 float f1 = this.getChatScale();
                 int l = MathHelper.ceiling_float_int((float)this.getChatWidth() / f1);
-                float y = 20.0F;
-                
-                if(Nightmare.instance.moduleManager.getModuleByName("Chat").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Chat"), "BetterChat").getValBoolean()) {
-                	y += (9 - 9 * animationPercent) * this.getChatScale();
-                }
                 GlStateManager.pushMatrix();
-                
-                GlStateManager.translate(2.0F, y, 0.0F);
+                GlStateManager.translate(2.0F, 20.0F, 0.0F);
                 GlStateManager.scale(f1, f1, 1.0F);
 
-                for (int i1 = 0; i1 + this.scrollPos < this.field_146253_i.size() && i1 < i; ++i1)
+                for (int i1 = 0; i1 + this.scrollPos < this.drawnChatLines.size() && i1 < i; ++i1)
                 {
-                    ChatLine chatline = (ChatLine)this.field_146253_i.get(i1 + this.scrollPos);
-                    
+                    ChatLine chatline = (ChatLine)this.drawnChatLines.get(i1 + this.scrollPos);
+
                     if (chatline != null)
                     {
-                        int j1 = p_146230_1_ - chatline.getUpdatedCounter();
+                        int j1 = updateCounter - chatline.getUpdatedCounter();
 
                         if (j1 < 200 || flag)
                         {
@@ -103,9 +66,7 @@ public class GuiNewChat extends Gui
                             int l1 = (int)(255.0D * d0);
 
                             if (flag)
-                            {
                                 l1 = 255;
-                            }
 
                             l1 = (int)((float)l1 * f);
                             ++j;
@@ -114,11 +75,7 @@ public class GuiNewChat extends Gui
                             {
                                 int i2 = 0;
                                 int j2 = -i1 * 9;
-                                
-                                if(Nightmare.instance.moduleManager.getModuleByName("Chat").isDisabled() || (Nightmare.instance.moduleManager.getModuleByName("Chat").isToggled() && !Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Chat"), "ClearChat").getValBoolean())) {
-                                    drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
-                                }
-                                
+                                drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
                                 String s = chatline.getChatComponent().getFormattedText();
                                 GlStateManager.enableBlend();
                                 this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
@@ -142,10 +99,8 @@ public class GuiNewChat extends Gui
                     {
                         int k3 = j3 > 0 ? 170 : 96;
                         int l3 = this.isScrolled ? 13382451 : 3355562;
-                        if(Nightmare.instance.moduleManager.getModuleByName("Chat").isDisabled() || (Nightmare.instance.moduleManager.getModuleByName("Chat").isToggled() && !Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Chat"), "ClearChat").getValBoolean())) {
-                            drawRect(0, -j3, 2, -j3 - k1, l3 + (k3 << 24));
-                            drawRect(2, -j3, 1, -j3 - k1, 13421772 + (k3 << 24));
-                        }
+                        drawRect(0, -j3, 2, -j3 - k1, l3 + (k3 << 24));
+                        drawRect(2, -j3, 1, -j3 - k1, 13421772 + (k3 << 24));
                     }
                 }
 
@@ -159,54 +114,32 @@ public class GuiNewChat extends Gui
      */
     public void clearChatMessages()
     {
-        this.field_146253_i.clear();
+        this.drawnChatLines.clear();
         this.chatLines.clear();
         this.sentMessages.clear();
     }
 
-    public void printChatMessage(IChatComponent p_146227_1_)
+    public void printChatMessage(IChatComponent chatComponent)
     {
-    	if(Nightmare.instance.moduleManager.getModuleByName("Chat").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Chat"), "CompactChat").getValBoolean()) {
-        	if (p_146227_1_.getUnformattedText().equals(lastMessage)) {
-        		Minecraft.getMinecraft().ingameGUI.getChatGUI().deleteChatLine(line);
-        		sameMessageAmount++;
-        		lastMessage = p_146227_1_.getUnformattedText();
-        		p_146227_1_.appendText(ChatUtils.WHITE + " [x" + sameMessageAmount + "]");
-        	} else {
-        		sameMessageAmount = 1;
-        		lastMessage = p_146227_1_.getUnformattedText();
-        	}
-     
-        	line++;
-     
-        	if (line > 256) {
-        		line = 0;
-        	}
-    	}
-    	
-    	
-        this.printChatMessageWithOptionalDeletion(p_146227_1_, (Nightmare.instance.moduleManager.getModuleByName("Chat").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Chat"), "CompactChat").getValBoolean()) ? line : 0);
+        this.printChatMessageWithOptionalDeletion(chatComponent, 0);
     }
 
     /**
      * prints the ChatComponent to Chat. If the ID is not 0, deletes an existing Chat Line of that ID from the GUI
      */
-    public void printChatMessageWithOptionalDeletion(IChatComponent p_146234_1_, int p_146234_2_)
+    public void printChatMessageWithOptionalDeletion(IChatComponent chatComponent, int chatLineId)
     {
-        percentComplete = 0;
-        this.setChatLine(p_146234_1_, p_146234_2_, this.mc.ingameGUI.getUpdateCounter(), false);
-        logger.info("[CHAT] " + p_146234_1_.getUnformattedText());
+        this.setChatLine(chatComponent, chatLineId, this.mc.ingameGUI.getUpdateCounter(), false);
+        logger.info("[CHAT] " + chatComponent.getUnformattedText());
     }
 
-    private void setChatLine(IChatComponent p_146237_1_, int p_146237_2_, int p_146237_3_, boolean p_146237_4_)
+    private void setChatLine(IChatComponent chatComponent, int chatLineId, int updateCounter, boolean displayOnly)
     {
-        if (p_146237_2_ != 0)
-        {
-            this.deleteChatLine(p_146237_2_);
-        }
+        if (chatLineId != 0)
+            this.deleteChatLine(chatLineId);
 
         int i = MathHelper.floor_float((float)this.getChatWidth() / this.getChatScale());
-        List<IChatComponent> list = GuiUtilRenderComponents.func_178908_a(p_146237_1_, i, this.mc.fontRendererObj, false, false);
+        List<IChatComponent> list = GuiUtilRenderComponents.splitText(chatComponent, i, this.mc.fontRendererObj, false, false);
         boolean flag = this.getChatOpen();
 
         for (IChatComponent ichatcomponent : list)
@@ -217,28 +150,24 @@ public class GuiNewChat extends Gui
                 this.scroll(1);
             }
 
-            this.field_146253_i.add(0, new ChatLine(p_146237_3_, ichatcomponent, p_146237_2_));
+            this.drawnChatLines.add(0, new ChatLine(updateCounter, ichatcomponent, chatLineId));
         }
 
-        while (this.field_146253_i.size() > 100)
-        {
-            this.field_146253_i.remove(this.field_146253_i.size() - 1);
-        }
+        while (this.drawnChatLines.size() > 100)
+            this.drawnChatLines.remove(this.drawnChatLines.size() - 1);
 
-        if (!p_146237_4_)
+        if (!displayOnly)
         {
-            this.chatLines.add(0, new ChatLine(p_146237_3_, p_146237_1_, p_146237_2_));
+            this.chatLines.add(0, new ChatLine(updateCounter, chatComponent, chatLineId));
 
             while (this.chatLines.size() > 100)
-            {
                 this.chatLines.remove(this.chatLines.size() - 1);
-            }
         }
     }
 
     public void refreshChat()
     {
-        this.field_146253_i.clear();
+        this.drawnChatLines.clear();
         this.resetScroll();
 
         for (int i = this.chatLines.size() - 1; i >= 0; --i)
@@ -255,13 +184,13 @@ public class GuiNewChat extends Gui
 
     /**
      * Adds this string to the list of sent messages, for recall using the up/down arrow keys
+     *  
+     * @param message The message to add in the sendMessage List
      */
-    public void addToSentMessages(String p_146239_1_)
+    public void addToSentMessages(String message)
     {
-        if (this.sentMessages.isEmpty() || !((String)this.sentMessages.get(this.sentMessages.size() - 1)).equals(p_146239_1_))
-        {
-            this.sentMessages.add(p_146239_1_);
-        }
+        if (this.sentMessages.isEmpty() || !((String)this.sentMessages.get(this.sentMessages.size() - 1)).equals(message))
+            this.sentMessages.add(message);
     }
 
     /**
@@ -275,16 +204,16 @@ public class GuiNewChat extends Gui
 
     /**
      * Scrolls the chat by the given number of lines.
+     *  
+     * @param amount The amount to scroll
      */
-    public void scroll(int p_146229_1_)
+    public void scroll(int amount)
     {
-        this.scrollPos += p_146229_1_;
-        int i = this.field_146253_i.size();
+        this.scrollPos += amount;
+        int i = this.drawnChatLines.size();
 
         if (this.scrollPos > i - this.getLineCount())
-        {
             this.scrollPos = i - this.getLineCount();
-        }
 
         if (this.scrollPos <= 0)
         {
@@ -295,61 +224,54 @@ public class GuiNewChat extends Gui
 
     /**
      * Gets the chat component under the mouse
+     *  
+     * @param mouseX The x position of the mouse
+     * @param mouseY The y position of the mouse
      */
-    public IChatComponent getChatComponent(int p_146236_1_, int p_146236_2_)
+    public IChatComponent getChatComponent(int mouseX, int mouseY)
     {
         if (!this.getChatOpen())
-        {
             return null;
-        }
         else
         {
             ScaledResolution scaledresolution = new ScaledResolution(this.mc);
             int i = scaledresolution.getScaleFactor();
             float f = this.getChatScale();
-            int j = p_146236_1_ / i - 3;
-            int k = p_146236_2_ / i - 27;
+            int j = mouseX / i - 3;
+            int k = mouseY / i - 27;
             j = MathHelper.floor_float((float)j / f);
             k = MathHelper.floor_float((float)k / f);
 
             if (j >= 0 && k >= 0)
             {
-                int l = Math.min(this.getLineCount(), this.field_146253_i.size());
+                int l = Math.min(this.getLineCount(), this.drawnChatLines.size());
 
                 if (j <= MathHelper.floor_float((float)this.getChatWidth() / this.getChatScale()) && k < this.mc.fontRendererObj.FONT_HEIGHT * l + l)
                 {
                     int i1 = k / this.mc.fontRendererObj.FONT_HEIGHT + this.scrollPos;
 
-                    if (i1 >= 0 && i1 < this.field_146253_i.size())
+                    if (i1 >= 0 && i1 < this.drawnChatLines.size())
                     {
-                        ChatLine chatline = (ChatLine)this.field_146253_i.get(i1);
+                        ChatLine chatline = (ChatLine)this.drawnChatLines.get(i1);
                         int j1 = 0;
 
                         for (IChatComponent ichatcomponent : chatline.getChatComponent())
-                        {
                             if (ichatcomponent instanceof ChatComponentText)
                             {
                                 j1 += this.mc.fontRendererObj.getStringWidth(GuiUtilRenderComponents.func_178909_a(((ChatComponentText)ichatcomponent).getChatComponentText_TextValue(), false));
 
                                 if (j1 > j)
-                                {
                                     return ichatcomponent;
-                                }
                             }
-                        }
                     }
 
                     return null;
                 }
                 else
-                {
                     return null;
-                }
             }
             else
-            {
                 return null;
-            }
         }
     }
 
@@ -363,19 +285,19 @@ public class GuiNewChat extends Gui
 
     /**
      * finds and deletes a Chat line by ID
+     *  
+     * @param id The ChatLine's id to delete
      */
-    public void deleteChatLine(int p_146242_1_)
+    public void deleteChatLine(int id)
     {
-        Iterator<ChatLine> iterator = this.field_146253_i.iterator();
+        Iterator<ChatLine> iterator = this.drawnChatLines.iterator();
 
         while (iterator.hasNext())
         {
             ChatLine chatline = (ChatLine)iterator.next();
 
-            if (chatline.getChatLineID() == p_146242_1_)
-            {
+            if (chatline.getChatLineID() == id)
                 iterator.remove();
-            }
         }
 
         iterator = this.chatLines.iterator();
@@ -384,7 +306,7 @@ public class GuiNewChat extends Gui
         {
             ChatLine chatline1 = (ChatLine)iterator.next();
 
-            if (chatline1.getChatLineID() == p_146242_1_)
+            if (chatline1.getChatLineID() == id)
             {
                 iterator.remove();
                 break;
@@ -410,26 +332,22 @@ public class GuiNewChat extends Gui
         return this.mc.gameSettings.chatScale;
     }
 
-    public static int calculateChatboxWidth(float p_146233_0_)
+    public static int calculateChatboxWidth(float scale)
     {
         int i = 320;
         int j = 40;
-        return MathHelper.floor_float(p_146233_0_ * (float)(i - j) + (float)j);
+        return MathHelper.floor_float(scale * (float)(i - j) + (float)j);
     }
 
-    public static int calculateChatboxHeight(float p_146243_0_)
+    public static int calculateChatboxHeight(float scale)
     {
         int i = 180;
         int j = 20;
-        return MathHelper.floor_float(p_146243_0_ * (float)(i - j) + (float)j);
+        return MathHelper.floor_float(scale * (float)(i - j) + (float)j);
     }
 
     public int getLineCount()
     {
         return this.getChatHeight() / 9;
-    }
-    
-    public float clamp(float number, float min, float max) {
-        return number < min ? min : Math.min(number, max);
     }
 }

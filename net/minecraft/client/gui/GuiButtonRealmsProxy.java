@@ -56,9 +56,7 @@ public class GuiButtonRealmsProxy extends GuiButton
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
     {
         if (super.mousePressed(mc, mouseX, mouseY))
-        {
             this.realmsButton.clicked(mouseX, mouseY);
-        }
 
         return super.mousePressed(mc, mouseX, mouseY);
     }
@@ -98,7 +96,7 @@ public class GuiButtonRealmsProxy extends GuiButton
         return super.getHoverState(p_154312_1_);
     }
 
-    public int func_175232_g()
+    public int getHeight()
     {
         return this.height;
     }

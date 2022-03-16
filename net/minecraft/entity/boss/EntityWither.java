@@ -163,7 +163,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 
         if (this.motionX * this.motionX + this.motionZ * this.motionZ > 0.05000000074505806D)
         {
-            this.rotationYaw = (float)MathHelper.func_181159_b(this.motionZ, this.motionX) * (180F / (float)Math.PI) - 90.0F;
+            this.rotationYaw = (float)MathHelper.atan2(this.motionZ, this.motionX) * (180F / (float)Math.PI) - 90.0F;
         }
 
         super.onLivingUpdate();
@@ -193,8 +193,8 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
                 double d7 = entity1.posY + (double)entity1.getEyeHeight() - d12;
                 double d8 = entity1.posZ - d13;
                 double d9 = (double)MathHelper.sqrt_double(d6 * d6 + d8 * d8);
-                float f = (float)(MathHelper.func_181159_b(d8, d6) * 180.0D / Math.PI) - 90.0F;
-                float f1 = (float)(-(MathHelper.func_181159_b(d7, d9) * 180.0D / Math.PI));
+                float f = (float)(MathHelper.atan2(d8, d6) * 180.0D / Math.PI) - 90.0F;
+                float f1 = (float)(-(MathHelper.atan2(d7, d9) * 180.0D / Math.PI));
                 this.field_82220_d[j] = this.func_82204_b(this.field_82220_d[j], f1, 40.0F);
                 this.field_82221_e[j] = this.func_82204_b(this.field_82221_e[j], f, 10.0F);
             }
@@ -236,7 +236,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 
             if (j1 <= 0)
             {
-                this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 7.0F, false, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
+                this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 7.0F, false, this.worldObj.getGameRules().getBoolean("mobGriefing"));
                 this.worldObj.playBroadcastSound(1013, new BlockPos(this), 0);
             }
 
@@ -343,7 +343,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
             {
                 --this.blockBreakCounter;
 
-                if (this.blockBreakCounter == 0 && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
+                if (this.blockBreakCounter == 0 && this.worldObj.getGameRules().getBoolean("mobGriefing"))
                 {
                     int i1 = MathHelper.floor_double(this.posY);
                     int l1 = MathHelper.floor_double(this.posX);
@@ -362,7 +362,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
                                 BlockPos blockpos = new BlockPos(i3, k, l);
                                 Block block = this.worldObj.getBlockState(blockpos).getBlock();
 
-                                if (block.getMaterial() != Material.air && func_181033_a(block))
+                                if (block.getMaterial() != Material.air && canDestroyBlock(block))
                                 {
                                     flag = this.worldObj.destroyBlock(blockpos, true) || flag;
                                 }
@@ -372,7 +372,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 
                     if (flag)
                     {
-                        this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1012, new BlockPos(this), 0);
+                        this.worldObj.playAuxSFXAtEntity(null, 1012, new BlockPos(this), 0);
                     }
                 }
             }
@@ -384,7 +384,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
         }
     }
 
-    public static boolean func_181033_a(Block p_181033_0_)
+    public static boolean canDestroyBlock(Block p_181033_0_)
     {
         return p_181033_0_ != Blocks.bedrock && p_181033_0_ != Blocks.end_portal && p_181033_0_ != Blocks.end_portal_frame && p_181033_0_ != Blocks.command_block && p_181033_0_ != Blocks.barrier;
     }
@@ -470,7 +470,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
      */
     private void launchWitherSkullToCoords(int p_82209_1_, double x, double y, double z, boolean invulnerable)
     {
-        this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1014, new BlockPos(this), 0);
+        this.worldObj.playAuxSFXAtEntity(null, 1014, new BlockPos(this), 0);
         double d0 = this.func_82214_u(p_82209_1_);
         double d1 = this.func_82208_v(p_82209_1_);
         double d2 = this.func_82213_w(p_82209_1_);
@@ -493,9 +493,9 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
     /**
      * Attack the specified entity using a ranged attack.
      */
-    public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_)
     {
-        this.launchWitherSkullToEntity(0, p_82196_1_);
+        this.launchWitherSkullToEntity(0, target);
     }
 
     /**
@@ -555,8 +555,12 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         EntityItem entityitem = this.dropItem(Items.nether_star, 1);
 
@@ -623,7 +627,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 
     public void setInvulTime(int p_82215_1_)
     {
-        this.dataWatcher.updateObject(20, Integer.valueOf(p_82215_1_));
+        this.dataWatcher.updateObject(20, p_82215_1_);
     }
 
     /**
@@ -636,12 +640,10 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 
     /**
      * Updates the target entity ID
-     *  
-     * @param targetOffset should be from 0-2
      */
     public void updateWatchedTargetId(int targetOffset, int newId)
     {
-        this.dataWatcher.updateObject(17 + targetOffset, Integer.valueOf(newId));
+        this.dataWatcher.updateObject(17 + targetOffset, newId);
     }
 
     /**

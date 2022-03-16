@@ -14,12 +14,12 @@ import net.minecraft.util.IStringSerializable;
 
 public class BlockSandStone extends Block
 {
-    public static final PropertyEnum<BlockSandStone.EnumType> TYPE = PropertyEnum.<BlockSandStone.EnumType>create("type", BlockSandStone.EnumType.class);
+    public static final PropertyEnum<EnumType> TYPE = PropertyEnum.<EnumType>create("type", EnumType.class);
 
     public BlockSandStone()
     {
         super(Material.rock);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, BlockSandStone.EnumType.DEFAULT));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, EnumType.DEFAULT));
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
@@ -29,7 +29,7 @@ public class BlockSandStone extends Block
      */
     public int damageDropped(IBlockState state)
     {
-        return ((BlockSandStone.EnumType)state.getValue(TYPE)).getMetadata();
+        return state.getValue(TYPE).getMetadata();
     }
 
     /**
@@ -37,10 +37,8 @@ public class BlockSandStone extends Block
      */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        for (BlockSandStone.EnumType blocksandstone$enumtype : BlockSandStone.EnumType.values())
-        {
+        for (EnumType blocksandstone$enumtype : EnumType.values())
             list.add(new ItemStack(itemIn, 1, blocksandstone$enumtype.getMetadata()));
-        }
     }
 
     /**
@@ -56,7 +54,7 @@ public class BlockSandStone extends Block
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(TYPE, BlockSandStone.EnumType.byMetadata(meta));
+        return this.getDefaultState().withProperty(TYPE, EnumType.byMetadata(meta));
     }
 
     /**
@@ -64,7 +62,7 @@ public class BlockSandStone extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((BlockSandStone.EnumType)state.getValue(TYPE)).getMetadata();
+        return state.getValue(TYPE).getMetadata();
     }
 
     protected BlockState createBlockState()
@@ -103,9 +101,7 @@ public class BlockSandStone extends Block
         public static BlockSandStone.EnumType byMetadata(int meta)
         {
             if (meta < 0 || meta >= META_LOOKUP.length)
-            {
                 meta = 0;
-            }
 
             return META_LOOKUP[meta];
         }
@@ -121,10 +117,8 @@ public class BlockSandStone extends Block
         }
 
         static {
-            for (BlockSandStone.EnumType blocksandstone$enumtype : values())
-            {
+            for (EnumType blocksandstone$enumtype : values())
                 META_LOOKUP[blocksandstone$enumtype.getMetadata()] = blocksandstone$enumtype;
-            }
         }
     }
 }

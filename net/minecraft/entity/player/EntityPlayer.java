@@ -1,11 +1,13 @@
 package net.minecraft.entity.player;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
-import com.mojang.authlib.GameProfile;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
@@ -183,7 +185,7 @@ public abstract class EntityPlayer extends EntityLivingBase
         this.openContainer = this.inventoryContainer;
         BlockPos blockpos = worldIn.getSpawnPoint();
         this.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)(blockpos.getY() + 1), (double)blockpos.getZ() + 0.5D, 0.0F, 0.0F);
-        this.field_70741_aB = 180.0F;
+        this.unused180 = 180.0F;
         this.fireResistance = 20;
     }
 
@@ -197,10 +199,10 @@ public abstract class EntityPlayer extends EntityLivingBase
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
-        this.dataWatcher.addObject(17, Float.valueOf(0.0F));
-        this.dataWatcher.addObject(18, Integer.valueOf(0));
-        this.dataWatcher.addObject(10, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(16, (byte)0);
+        this.dataWatcher.addObject(17, 0.0F);
+        this.dataWatcher.addObject(18, 0);
+        this.dataWatcher.addObject(10, (byte)0);
     }
 
     /**
@@ -505,7 +507,7 @@ public abstract class EntityPlayer extends EntityLivingBase
         }
     }
 
-    public void handleHealthUpdate(byte id)
+    public void handleStatusUpdate(byte id)
     {
         if (id == 9)
         {
@@ -521,7 +523,7 @@ public abstract class EntityPlayer extends EntityLivingBase
         }
         else
         {
-            super.handleHealthUpdate(id);
+            super.handleStatusUpdate(id);
         }
     }
 
@@ -548,7 +550,7 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
         if (!this.worldObj.isRemote && this.isSneaking())
         {
-            this.mountEntity((Entity)null);
+            this.mountEntity(null);
             this.setSneaking(false);
         }
         else
@@ -602,7 +604,7 @@ public abstract class EntityPlayer extends EntityLivingBase
             --this.flyToggleTimer;
         }
 
-        if (this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL && this.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration"))
+        if (this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL && this.worldObj.getGameRules().getBoolean("naturalRegeneration"))
         {
             if (this.getHealth() < this.getMaxHealth() && this.ticksExisted % 20 == 0)
             {
@@ -696,7 +698,7 @@ public abstract class EntityPlayer extends EntityLivingBase
      */
     public void setScore(int p_85040_1_)
     {
-        this.dataWatcher.updateObject(18, Integer.valueOf(p_85040_1_));
+        this.dataWatcher.updateObject(18, p_85040_1_);
     }
 
     /**
@@ -705,7 +707,7 @@ public abstract class EntityPlayer extends EntityLivingBase
     public void addScore(int p_85039_1_)
     {
         int i = this.getScore();
-        this.dataWatcher.updateObject(18, Integer.valueOf(i + p_85039_1_));
+        this.dataWatcher.updateObject(18, i + p_85039_1_);
     }
 
     /**
@@ -723,7 +725,7 @@ public abstract class EntityPlayer extends EntityLivingBase
             this.dropItem(new ItemStack(Items.apple, 1), true, false);
         }
 
-        if (!this.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+        if (!this.worldObj.getGameRules().getBoolean("keepInventory"))
         {
             this.inventory.dropAllItems();
         }
@@ -1218,13 +1220,13 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
     }
 
-    public boolean interactWith(Entity p_70998_1_)
+    public boolean interactWith(Entity targetEntity)
     {
         if (this.isSpectator())
         {
-            if (p_70998_1_ instanceof IInventory)
+            if (targetEntity instanceof IInventory)
             {
-                this.displayGUIChest((IInventory)p_70998_1_);
+                this.displayGUIChest((IInventory)targetEntity);
             }
 
             return false;
@@ -1234,16 +1236,16 @@ public abstract class EntityPlayer extends EntityLivingBase
             ItemStack itemstack = this.getCurrentEquippedItem();
             ItemStack itemstack1 = itemstack != null ? itemstack.copy() : null;
 
-            if (!p_70998_1_.interactFirst(this))
+            if (!targetEntity.interactFirst(this))
             {
-                if (itemstack != null && p_70998_1_ instanceof EntityLivingBase)
+                if (itemstack != null && targetEntity instanceof EntityLivingBase)
                 {
                     if (this.capabilities.isCreativeMode)
                     {
                         itemstack = itemstack1;
                     }
 
-                    if (itemstack.interactWithEntity(this, (EntityLivingBase)p_70998_1_))
+                    if (itemstack.interactWithEntity(this, (EntityLivingBase)targetEntity))
                     {
                         if (itemstack.stackSize <= 0 && !this.capabilities.isCreativeMode)
                         {
@@ -1288,7 +1290,7 @@ public abstract class EntityPlayer extends EntityLivingBase
      */
     public void destroyCurrentEquippedItem()
     {
-        this.inventory.setInventorySlotContents(this.inventory.currentItem, (ItemStack)null);
+        this.inventory.setInventorySlotContents(this.inventory.currentItem, null);
     }
 
     /**
@@ -1360,7 +1362,6 @@ public abstract class EntityPlayer extends EntityLivingBase
                             targetEntity.addVelocity((double)(-MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F), 0.1D, (double)(MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F));
                             this.motionX *= 0.6D;
                             this.motionZ *= 0.6D;
-                            
                             if(Nightmare.instance.moduleManager.getModuleByName("KeepSprint").isDisabled()) {
                                 this.setSprinting(false);
                             }
@@ -1531,7 +1532,7 @@ public abstract class EntityPlayer extends EntityLivingBase
 
         if (this.isRiding())
         {
-            this.mountEntity((Entity)null);
+            this.mountEntity(null);
         }
 
         this.setSize(0.2F, 0.2F);
@@ -1608,14 +1609,14 @@ public abstract class EntityPlayer extends EntityLivingBase
     /**
      * Wake up the player if they're sleeping.
      */
-    public void wakeUpPlayer(boolean p_70999_1_, boolean updateWorldFlag, boolean setSpawn)
+    public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn)
     {
         this.setSize(0.6F, 1.8F);
         IBlockState iblockstate = this.worldObj.getBlockState(this.playerLocation);
 
         if (this.playerLocation != null && iblockstate.getBlock() == Blocks.bed)
         {
-            this.worldObj.setBlockState(this.playerLocation, iblockstate.withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)), 4);
+            this.worldObj.setBlockState(this.playerLocation, iblockstate.withProperty(BlockBed.OCCUPIED, false), 4);
             BlockPos blockpos = BlockBed.getSafeExitLocation(this.worldObj, this.playerLocation, 0);
 
             if (blockpos == null)
@@ -1633,7 +1634,7 @@ public abstract class EntityPlayer extends EntityLivingBase
             this.worldObj.updateAllPlayersSleepingFlag();
         }
 
-        this.sleepTimer = p_70999_1_ ? 0 : 100;
+        this.sleepTimer = immediately ? 0 : 100;
 
         if (setSpawn)
         {
@@ -1648,8 +1649,6 @@ public abstract class EntityPlayer extends EntityLivingBase
 
     /**
      * Return null if bed is invalid
-     *  
-     * @param forceSpawn Spawn at bed location even if bed is missing.
      */
     public static BlockPos getBedSpawnLocation(World worldIn, BlockPos bedLocation, boolean forceSpawn)
     {
@@ -1663,8 +1662,8 @@ public abstract class EntityPlayer extends EntityLivingBase
             }
             else
             {
-                boolean flag = block.func_181623_g();
-                boolean flag1 = worldIn.getBlockState(bedLocation.up()).getBlock().func_181623_g();
+                boolean flag = block.canSpawnInBlock();
+                boolean flag1 = worldIn.getBlockState(bedLocation.up()).getBlock().canSpawnInBlock();
                 return flag && flag1 ? bedLocation : null;
             }
         }
@@ -1971,7 +1970,8 @@ public abstract class EntityPlayer extends EntityLivingBase
             this.triggerAchievement(AchievementList.killEnemy);
         }
 
-        EntityList.EntityEggInfo entitylist$entityegginfo = (EntityList.EntityEggInfo)EntityList.entityEggs.get(Integer.valueOf(EntityList.getEntityID(entityLivingIn)));
+        EntityList.EntityEggInfo entitylist$entityegginfo = 
+        		(EntityList.EntityEggInfo)EntityList.entityEggs.get(EntityList.getEntityID(entityLivingIn));
 
         if (entitylist$entityegginfo != null)
         {
@@ -2147,7 +2147,7 @@ public abstract class EntityPlayer extends EntityLivingBase
      */
     protected int getExperiencePoints(EntityPlayer player)
     {
-        if (this.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+        if (this.worldObj.getGameRules().getBoolean("keepInventory"))
         {
             return 0;
         }
@@ -2186,11 +2186,11 @@ public abstract class EntityPlayer extends EntityLivingBase
             this.experienceTotal = oldPlayer.experienceTotal;
             this.experience = oldPlayer.experience;
             this.setScore(oldPlayer.getScore());
-            this.field_181016_an = oldPlayer.field_181016_an;
-            this.field_181017_ao = oldPlayer.field_181017_ao;
-            this.field_181018_ap = oldPlayer.field_181018_ap;
+            this.lastPortalPos = oldPlayer.lastPortalPos;
+            this.lastPortalVec = oldPlayer.lastPortalVec;
+            this.teleportDirection = oldPlayer.teleportDirection;
         }
-        else if (this.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+        else if (this.worldObj.getGameRules().getBoolean("keepInventory"))
         {
             this.inventory.copyInventory(oldPlayer.inventory);
             this.experienceLevel = oldPlayer.experienceLevel;
@@ -2201,7 +2201,7 @@ public abstract class EntityPlayer extends EntityLivingBase
 
         this.xpSeed = oldPlayer.xpSeed;
         this.theInventoryEnderChest = oldPlayer.theInventoryEnderChest;
-        this.getDataWatcher().updateObject(10, Byte.valueOf(oldPlayer.getDataWatcher().getWatchableObjectByte(10)));
+        this.getDataWatcher().updateObject(10, oldPlayer.getDataWatcher().getWatchableObjectByte(10));
     }
 
     /**
@@ -2228,7 +2228,7 @@ public abstract class EntityPlayer extends EntityLivingBase
     }
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Get the name of this object. For players this returns their username
      */
     public String getName()
     {
@@ -2353,7 +2353,7 @@ public abstract class EntityPlayer extends EntityLivingBase
             amount = 0.0F;
         }
 
-        this.getDataWatcher().updateObject(17, Float.valueOf(amount));
+        this.getDataWatcher().updateObject(17, amount);
     }
 
     public float getAbsorptionAmount()
@@ -2407,7 +2407,7 @@ public abstract class EntityPlayer extends EntityLivingBase
      */
     public boolean sendCommandFeedback()
     {
-        return MinecraftServer.getServer().worldServers[0].getGameRules().getGameRuleBooleanValue("sendCommandFeedback");
+        return MinecraftServer.getServer().worldServers[0].getGameRules().getBoolean("sendCommandFeedback");
     }
 
     public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)

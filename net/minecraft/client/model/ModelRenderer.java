@@ -83,7 +83,7 @@ public class ModelRenderer
 
     public ModelRenderer(ModelBase model)
     {
-        this(model, (String)null);
+        this(model, null);
     }
 
     public ModelRenderer(ModelBase model, int texOffX, int texOffY)
@@ -548,7 +548,7 @@ public class ModelRenderer
     public String toString()
     {
         StringBuffer stringbuffer = new StringBuffer();
-        stringbuffer.append("id: " + this.id + ", boxes: " + (this.cubeList != null ? Integer.valueOf(this.cubeList.size()) : null) + ", submodels: " + (this.childModels != null ? Integer.valueOf(this.childModels.size()) : null));
+        stringbuffer.append("id: " + this.id + ", boxes: " + (this.cubeList != null ? this.cubeList.size() : null) + ", submodels: " + (this.childModels != null ? this.childModels.size() : null));
         return stringbuffer.toString();
     }
 }

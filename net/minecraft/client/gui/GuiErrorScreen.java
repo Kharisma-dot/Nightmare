@@ -21,7 +21,7 @@ public class GuiErrorScreen extends GuiScreen
     public void initGui()
     {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, 140, I18n.format("gui.cancel", new Object[0])));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, 140, I18n.format("gui.cancel")));
     }
 
     /**
@@ -48,6 +48,6 @@ public class GuiErrorScreen extends GuiScreen
      */
     protected void actionPerformed(GuiButton button) throws IOException
     {
-        this.mc.displayGuiScreen((GuiScreen)null);
+        this.mc.displayGuiScreen(null);
     }
 }

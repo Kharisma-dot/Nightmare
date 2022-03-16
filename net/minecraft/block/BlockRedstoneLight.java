@@ -19,9 +19,7 @@ public class BlockRedstoneLight extends Block
         this.isOn = isOn;
 
         if (isOn)
-        {
-            this.setLightLevel(1.0F);
-        }
+            this.setLightLevel(1f);
     }
 
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
@@ -29,13 +27,9 @@ public class BlockRedstoneLight extends Block
         if (!worldIn.isRemote)
         {
             if (this.isOn && !worldIn.isBlockPowered(pos))
-            {
                 worldIn.setBlockState(pos, Blocks.redstone_lamp.getDefaultState(), 2);
-            }
             else if (!this.isOn && worldIn.isBlockPowered(pos))
-            {
                 worldIn.setBlockState(pos, Blocks.lit_redstone_lamp.getDefaultState(), 2);
-            }
         }
     }
 
@@ -47,13 +41,9 @@ public class BlockRedstoneLight extends Block
         if (!worldIn.isRemote)
         {
             if (this.isOn && !worldIn.isBlockPowered(pos))
-            {
                 worldIn.scheduleUpdate(pos, this, 4);
-            }
             else if (!this.isOn && worldIn.isBlockPowered(pos))
-            {
                 worldIn.setBlockState(pos, Blocks.lit_redstone_lamp.getDefaultState(), 2);
-            }
         }
     }
 
@@ -62,25 +52,18 @@ public class BlockRedstoneLight extends Block
         if (!worldIn.isRemote)
         {
             if (this.isOn && !worldIn.isBlockPowered(pos))
-            {
                 worldIn.setBlockState(pos, Blocks.redstone_lamp.getDefaultState(), 2);
-            }
         }
     }
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(Blocks.redstone_lamp);
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Item.getItemFromBlock(Blocks.redstone_lamp);

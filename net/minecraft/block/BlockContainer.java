@@ -15,20 +15,20 @@ public abstract class BlockContainer extends Block implements ITileEntityProvide
         this(materialIn, materialIn.getMaterialMapColor());
     }
 
-    protected BlockContainer(Material p_i46402_1_, MapColor p_i46402_2_)
+    protected BlockContainer(Material material, MapColor mapColor)
     {
-        super(p_i46402_1_, p_i46402_2_);
+        super(material, mapColor);
         this.isBlockContainer = true;
     }
 
-    protected boolean func_181086_a(World p_181086_1_, BlockPos p_181086_2_, EnumFacing p_181086_3_)
+    protected boolean isInvalidNeighbor(World world, BlockPos pos, EnumFacing facing)
     {
-        return p_181086_1_.getBlockState(p_181086_2_.offset(p_181086_3_)).getBlock().getMaterial() == Material.cactus;
+        return world.getBlockState(pos.offset(facing)).getBlock().getMaterial() == Material.cactus;
     }
 
-    protected boolean func_181087_e(World p_181087_1_, BlockPos p_181087_2_)
+    protected boolean hasInvalidNeighbor(World world, BlockPos pos)
     {
-        return this.func_181086_a(p_181087_1_, p_181087_2_, EnumFacing.NORTH) || this.func_181086_a(p_181087_1_, p_181087_2_, EnumFacing.SOUTH) || this.func_181086_a(p_181087_1_, p_181087_2_, EnumFacing.WEST) || this.func_181086_a(p_181087_1_, p_181087_2_, EnumFacing.EAST);
+        return this.isInvalidNeighbor(world, pos, EnumFacing.NORTH) || this.isInvalidNeighbor(world, pos, EnumFacing.SOUTH) || this.isInvalidNeighbor(world, pos, EnumFacing.WEST) || this.isInvalidNeighbor(world, pos, EnumFacing.EAST);
     }
 
     /**

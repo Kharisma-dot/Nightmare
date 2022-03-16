@@ -4,13 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.src.Config;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.model.pipeline.IVertexConsumer;
-import net.minecraftforge.client.model.pipeline.IVertexProducer;
 import net.optifine.model.QuadBounds;
 import net.optifine.reflect.Reflector;
 
-public class BakedQuad implements IVertexProducer
-{
+public class BakedQuad{
     /**
      * Joined 4 vertex records, each has 7 fields (x, y, z, shadeColor, u, v, <unused>), see
      * FaceBakery.storeVertexData()
@@ -90,42 +87,35 @@ public class BakedQuad implements IVertexProducer
     private static int[] makeVertexDataSingle(int[] p_makeVertexDataSingle_0_, TextureAtlasSprite p_makeVertexDataSingle_1_)
     {
         int[] aint = (int[])p_makeVertexDataSingle_0_.clone();
-        int i = p_makeVertexDataSingle_1_.sheetWidth / p_makeVertexDataSingle_1_.getIconWidth();
-        int j = p_makeVertexDataSingle_1_.sheetHeight / p_makeVertexDataSingle_1_.getIconHeight();
-        int k = aint.length / 4;
+        int i = aint.length / 4;
 
-        for (int l = 0; l < 4; ++l)
+        for (int j = 0; j < 4; ++j)
         {
-            int i1 = l * k;
-            float f = Float.intBitsToFloat(aint[i1 + 4]);
-            float f1 = Float.intBitsToFloat(aint[i1 + 4 + 1]);
+            int k = j * i;
+            float f = Float.intBitsToFloat(aint[k + 4]);
+            float f1 = Float.intBitsToFloat(aint[k + 4 + 1]);
             float f2 = p_makeVertexDataSingle_1_.toSingleU(f);
             float f3 = p_makeVertexDataSingle_1_.toSingleV(f1);
-            aint[i1 + 4] = Float.floatToRawIntBits(f2);
-            aint[i1 + 4 + 1] = Float.floatToRawIntBits(f3);
+            aint[k + 4] = Float.floatToRawIntBits(f2);
+            aint[k + 4 + 1] = Float.floatToRawIntBits(f3);
         }
 
         return aint;
     }
 
-    public void pipe(IVertexConsumer p_pipe_1_)
-    {
-        Reflector.callVoid(Reflector.LightUtil_putBakedQuad, new Object[] {p_pipe_1_, this});
-    }
-
-    private static TextureAtlasSprite getSpriteByUv(int[] p_getSpriteByUv_0_)
+    private static TextureAtlasSprite getSpriteByUv(int[] uvs)
     {
         float f = 1.0F;
         float f1 = 1.0F;
         float f2 = 0.0F;
         float f3 = 0.0F;
-        int i = p_getSpriteByUv_0_.length / 4;
+        int i = uvs.length / 4;
 
         for (int j = 0; j < 4; ++j)
         {
             int k = j * i;
-            float f4 = Float.intBitsToFloat(p_getSpriteByUv_0_[k + 4]);
-            float f5 = Float.intBitsToFloat(p_getSpriteByUv_0_[k + 4 + 1]);
+            float f4 = Float.intBitsToFloat(uvs[k + 4]);
+            float f5 = Float.intBitsToFloat(uvs[k + 4 + 1]);
             f = Math.min(f, f4);
             f1 = Math.min(f1, f5);
             f2 = Math.max(f2, f4);

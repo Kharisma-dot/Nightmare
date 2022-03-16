@@ -46,9 +46,9 @@ public class ConnectedTextures
 {
     private static Map[] spriteQuadMaps = null;
     private static Map[] spriteQuadFullMaps = null;
-    private static Map[][] spriteQuadCompactMaps = (Map[][])null;
-    private static ConnectedProperties[][] blockProperties = (ConnectedProperties[][])null;
-    private static ConnectedProperties[][] tileProperties = (ConnectedProperties[][])null;
+    private static Map[][] spriteQuadCompactMaps = null;
+    private static ConnectedProperties[][] blockProperties = null;
+    private static ConnectedProperties[][] tileProperties = null;
     private static boolean multipass = false;
     protected static final int UNKNOWN = -1;
     protected static final int Y_NEG_DOWN = 0;
@@ -153,14 +153,14 @@ public class ConnectedTextures
 
             if (d0 < 0.4D)
             {
-                if (((Boolean)iblockstate.getValue(BlockPane.WEST)).booleanValue())
+                if (iblockstate.getValue(BlockPane.WEST))
                 {
                     return true;
                 }
             }
             else if (d0 > 0.6D)
             {
-                if (((Boolean)iblockstate.getValue(BlockPane.EAST)).booleanValue())
+                if (iblockstate.getValue(BlockPane.EAST))
                 {
                     return true;
                 }
@@ -171,7 +171,7 @@ public class ConnectedTextures
 
                 if (d1 < 0.4D)
                 {
-                    if (((Boolean)iblockstate.getValue(BlockPane.NORTH)).booleanValue())
+                    if (iblockstate.getValue(BlockPane.NORTH))
                     {
                         return true;
                     }
@@ -183,7 +183,7 @@ public class ConnectedTextures
                         return true;
                     }
 
-                    if (((Boolean)iblockstate.getValue(BlockPane.SOUTH)).booleanValue())
+                    if (iblockstate.getValue(BlockPane.SOUTH))
                     {
                         return true;
                     }
@@ -1834,11 +1834,6 @@ public class ConnectedTextures
         }
         else
         {
-            if (Reflector.ForgeBlock_getExtendedState.exists())
-            {
-                neighbourState = (IBlockState)Reflector.call(neighbourState.getBlock(), Reflector.ForgeBlock_getExtendedState, new Object[] {neighbourState, iblockaccess, blockPos});
-            }
-
             EnumFacing enumfacing = getFacing(side);
             List list = ibakedmodel.getFaceQuads(enumfacing);
 
@@ -2191,10 +2186,10 @@ public class ConnectedTextures
 
     public static void updateIcons(TextureMap textureMap)
     {
-        blockProperties = (ConnectedProperties[][])null;
-        tileProperties = (ConnectedProperties[][])null;
+        blockProperties = null;
+        tileProperties = null;
         spriteQuadMaps = null;
-        spriteQuadCompactMaps = (Map[][])null;
+        spriteQuadCompactMaps = null;
 
         if (Config.isConnectedTextures())
         {
@@ -2215,12 +2210,12 @@ public class ConnectedTextures
 
             if (blockProperties.length <= 0)
             {
-                blockProperties = (ConnectedProperties[][])null;
+                blockProperties = null;
             }
 
             if (tileProperties.length <= 0)
             {
-                tileProperties = (ConnectedProperties[][])null;
+                tileProperties = null;
             }
         }
     }
@@ -2254,6 +2249,7 @@ public class ConnectedTextures
                 {
                     Properties properties = new PropertiesOrdered();
                     properties.load(inputstream);
+                    inputstream.close();
                     ConnectedProperties connectedproperties = new ConnectedProperties(properties, s);
 
                     if (connectedproperties.isValid(s))
@@ -2350,16 +2346,22 @@ public class ConnectedTextures
         return !set1.isEmpty();
     }
 
-    private static ConnectedProperties[][] propertyListToArray(final List list) {
-        final ConnectedProperties[][] propArr = new ConnectedProperties[list.size()][];
-        for (int i = 0; i < list.size(); ++i) {
-            final List subList = (List) list.get(i);
-            if (subList != null) {
-                final ConnectedProperties[] subArr = (ConnectedProperties[]) subList.toArray(new ConnectedProperties[subList.size()]);
-                propArr[i] = subArr;
+    private static ConnectedProperties[][] propertyListToArray(List list)
+    {
+        ConnectedProperties[][] aconnectedproperties = new ConnectedProperties[list.size()][];
+
+        for (int i = 0; i < list.size(); ++i)
+        {
+            List list2 = (List)list.get(i);
+
+            if (list2 != null)
+            {
+                ConnectedProperties[] aconnectedproperties1 = (ConnectedProperties[])((ConnectedProperties[])list2.toArray(new ConnectedProperties[list2.size()]));
+                aconnectedproperties[i] = aconnectedproperties1;
             }
         }
-        return propArr;
+
+        return aconnectedproperties;
     }
 
     private static void addToTileList(ConnectedProperties cp, List tileList)
@@ -2418,15 +2420,15 @@ public class ConnectedTextures
             list.add(null);
         }
 
-        List l = (List)list.get(id);
+        List list1 = (List)list.get(id);
 
-        if (l == null)
+        if (list1 == null)
         {
-            l = new ArrayList();
-            list.set(id, l);
+            list1 = new ArrayList();
+            list.set(id, list1);
         }
 
-        l.add(cp);
+        list1.add(cp);
     }
 
     private static String[] getDefaultCtmPaths()

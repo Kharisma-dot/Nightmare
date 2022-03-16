@@ -25,13 +25,13 @@ public class ModelAdapterHeadHumanoid extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelHumanoidHead))
-        {
             return null;
-        }
         else
         {
             ModelHumanoidHead modelhumanoidhead = (ModelHumanoidHead)model;
-            return modelPart.equals("head") ? modelhumanoidhead.skeletonHead : (modelPart.equals("head2") ? (!Reflector.ModelHumanoidHead_head.exists() ? null : (ModelRenderer)Reflector.getFieldValue(modelhumanoidhead, Reflector.ModelHumanoidHead_head)) : null);
+            return modelPart.equals("head") ? modelhumanoidhead.skeletonHead : (modelPart.equals("head2") ?
+            		(!Reflector.ModelHumanoidHead_head.exists() ?
+            		null : (ModelRenderer)Reflector.getFieldValue(modelhumanoidhead, Reflector.ModelHumanoidHead_head)) : null);
         }
     }
 
@@ -46,9 +46,7 @@ public class ModelAdapterHeadHumanoid extends ModelAdapter
         TileEntitySpecialRenderer tileentityspecialrenderer = tileentityrendererdispatcher.getSpecialRendererByClass(TileEntitySkull.class);
 
         if (!(tileentityspecialrenderer instanceof TileEntitySkullRenderer))
-        {
             return null;
-        }
         else
         {
             if (tileentityspecialrenderer.getEntityClass() == null)

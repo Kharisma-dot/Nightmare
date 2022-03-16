@@ -7,7 +7,7 @@ public class TestExpressions
 {
     public static void main(String[] args) throws Exception
     {
-        ExpressionParser expressionparser = new ExpressionParser((IExpressionResolver)null);
+        ExpressionParser expressionparser = new ExpressionParser(null);
 
         while (true)
         {
@@ -18,9 +18,7 @@ public class TestExpressions
                 String s = bufferedreader.readLine();
 
                 if (s.length() <= 0)
-                {
                     return;
-                }
 
                 IExpression iexpression = expressionparser.parse(s);
 

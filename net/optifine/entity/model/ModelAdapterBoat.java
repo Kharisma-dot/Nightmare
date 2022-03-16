@@ -25,13 +25,13 @@ public class ModelAdapterBoat extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelBoat))
-        {
             return null;
-        }
         else
         {
             ModelBoat modelboat = (ModelBoat)model;
-            return modelPart.equals("bottom") ? modelboat.boatSides[0] : (modelPart.equals("back") ? modelboat.boatSides[1] : (modelPart.equals("front") ? modelboat.boatSides[2] : (modelPart.equals("right") ? modelboat.boatSides[3] : (modelPart.equals("left") ? modelboat.boatSides[4] : null))));
+            return modelPart.equals("bottom") ? modelboat.boatSides[0] : (modelPart.equals("back") ?
+            		modelboat.boatSides[1] : (modelPart.equals("front") ? modelboat.boatSides[2] : (modelPart.equals("right") ?
+            		modelboat.boatSides[3] : (modelPart.equals("left") ? modelboat.boatSides[4] : null))));
         }
     }
 

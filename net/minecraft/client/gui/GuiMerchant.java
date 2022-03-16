@@ -74,7 +74,7 @@ public class GuiMerchant extends GuiContainer
     {
         String s = this.chatComponent.getUnformattedText();
         this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
 
     /**
@@ -105,9 +105,7 @@ public class GuiMerchant extends GuiContainer
             MerchantRecipeList merchantrecipelist = this.merchant.getRecipes(this.mc.thePlayer);
 
             if (merchantrecipelist != null && this.selectedMerchantRecipe >= merchantrecipelist.size())
-            {
                 this.selectedMerchantRecipe = merchantrecipelist.size() - 1;
-            }
 
             flag = true;
         }
@@ -116,9 +114,7 @@ public class GuiMerchant extends GuiContainer
             --this.selectedMerchantRecipe;
 
             if (this.selectedMerchantRecipe < 0)
-            {
                 this.selectedMerchantRecipe = 0;
-            }
 
             flag = true;
         }
@@ -149,10 +145,8 @@ public class GuiMerchant extends GuiContainer
             int k = this.selectedMerchantRecipe;
 
             if (k < 0 || k >= merchantrecipelist.size())
-            {
                 return;
-            }
-
+            
             MerchantRecipe merchantrecipe = (MerchantRecipe)merchantrecipelist.get(k);
 
             if (merchantrecipe.isRecipeDisabled())
@@ -205,21 +199,17 @@ public class GuiMerchant extends GuiContainer
             GlStateManager.disableLighting();
 
             if (this.isPointInRegion(36, 24, 16, 16, mouseX, mouseY) && itemstack != null)
-            {
                 this.renderToolTip(itemstack, mouseX, mouseY);
-            }
+            
             else if (itemstack1 != null && this.isPointInRegion(62, 24, 16, 16, mouseX, mouseY) && itemstack1 != null)
-            {
                 this.renderToolTip(itemstack1, mouseX, mouseY);
-            }
+            
             else if (itemstack2 != null && this.isPointInRegion(120, 24, 16, 16, mouseX, mouseY) && itemstack2 != null)
-            {
                 this.renderToolTip(itemstack2, mouseX, mouseY);
-            }
-            else if (merchantrecipe.isRecipeDisabled() && (this.isPointInRegion(83, 21, 28, 21, mouseX, mouseY) || this.isPointInRegion(83, 51, 28, 21, mouseX, mouseY)))
-            {
-                this.drawCreativeTabHoveringText(I18n.format("merchant.deprecated", new Object[0]), mouseX, mouseY);
-            }
+            
+            else if (merchantrecipe.isRecipeDisabled() && (this.isPointInRegion(83, 21, 28, 21, mouseX, mouseY) 
+            		|| this.isPointInRegion(83, 51, 28, 21, mouseX, mouseY)))
+                this.drawCreativeTabHoveringText(I18n.format("merchant.deprecated"), mouseX, mouseY);
 
             GlStateManager.popMatrix();
             GlStateManager.enableLighting();
@@ -249,23 +239,19 @@ public class GuiMerchant extends GuiContainer
             {
                 mc.getTextureManager().bindTexture(GuiMerchant.MERCHANT_GUI_TEXTURE);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+                boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width 
+                		&& mouseY < this.yPosition + this.height;
                 int i = 0;
                 int j = 176;
 
                 if (!this.enabled)
-                {
                     j += this.width * 2;
-                }
+                
                 else if (flag)
-                {
                     j += this.width;
-                }
 
                 if (!this.field_146157_o)
-                {
                     i += this.height;
-                }
 
                 this.drawTexturedModalRect(this.xPosition, this.yPosition, j, i, this.width, this.height);
             }

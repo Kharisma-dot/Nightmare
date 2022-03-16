@@ -3,6 +3,7 @@ package net.minecraft.client.renderer.texture;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
@@ -155,11 +156,6 @@ public class TextureUtil
     {
         Object object = TextureUtil.class;
 
-        if (Reflector.SplashScreen.exists())
-        {
-            object = Reflector.SplashScreen.getTargetClass();
-        }
-
         synchronized (object)
         {
             deleteTexture(p_180600_0_);
@@ -175,9 +171,7 @@ public class TextureUtil
         }
 
         for (int i = 0; i <= p_180600_1_; ++i)
-        {
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, i, GL11.GL_RGBA, p_180600_2_ >> i, p_180600_3_ >> i, 0, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)((IntBuffer)null));
-        }
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, i, GL11.GL_RGBA, p_180600_2_ >> i, p_180600_3_ >> i, 0, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (ByteBuffer)null);
     }
 
     public static int uploadTextureImageSub(int textureId, BufferedImage p_110995_1_, int p_110995_2_, int p_110995_3_, boolean p_110995_4_, boolean p_110995_5_)

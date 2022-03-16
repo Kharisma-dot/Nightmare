@@ -67,7 +67,7 @@ public class ShaderPackParser
 
             while (iterator.hasNext())
             {
-                int i = ((Integer)iterator.next()).intValue();
+                int i = iterator.next();
                 String s = "/shaders/world" + i;
                 collectShaderOptions(shaderPack, s, programNames, map);
             }
@@ -508,7 +508,7 @@ public class ShaderPackParser
 
                 if (s1.equals("<empty>"))
                 {
-                    list.add((ShaderOption)null);
+                    list.add(null);
                 }
                 else if (set.contains(s1))
                 {
@@ -560,7 +560,7 @@ public class ShaderPackParser
                         if (shaderoption == null)
                         {
                             Config.warn("[Shaders] Invalid option: " + s1 + ", key: " + key);
-                            list.add((ShaderOption)null);
+                            list.add(null);
                         }
                         else
                         {
@@ -900,12 +900,12 @@ public class ShaderPackParser
         {
             String s2 = astring[0];
             String s1 = astring[1];
-            Integer integer = (Integer)mapAlphaFuncs.get(s2);
+            Integer integer = mapAlphaFuncs.get(s2);
             float f = Config.parseFloat(s1, -1.0F);
 
             if (integer != null && f >= 0.0F)
             {
-                return new GlAlphaState(true, integer.intValue(), f);
+                return new GlAlphaState(true, integer, f);
             }
         }
 
@@ -974,14 +974,14 @@ public class ShaderPackParser
                 s3 = astring[3];
             }
 
-            Integer integer = (Integer)mapBlendFactors.get(s4);
-            Integer integer1 = (Integer)mapBlendFactors.get(s1);
-            Integer integer2 = (Integer)mapBlendFactors.get(s2);
-            Integer integer3 = (Integer)mapBlendFactors.get(s3);
+            Integer integer = mapBlendFactors.get(s4);
+            Integer integer1 = mapBlendFactors.get(s1);
+            Integer integer2 = mapBlendFactors.get(s2);
+            Integer integer3 = mapBlendFactors.get(s3);
 
             if (integer != null && integer1 != null && integer2 != null && integer3 != null)
             {
-                return new GlBlendState(true, integer.intValue(), integer1.intValue(), integer2.intValue(), integer3.intValue());
+                return new GlBlendState(true, integer, integer1, integer2, integer3);
             }
         }
 
@@ -1083,7 +1083,7 @@ public class ShaderPackParser
                         if (i >= 0 && i < aboolean.length)
                         {
                             String s4 = props.getProperty(s).trim();
-                            Boolean obool = Config.parseBoolean(s4, (Boolean)null);
+                            Boolean obool = Config.parseBoolean(s4, null);
 
                             if (obool == null)
                             {

@@ -25,9 +25,7 @@ public class ModelAdapterWither extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelWither))
-        {
             return null;
-        }
         else
         {
             ModelWither modelwither = (ModelWither)model;
@@ -35,12 +33,10 @@ public class ModelAdapterWither extends ModelAdapter
 
             if (modelPart.startsWith(s))
             {
-                ModelRenderer[] amodelrenderer1 = (ModelRenderer[])((ModelRenderer[])Reflector.getFieldValue(modelwither, Reflector.ModelWither_bodyParts));
+                ModelRenderer[] amodelrenderer1 = (ModelRenderer[])Reflector.getFieldValue(modelwither, Reflector.ModelWither_bodyParts);
 
                 if (amodelrenderer1 == null)
-                {
                     return null;
-                }
                 else
                 {
                     String s3 = modelPart.substring(s.length());
@@ -55,12 +51,10 @@ public class ModelAdapterWither extends ModelAdapter
 
                 if (modelPart.startsWith(s1))
                 {
-                    ModelRenderer[] amodelrenderer = (ModelRenderer[])((ModelRenderer[])Reflector.getFieldValue(modelwither, Reflector.ModelWither_heads));
+                    ModelRenderer[] amodelrenderer = (ModelRenderer[])Reflector.getFieldValue(modelwither, Reflector.ModelWither_heads);
 
                     if (amodelrenderer == null)
-                    {
                         return null;
-                    }
                     else
                     {
                         String s2 = modelPart.substring(s1.length());
@@ -70,9 +64,7 @@ public class ModelAdapterWither extends ModelAdapter
                     }
                 }
                 else
-                {
                     return null;
-                }
             }
         }
     }

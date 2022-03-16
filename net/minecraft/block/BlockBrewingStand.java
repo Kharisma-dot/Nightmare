@@ -33,7 +33,7 @@ public class BlockBrewingStand extends BlockContainer
     public BlockBrewingStand()
     {
         super(Material.iron);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(HAS_BOTTLE[0], Boolean.valueOf(false)).withProperty(HAS_BOTTLE[1], Boolean.valueOf(false)).withProperty(HAS_BOTTLE[2], Boolean.valueOf(false)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(HAS_BOTTLE[0], false).withProperty(HAS_BOTTLE[1], false).withProperty(HAS_BOTTLE[2], false));
     }
 
     /**
@@ -75,8 +75,6 @@ public class BlockBrewingStand extends BlockContainer
 
     /**
      * Add all collision boxes of this Block to the list that intersect with the given mask.
-     *  
-     * @param collidingEntity the Entity colliding with this Block
      */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
@@ -97,9 +95,7 @@ public class BlockBrewingStand extends BlockContainer
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
-        {
             return true;
-        }
         else
         {
             TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -124,9 +120,7 @@ public class BlockBrewingStand extends BlockContainer
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
             if (tileentity instanceof TileEntityBrewingStand)
-            {
                 ((TileEntityBrewingStand)tileentity).setName(stack.getDisplayName());
-            }
         }
     }
 
@@ -143,26 +137,19 @@ public class BlockBrewingStand extends BlockContainer
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
         if (tileentity instanceof TileEntityBrewingStand)
-        {
             InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityBrewingStand)tileentity);
-        }
 
         super.breakBlock(worldIn, pos, state);
     }
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Items.brewing_stand;
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Items.brewing_stand;
@@ -191,9 +178,7 @@ public class BlockBrewingStand extends BlockContainer
         IBlockState iblockstate = this.getDefaultState();
 
         for (int i = 0; i < 3; ++i)
-        {
-            iblockstate = iblockstate.withProperty(HAS_BOTTLE[i], Boolean.valueOf((meta & 1 << i) > 0));
-        }
+            iblockstate = iblockstate.withProperty(HAS_BOTTLE[i], (meta & 1 << i) > 0);
 
         return iblockstate;
     }
@@ -206,12 +191,8 @@ public class BlockBrewingStand extends BlockContainer
         int i = 0;
 
         for (int j = 0; j < 3; ++j)
-        {
-            if (((Boolean)state.getValue(HAS_BOTTLE[j])).booleanValue())
-            {
+            if (state.getValue(HAS_BOTTLE[j]))
                 i |= 1 << j;
-            }
-        }
 
         return i;
     }

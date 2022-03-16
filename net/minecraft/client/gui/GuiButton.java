@@ -61,13 +61,9 @@ public class GuiButton extends Gui
         int i = 1;
 
         if (!this.enabled)
-        {
             i = 0;
-        }
         else if (mouseOver)
-        {
             i = 2;
-        }
 
         return i;
     }
@@ -93,13 +89,9 @@ public class GuiButton extends Gui
             int j = 14737632;
 
             if (!this.enabled)
-            {
                 j = 10526880;
-            }
             else if (this.hovered)
-            {
                 j = 16777120;
-            }
 
             this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
         }
@@ -125,7 +117,9 @@ public class GuiButton extends Gui
      */
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
     {
-        return this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+        return this.enabled && this.visible 
+        		&& mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width 
+        		&& mouseY < this.yPosition + this.height;
     }
 
     /**

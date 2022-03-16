@@ -36,7 +36,7 @@ public class CustomColormap implements CustomColors.IColorizer
     private int width = 0;
     private int height = 0;
     private int[] colors = null;
-    private float[][] colorsRgb = (float[][])null;
+    private float[][] colorsRgb = null;
     private static final int FORMAT_UNKNOWN = -1;
     private static final int FORMAT_VANILLA = 0;
     private static final int FORMAT_GRID = 1;
@@ -545,7 +545,7 @@ public class CustomColormap implements CustomColors.IColorizer
 
                 if (matchblock.getBlockId() >= 0)
                 {
-                    set.add(Integer.valueOf(matchblock.getBlockId()));
+                    set.add(matchblock.getBlockId());
                 }
             }
 
@@ -554,7 +554,7 @@ public class CustomColormap implements CustomColors.IColorizer
 
             for (int j = 0; j < ainteger.length; ++j)
             {
-                aint[j] = ainteger[j].intValue();
+                aint[j] = ainteger[j];
             }
 
             return aint;

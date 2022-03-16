@@ -109,7 +109,7 @@ public class TileEntityPiston extends TileEntity implements ITickable
 
         if (axisalignedbb != null)
         {
-            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb);
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
 
             if (!list.isEmpty())
             {

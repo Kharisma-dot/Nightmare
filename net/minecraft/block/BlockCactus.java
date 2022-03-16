@@ -23,7 +23,7 @@ public class BlockCactus extends Block
     protected BlockCactus()
     {
         super(Material.cactus);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, 0));
         this.setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
@@ -37,25 +37,21 @@ public class BlockCactus extends Block
             int i;
 
             for (i = 1; worldIn.getBlockState(pos.down(i)).getBlock() == this; ++i)
-            {
                 ;
-            }
 
             if (i < 3)
             {
-                int j = ((Integer)state.getValue(AGE)).intValue();
+                int j = state.getValue(AGE);
 
                 if (j == 15)
                 {
                     worldIn.setBlockState(blockpos, this.getDefaultState());
-                    IBlockState iblockstate = state.withProperty(AGE, Integer.valueOf(0));
+                    IBlockState iblockstate = state.withProperty(AGE, 0);
                     worldIn.setBlockState(pos, iblockstate, 4);
                     this.onNeighborBlockChange(worldIn, blockpos, iblockstate, this);
                 }
                 else
-                {
-                    worldIn.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(j + 1)), 4);
-                }
+                    worldIn.setBlockState(pos, state.withProperty(AGE, j + 1), 4);
             }
         }
     }
@@ -96,20 +92,14 @@ public class BlockCactus extends Block
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         if (!this.canBlockStay(worldIn, pos))
-        {
             worldIn.destroyBlock(pos, true);
-        }
     }
 
     public boolean canBlockStay(World worldIn, BlockPos pos)
     {
         for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
-        {
             if (worldIn.getBlockState(pos.offset(enumfacing)).getBlock().getMaterial().isSolid())
-            {
                 return false;
-            }
-        }
 
         Block block = worldIn.getBlockState(pos.down()).getBlock();
         return block == Blocks.cactus || block == Blocks.sand;
@@ -120,7 +110,7 @@ public class BlockCactus extends Block
      */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
-        entityIn.attackEntityFrom(DamageSource.cactus, 1.0F);
+        entityIn.attackEntityFrom(DamageSource.cactus, 1f);
     }
 
     public EnumWorldBlockLayer getBlockLayer()
@@ -133,7 +123,7 @@ public class BlockCactus extends Block
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(AGE, Integer.valueOf(meta));
+        return this.getDefaultState().withProperty(AGE, meta);
     }
 
     /**
@@ -141,7 +131,7 @@ public class BlockCactus extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((Integer)state.getValue(AGE)).intValue();
+        return state.getValue(AGE);
     }
 
     protected BlockState createBlockState()

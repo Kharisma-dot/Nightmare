@@ -46,8 +46,8 @@ public class RandomEntities
     public static final String PREFIX_MCPATCHER_MOB = "mcpatcher/mob/";
     private static final String[] DEPENDANT_SUFFIXES = new String[] {"_armor", "_eyes", "_exploding", "_shooting", "_fur", "_eyes", "_invulnerable", "_angry", "_tame", "_collar"};
     private static final String PREFIX_DYNAMIC_TEXTURE_HORSE = "horse/";
-    private static final String[] HORSE_TEXTURES = (String[])((String[])ReflectorRaw.getFieldValue((Object)null, EntityHorse.class, String[].class, 0));
-    private static final String[] HORSE_TEXTURES_ABBR = (String[])((String[])ReflectorRaw.getFieldValue((Object)null, EntityHorse.class, String[].class, 1));
+    private static final String[] HORSE_TEXTURES = (String[])((String[])ReflectorRaw.getFieldValue(null, EntityHorse.class, String[].class, 2));
+    private static final String[] HORSE_TEXTURES_ABBR = (String[])((String[])ReflectorRaw.getFieldValue(null, EntityHorse.class, String[].class, 3));
 
     public static void entityLoaded(Entity entity, World world)
     {
@@ -98,8 +98,8 @@ public class RandomEntities
             }
         }
 
-        randomEntity.setEntity((Entity)null);
-        randomTileEntity.setTileEntity((TileEntity)null);
+        randomEntity.setEntity(null);
+        randomTileEntity.setTileEntity(null);
     }
 
     public static ResourceLocation getTextureLocation(ResourceLocation loc)

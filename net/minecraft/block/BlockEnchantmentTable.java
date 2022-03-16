@@ -21,7 +21,7 @@ public class BlockEnchantmentTable extends BlockContainer
     protected BlockEnchantmentTable()
     {
         super(Material.rock, MapColor.redColor);
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.75F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.75f, 1f);
         this.setLightOpacity(0);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
@@ -36,16 +36,12 @@ public class BlockEnchantmentTable extends BlockContainer
         super.randomDisplayTick(worldIn, pos, state, rand);
 
         for (int i = -2; i <= 2; ++i)
-        {
             for (int j = -2; j <= 2; ++j)
             {
                 if (i > -2 && i < 2 && j == -1)
-                {
                     j = 2;
-                }
 
                 if (rand.nextInt(16) == 0)
-                {
                     for (int k = 0; k <= 1; ++k)
                     {
                         BlockPos blockpos = pos.add(i, k, j);
@@ -53,16 +49,12 @@ public class BlockEnchantmentTable extends BlockContainer
                         if (worldIn.getBlockState(blockpos).getBlock() == Blocks.bookshelf)
                         {
                             if (!worldIn.isAirBlock(pos.add(i / 2, 0, j / 2)))
-                            {
                                 break;
-                            }
 
-                            worldIn.spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, (double)pos.getX() + 0.5D, (double)pos.getY() + 2.0D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
+                            worldIn.spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, (double)pos.getX() + 0.5D, (double)pos.getY() + 2.0D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D);
                         }
                     }
-                }
             }
-        }
     }
 
     /**
@@ -92,17 +84,13 @@ public class BlockEnchantmentTable extends BlockContainer
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
-        {
             return true;
-        }
         else
         {
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
             if (tileentity instanceof TileEntityEnchantmentTable)
-            {
                 playerIn.displayGui((TileEntityEnchantmentTable)tileentity);
-            }
 
             return true;
         }
@@ -120,9 +108,7 @@ public class BlockEnchantmentTable extends BlockContainer
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
             if (tileentity instanceof TileEntityEnchantmentTable)
-            {
                 ((TileEntityEnchantmentTable)tileentity).setCustomName(stack.getDisplayName());
-            }
         }
     }
 }

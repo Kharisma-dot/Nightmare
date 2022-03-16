@@ -10,13 +10,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Plane;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockLadder extends Block
 {
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final PropertyDirection FACING = PropertyDirection.create("facing", Plane.HORIZONTAL);
 
     protected BlockLadder()
     {
@@ -42,28 +43,24 @@ public class BlockLadder extends Block
         IBlockState iblockstate = worldIn.getBlockState(pos);
 
         if (iblockstate.getBlock() == this)
-        {
-            float f = 0.125F;
-
             switch ((EnumFacing)iblockstate.getValue(FACING))
             {
                 case NORTH:
-                    this.setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
+                    this.setBlockBounds(0f, 0f, 0.875f, 1f, 1f, 1f);
                     break;
 
                 case SOUTH:
-                    this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
+                    this.setBlockBounds(0f, 0f, 0f, 1f, 1f, 0.125f);
                     break;
 
                 case WEST:
-                    this.setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                    this.setBlockBounds(0.875f, 0f, 0f, 1f, 1f, 1f);
                     break;
 
                 case EAST:
                 default:
-                    this.setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
+                    this.setBlockBounds(0f, 0f, 0f, 0.125f, 1f, 1f);
             }
-        }
     }
 
     /**
@@ -81,7 +78,10 @@ public class BlockLadder extends Block
 
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
-        return worldIn.getBlockState(pos.west()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.east()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.north()).getBlock().isNormalCube() ? true : worldIn.getBlockState(pos.south()).getBlock().isNormalCube()));
+        return worldIn.getBlockState(pos.west()).getBlock().isNormalCube() ? 
+        		true : (worldIn.getBlockState(pos.east()).getBlock().isNormalCube() ? 
+        		true : (worldIn.getBlockState(pos.north()).getBlock().isNormalCube() ? 
+        		true : worldIn.getBlockState(pos.south()).getBlock().isNormalCube()));
     }
 
     /**
@@ -91,18 +91,12 @@ public class BlockLadder extends Block
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         if (facing.getAxis().isHorizontal() && this.canBlockStay(worldIn, pos, facing))
-        {
             return this.getDefaultState().withProperty(FACING, facing);
-        }
         else
         {
             for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
-            {
                 if (this.canBlockStay(worldIn, pos, enumfacing))
-                {
                     return this.getDefaultState().withProperty(FACING, enumfacing);
-                }
-            }
 
             return this.getDefaultState();
         }
@@ -113,7 +107,7 @@ public class BlockLadder extends Block
      */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
-        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+        EnumFacing enumfacing = state.getValue(FACING);
 
         if (!this.canBlockStay(worldIn, pos, enumfacing))
         {
@@ -142,9 +136,7 @@ public class BlockLadder extends Block
         EnumFacing enumfacing = EnumFacing.getFront(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
             enumfacing = EnumFacing.NORTH;
-        }
 
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
@@ -154,7 +146,7 @@ public class BlockLadder extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((EnumFacing)state.getValue(FACING)).getIndex();
+        return state.getValue(FACING).getIndex();
     }
 
     protected BlockState createBlockState()

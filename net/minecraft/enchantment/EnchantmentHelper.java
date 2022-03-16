@@ -37,9 +37,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the level of enchantment on the ItemStack passed.
-     *  
-     * @param enchID The ID for the enchantment you are looking for.
-     * @param stack The ItemStack being searched.
      */
     public static int getEnchantmentLevel(int enchID, ItemStack stack)
     {
@@ -84,7 +81,7 @@ public class EnchantmentHelper
             {
                 int j = nbttaglist.getCompoundTagAt(i).getShort("id");
                 int k = nbttaglist.getCompoundTagAt(i).getShort("lvl");
-                map.put(Integer.valueOf(j), Integer.valueOf(k));
+                map.put(j, k);
             }
         }
 
@@ -93,10 +90,6 @@ public class EnchantmentHelper
 
     /**
      * Set the enchantments for the specified stack.
-     *  
-     * @param enchMap A map containing all the enchantments you wish to add. Enchantments stored with the ID as the key,
-     * and the level as the value.
-     * @param stack The stack to have enchantments applied to.
      */
     public static void setEnchantments(Map<Integer, Integer> enchMap, ItemStack stack)
     {
@@ -105,19 +98,19 @@ public class EnchantmentHelper
 
         while (iterator.hasNext())
         {
-            int i = ((Integer)iterator.next()).intValue();
+            int i = (int) iterator.next();
             Enchantment enchantment = Enchantment.getEnchantmentById(i);
 
             if (enchantment != null)
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setShort("id", (short)i);
-                nbttagcompound.setShort("lvl", (short)((Integer)enchMap.get(Integer.valueOf(i))).intValue());
+                nbttagcompound.setShort("lvl", (short)(int)enchMap.get(i));
                 nbttaglist.appendTag(nbttagcompound);
 
                 if (stack.getItem() == Items.enchanted_book)
                 {
-                    Items.enchanted_book.addEnchantment(stack, new EnchantmentData(enchantment, ((Integer)enchMap.get(Integer.valueOf(i))).intValue()));
+                    Items.enchanted_book.addEnchantment(stack, new EnchantmentData(enchantment, enchMap.get(i)));
                 }
             }
         }
@@ -137,9 +130,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the biggest level of the enchantment on the array of ItemStack passed.
-     *  
-     * @param enchID The ID of the enchantment being searched for.
-     * @param stacks The array of stacks being searched.
      */
     public static int getMaxEnchantmentLevel(int enchID, ItemStack[] stacks)
     {
@@ -167,9 +157,6 @@ public class EnchantmentHelper
 
     /**
      * Executes the enchantment modifier on the ItemStack passed.
-     *  
-     * @param modifier The modifier being applied.
-     * @param stack The ItemStack having a modifier applied to.
      */
     private static void applyEnchantmentModifier(EnchantmentHelper.IModifier modifier, ItemStack stack)
     {
@@ -195,9 +182,6 @@ public class EnchantmentHelper
 
     /**
      * Executes the enchantment modifier on the array of ItemStack passed.
-     *  
-     * @param modifier The modifier being applied.
-     * @param stacks An array of ItemStacks that will have the modifier applied to them.
      */
     private static void applyEnchantmentModifierArray(EnchantmentHelper.IModifier modifier, ItemStack[] stacks)
     {
@@ -209,9 +193,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the modifier of protection enchantments on armors equipped on player.
-     *  
-     * @param stacks An array of ItemStacks being checked.
-     * @param source The source of the damage.
      */
     public static int getEnchantmentModifierDamage(ItemStack[] stacks, DamageSource source)
     {
@@ -273,8 +254,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the Knockback modifier of the enchantment on the players held item.
-     *  
-     * @param player The player being checked.
      */
     public static int getKnockbackModifier(EntityLivingBase player)
     {
@@ -283,8 +262,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the fire aspect modifier of the players held item.
-     *  
-     * @param player The player being checked.
      */
     public static int getFireAspectModifier(EntityLivingBase player)
     {
@@ -293,8 +270,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the 'Water Breathing' modifier of enchantments on player equipped armors.
-     *  
-     * @param player The player being checked.
      */
     public static int getRespiration(Entity player)
     {
@@ -303,8 +278,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the level of the Depth Strider enchantment.
-     *  
-     * @param player The player being checked.
      */
     public static int getDepthStriderModifier(Entity player)
     {
@@ -313,8 +286,6 @@ public class EnchantmentHelper
 
     /**
      * Return the extra efficiency of tools based on enchantments on equipped player item.
-     *  
-     * @param player The player being checked.
      */
     public static int getEfficiencyModifier(EntityLivingBase player)
     {
@@ -323,8 +294,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the silk touch status of enchantments on current equipped item of player.
-     *  
-     * @param player The player being checked.
      */
     public static boolean getSilkTouchModifier(EntityLivingBase player)
     {
@@ -333,8 +302,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the fortune enchantment modifier of the current equipped item of player.
-     *  
-     * @param player The player being checked.
      */
     public static int getFortuneModifier(EntityLivingBase player)
     {
@@ -343,8 +310,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the level of the 'Luck Of The Sea' enchantment.
-     *  
-     * @param player The player being checked.
      */
     public static int getLuckOfSeaModifier(EntityLivingBase player)
     {
@@ -353,8 +318,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the level of the 'Lure' enchantment on the players held item.
-     *  
-     * @param player The player being checked.
      */
     public static int getLureModifier(EntityLivingBase player)
     {
@@ -363,8 +326,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the looting enchantment modifier of the current equipped item of player.
-     *  
-     * @param player The player being checked.
      */
     public static int getLootingModifier(EntityLivingBase player)
     {
@@ -373,8 +334,6 @@ public class EnchantmentHelper
 
     /**
      * Returns the aqua affinity status of enchantments on current equipped item of player.
-     *  
-     * @param player The player being checked.
      */
     public static boolean getAquaAffinityModifier(EntityLivingBase player)
     {
@@ -395,12 +354,12 @@ public class EnchantmentHelper
     }
 
     /**
-     * Returns the enchantability of itemstack, it's uses a singular formula for each index (2nd parameter: 0, 1 and 2),
-     * cutting to the max enchantability power of the table (3rd parameter)
+     * Returns the enchantability of itemstack, using a separate calculation for each enchantNum (0, 1 or 2), cutting to
+     * the max enchantability power of the table, which is locked to a max of 15.
      */
-    public static int calcItemStackEnchantability(Random p_77514_0_, int p_77514_1_, int p_77514_2_, ItemStack p_77514_3_)
+    public static int calcItemStackEnchantability(Random rand, int enchantNum, int power, ItemStack stack)
     {
-        Item item = p_77514_3_.getItem();
+        Item item = stack.getItem();
         int i = item.getItemEnchantability();
 
         if (i <= 0)
@@ -409,13 +368,13 @@ public class EnchantmentHelper
         }
         else
         {
-            if (p_77514_2_ > 15)
+            if (power > 15)
             {
-                p_77514_2_ = 15;
+                power = 15;
             }
 
-            int j = p_77514_0_.nextInt(8) + 1 + (p_77514_2_ >> 1) + p_77514_0_.nextInt(p_77514_2_ + 1);
-            return p_77514_1_ == 0 ? Math.max(j / 3, 1) : (p_77514_1_ == 1 ? j * 2 / 3 + 1 : Math.max(j, p_77514_2_ * 2));
+            int j = rand.nextInt(8) + 1 + (power >> 1) + rand.nextInt(power + 1);
+            return enchantNum == 0 ? Math.max(j / 3, 1) : (enchantNum == 1 ? j * 2 / 3 + 1 : Math.max(j, power * 2));
         }
     }
 
@@ -490,12 +449,12 @@ public class EnchantmentHelper
 
                         while (iterator.hasNext())
                         {
-                            Integer integer = (Integer)iterator.next();
+                            Integer integer = iterator.next();
                             boolean flag = true;
 
                             for (EnchantmentData enchantmentdata1 : list)
                             {
-                                if (!enchantmentdata1.enchantmentobj.canApplyTogether(Enchantment.getEnchantmentById(integer.intValue())))
+                                if (!enchantmentdata1.enchantmentobj.canApplyTogether(Enchantment.getEnchantmentById(integer)))
                                 {
                                     flag = false;
                                     break;
@@ -540,7 +499,7 @@ public class EnchantmentHelper
                             map = Maps.<Integer, EnchantmentData>newHashMap();
                         }
 
-                        map.put(Integer.valueOf(enchantment.effectId), new EnchantmentData(enchantment, i));
+                        map.put(enchantment.effectId, new EnchantmentData(enchantment, i));
                     }
                 }
             }

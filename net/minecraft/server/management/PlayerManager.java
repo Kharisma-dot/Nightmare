@@ -147,10 +147,6 @@ public class PlayerManager
 
     /**
      * passi n the chunk x and y and a flag as to whether or not the instance should be made if it doesnt exist
-     *  
-     * @param chunkX The chunk X coordinate
-     * @param chunkZ The chunk Z coordinate
-     * @param createIfAbsent If the player instance should be created if it doesn't exist
      */
     private PlayerManager.PlayerInstance getPlayerInstance(int chunkX, int chunkZ, boolean createIfAbsent)
     {
@@ -181,8 +177,6 @@ public class PlayerManager
 
     /**
      * Adds an EntityPlayerMP to the PlayerManager and to all player instances within player visibility
-     *  
-     * @param player The player to add
      */
     public void addPlayer(EntityPlayerMP player)
     {
@@ -273,8 +267,6 @@ public class PlayerManager
 
     /**
      * Removes an EntityPlayerMP from the PlayerManager.
-     *  
-     * @param player The player to remove
      */
     public void removePlayer(EntityPlayerMP player)
     {
@@ -301,12 +293,6 @@ public class PlayerManager
     /**
      * Determine if two rectangles centered at the given points overlap for the provided radius. Arguments: x1, z1, x2,
      * z2, radius.
-     *  
-     * @param x1 The first X coordinate
-     * @param z1 The first Z coordinate
-     * @param x2 The second X coordinate
-     * @param z2 The second Z coordinate
-     * @param radius The radius
      */
     private boolean overlaps(int x1, int z1, int x2, int z2, int radius)
     {
@@ -317,8 +303,6 @@ public class PlayerManager
 
     /**
      * update chunks around a player being moved by server logic (e.g. cart, boat)
-     *  
-     * @param player The player to update chunks around
      */
     public void updateMountedMovingPlayer(EntityPlayerMP player)
     {
@@ -533,7 +517,8 @@ public class PlayerManager
         {
             if (this.playersWatchingChunk.contains(player))
             {
-                PlayerManager.pmLogger.debug("Failed to add player. {} already is in chunk {}, {}", new Object[] {player, Integer.valueOf(this.chunkCoords.chunkXPos), Integer.valueOf(this.chunkCoords.chunkZPos)});
+                PlayerManager.pmLogger.debug("Failed to add player. {} already is in chunk {}, {}", 
+                		new Object[] {player, this.chunkCoords.chunkXPos, this.chunkCoords.chunkZPos});
             }
             else
             {

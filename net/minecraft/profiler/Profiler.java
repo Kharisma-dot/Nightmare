@@ -101,7 +101,7 @@ public class Profiler
 
                 this.profilingSection = this.profilingSection + name;
                 this.sectionList.add(this.profilingSection);
-                this.timestampList.add(Long.valueOf(System.nanoTime()));
+                this.timestampList.add(System.nanoTime());
             }
         }
     }
@@ -122,11 +122,11 @@ public class Profiler
 
                 if (this.profilingMap.containsKey(this.profilingSection))
                 {
-                    this.profilingMap.put(this.profilingSection, Long.valueOf(((Long)this.profilingMap.get(this.profilingSection)).longValue() + k));
+                    this.profilingMap.put(this.profilingSection, this.profilingMap.get(this.profilingSection) + k);
                 }
                 else
                 {
-                    this.profilingMap.put(this.profilingSection, Long.valueOf(k));
+                    this.profilingMap.put(this.profilingSection, k);
                 }
 
                 if (k > 100000000L)
@@ -139,7 +139,7 @@ public class Profiler
         }
     }
 
-    public List<Profiler.Result> getProfilingData(String p_76321_1_)
+    public List<Profiler.Result> getProfilingData(String profilerName)
     {
         if (!this.profilingEnabled)
         {
@@ -148,19 +148,19 @@ public class Profiler
         else
         {
             long i = this.profilingMap.containsKey("root") ? ((Long)this.profilingMap.get("root")).longValue() : 0L;
-            long j = this.profilingMap.containsKey(p_76321_1_) ? ((Long)this.profilingMap.get(p_76321_1_)).longValue() : -1L;
+            long j = this.profilingMap.containsKey(profilerName) ? ((Long)this.profilingMap.get(profilerName)).longValue() : -1L;
             List<Profiler.Result> list = Lists.<Profiler.Result>newArrayList();
 
-            if (p_76321_1_.length() > 0)
+            if (profilerName.length() > 0)
             {
-                p_76321_1_ = p_76321_1_ + ".";
+                profilerName = profilerName + ".";
             }
 
             long k = 0L;
 
             for (String s : this.profilingMap.keySet())
             {
-                if (s.length() > p_76321_1_.length() && s.startsWith(p_76321_1_) && s.indexOf(".", p_76321_1_.length() + 1) < 0)
+                if (s.length() > profilerName.length() && s.startsWith(profilerName) && s.indexOf(".", profilerName.length() + 1) < 0)
                 {
                     k += ((Long)this.profilingMap.get(s)).longValue();
                 }
@@ -180,19 +180,19 @@ public class Profiler
 
             for (String s1 : this.profilingMap.keySet())
             {
-                if (s1.length() > p_76321_1_.length() && s1.startsWith(p_76321_1_) && s1.indexOf(".", p_76321_1_.length() + 1) < 0)
+                if (s1.length() > profilerName.length() && s1.startsWith(profilerName) && s1.indexOf(".", profilerName.length() + 1) < 0)
                 {
                     long l = ((Long)this.profilingMap.get(s1)).longValue();
                     double d0 = (double)l * 100.0D / (double)k;
                     double d1 = (double)l * 100.0D / (double)i;
-                    String s2 = s1.substring(p_76321_1_.length());
+                    String s2 = s1.substring(profilerName.length());
                     list.add(new Profiler.Result(s2, d0, d1));
                 }
             }
 
             for (String s3 : this.profilingMap.keySet())
             {
-                this.profilingMap.put(s3, Long.valueOf(((Long)this.profilingMap.get(s3)).longValue() * 950L / 1000L));
+                this.profilingMap.put(s3, this.profilingMap.get(s3) * 950L / 1000L);
             }
 
             if ((float)k > f)
@@ -201,7 +201,7 @@ public class Profiler
             }
 
             Collections.sort(list);
-            list.add(0, new Profiler.Result(p_76321_1_, 100.0D, (double)k * 100.0D / (double)i));
+            list.add(0, new Profiler.Result(profilerName, 100.0D, (double)k * 100.0D / (double)i));
             return list;
         }
     }
@@ -237,11 +237,11 @@ public class Profiler
         public double field_76330_b;
         public String field_76331_c;
 
-        public Result(String p_i1554_1_, double p_i1554_2_, double p_i1554_4_)
+        public Result(String profilerName, double usePercentage, double totalUsePercentage)
         {
-            this.field_76331_c = p_i1554_1_;
-            this.field_76332_a = p_i1554_2_;
-            this.field_76330_b = p_i1554_4_;
+            this.field_76331_c = profilerName;
+            this.field_76332_a = usePercentage;
+            this.field_76330_b = totalUsePercentage;
         }
 
         public int compareTo(Profiler.Result p_compareTo_1_)
@@ -249,7 +249,7 @@ public class Profiler
             return p_compareTo_1_.field_76332_a < this.field_76332_a ? -1 : (p_compareTo_1_.field_76332_a > this.field_76332_a ? 1 : p_compareTo_1_.field_76331_c.compareTo(this.field_76331_c));
         }
 
-        public int func_76329_a()
+        public int getColor()
         {
             return (this.field_76331_c.hashCode() & 11184810) + 4473924;
         }

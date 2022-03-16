@@ -77,7 +77,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.Item;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.src.Config;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
@@ -94,204 +93,15 @@ import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.property.IUnlistedProperty;
+import net.optifine.Log;
+import net.optifine.util.ArrayUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Reflector
 {
-    private static boolean logForge = logEntry("*** Reflector Forge ***");
+    private static final Logger LOGGER = LogManager.getLogger();
     public static ReflectorClass BetterFoliageClient = new ReflectorClass("mods.betterfoliage.client.BetterFoliageClient");
-    public static ReflectorClass BlamingTransformer = new ReflectorClass("net.minecraftforge.fml.common.asm.transformers.BlamingTransformer");
-    public static ReflectorMethod BlamingTransformer_onCrash = new ReflectorMethod(BlamingTransformer, "onCrash");
-    public static ReflectorClass ChunkWatchEvent_UnWatch = new ReflectorClass("net.minecraftforge.event.world.ChunkWatchEvent$UnWatch");
-    public static ReflectorConstructor ChunkWatchEvent_UnWatch_Constructor = new ReflectorConstructor(ChunkWatchEvent_UnWatch, new Class[] {ChunkCoordIntPair.class, EntityPlayerMP.class});
-    public static ReflectorClass CoreModManager = new ReflectorClass("net.minecraftforge.fml.relauncher.CoreModManager");
-    public static ReflectorMethod CoreModManager_onCrash = new ReflectorMethod(CoreModManager, "onCrash");
-    public static ReflectorClass DimensionManager = new ReflectorClass("net.minecraftforge.common.DimensionManager");
-    public static ReflectorMethod DimensionManager_createProviderFor = new ReflectorMethod(DimensionManager, "createProviderFor");
-    public static ReflectorMethod DimensionManager_getStaticDimensionIDs = new ReflectorMethod(DimensionManager, "getStaticDimensionIDs");
-    public static ReflectorClass DrawScreenEvent_Pre = new ReflectorClass("net.minecraftforge.client.event.GuiScreenEvent$DrawScreenEvent$Pre");
-    public static ReflectorConstructor DrawScreenEvent_Pre_Constructor = new ReflectorConstructor(DrawScreenEvent_Pre, new Class[] {GuiScreen.class, Integer.TYPE, Integer.TYPE, Float.TYPE});
-    public static ReflectorClass DrawScreenEvent_Post = new ReflectorClass("net.minecraftforge.client.event.GuiScreenEvent$DrawScreenEvent$Post");
-    public static ReflectorConstructor DrawScreenEvent_Post_Constructor = new ReflectorConstructor(DrawScreenEvent_Post, new Class[] {GuiScreen.class, Integer.TYPE, Integer.TYPE, Float.TYPE});
-    public static ReflectorClass EntityViewRenderEvent_CameraSetup = new ReflectorClass("net.minecraftforge.client.event.EntityViewRenderEvent$CameraSetup");
-    public static ReflectorConstructor EntityViewRenderEvent_CameraSetup_Constructor = new ReflectorConstructor(EntityViewRenderEvent_CameraSetup, new Class[] {EntityRenderer.class, Entity.class, Block.class, Double.TYPE, Float.TYPE, Float.TYPE, Float.TYPE});
-    public static ReflectorField EntityViewRenderEvent_CameraSetup_yaw = new ReflectorField(EntityViewRenderEvent_CameraSetup, "yaw");
-    public static ReflectorField EntityViewRenderEvent_CameraSetup_pitch = new ReflectorField(EntityViewRenderEvent_CameraSetup, "pitch");
-    public static ReflectorField EntityViewRenderEvent_CameraSetup_roll = new ReflectorField(EntityViewRenderEvent_CameraSetup, "roll");
-    public static ReflectorClass EntityViewRenderEvent_FogColors = new ReflectorClass("net.minecraftforge.client.event.EntityViewRenderEvent$FogColors");
-    public static ReflectorConstructor EntityViewRenderEvent_FogColors_Constructor = new ReflectorConstructor(EntityViewRenderEvent_FogColors, new Class[] {EntityRenderer.class, Entity.class, Block.class, Double.TYPE, Float.TYPE, Float.TYPE, Float.TYPE});
-    public static ReflectorField EntityViewRenderEvent_FogColors_red = new ReflectorField(EntityViewRenderEvent_FogColors, "red");
-    public static ReflectorField EntityViewRenderEvent_FogColors_green = new ReflectorField(EntityViewRenderEvent_FogColors, "green");
-    public static ReflectorField EntityViewRenderEvent_FogColors_blue = new ReflectorField(EntityViewRenderEvent_FogColors, "blue");
-    public static ReflectorClass Event = new ReflectorClass("net.minecraftforge.fml.common.eventhandler.Event");
-    public static ReflectorMethod Event_isCanceled = new ReflectorMethod(Event, "isCanceled");
-    public static ReflectorClass EventBus = new ReflectorClass("net.minecraftforge.fml.common.eventhandler.EventBus");
-    public static ReflectorMethod EventBus_post = new ReflectorMethod(EventBus, "post");
-    public static ReflectorClass Event_Result = new ReflectorClass("net.minecraftforge.fml.common.eventhandler.Event$Result");
-    public static ReflectorField Event_Result_DENY = new ReflectorField(Event_Result, "DENY");
-    public static ReflectorField Event_Result_ALLOW = new ReflectorField(Event_Result, "ALLOW");
-    public static ReflectorField Event_Result_DEFAULT = new ReflectorField(Event_Result, "DEFAULT");
-    public static ReflectorClass ExtendedBlockState = new ReflectorClass("net.minecraftforge.common.property.ExtendedBlockState");
-    public static ReflectorConstructor ExtendedBlockState_Constructor = new ReflectorConstructor(ExtendedBlockState, new Class[] {Block.class, IProperty[].class, IUnlistedProperty[].class});
-    public static ReflectorClass FMLClientHandler = new ReflectorClass("net.minecraftforge.fml.client.FMLClientHandler");
-    public static ReflectorMethod FMLClientHandler_instance = new ReflectorMethod(FMLClientHandler, "instance");
-    public static ReflectorMethod FMLClientHandler_handleLoadingScreen = new ReflectorMethod(FMLClientHandler, "handleLoadingScreen");
-    public static ReflectorMethod FMLClientHandler_isLoading = new ReflectorMethod(FMLClientHandler, "isLoading");
-    public static ReflectorMethod FMLClientHandler_trackBrokenTexture = new ReflectorMethod(FMLClientHandler, "trackBrokenTexture");
-    public static ReflectorMethod FMLClientHandler_trackMissingTexture = new ReflectorMethod(FMLClientHandler, "trackMissingTexture");
-    public static ReflectorClass FMLCommonHandler = new ReflectorClass("net.minecraftforge.fml.common.FMLCommonHandler");
-    public static ReflectorMethod FMLCommonHandler_callFuture = new ReflectorMethod(FMLCommonHandler, "callFuture");
-    public static ReflectorMethod FMLCommonHandler_enhanceCrashReport = new ReflectorMethod(FMLCommonHandler, "enhanceCrashReport");
-    public static ReflectorMethod FMLCommonHandler_getBrandings = new ReflectorMethod(FMLCommonHandler, "getBrandings");
-    public static ReflectorMethod FMLCommonHandler_handleServerAboutToStart = new ReflectorMethod(FMLCommonHandler, "handleServerAboutToStart");
-    public static ReflectorMethod FMLCommonHandler_handleServerStarting = new ReflectorMethod(FMLCommonHandler, "handleServerStarting");
-    public static ReflectorMethod FMLCommonHandler_instance = new ReflectorMethod(FMLCommonHandler, "instance");
-    public static ReflectorClass ForgeBiome = new ReflectorClass(BiomeGenBase.class);
-    public static ReflectorMethod ForgeBiome_getWaterColorMultiplier = new ReflectorMethod(ForgeBiome, "getWaterColorMultiplier");
-    public static ReflectorClass ForgeBlock = new ReflectorClass(Block.class);
-    public static ReflectorMethod ForgeBlock_addDestroyEffects = new ReflectorMethod(ForgeBlock, "addDestroyEffects");
-    public static ReflectorMethod ForgeBlock_addHitEffects = new ReflectorMethod(ForgeBlock, "addHitEffects");
-    public static ReflectorMethod ForgeBlock_canCreatureSpawn = new ReflectorMethod(ForgeBlock, "canCreatureSpawn");
-    public static ReflectorMethod ForgeBlock_canRenderInLayer = new ReflectorMethod(ForgeBlock, "canRenderInLayer", new Class[] {EnumWorldBlockLayer.class});
-    public static ReflectorMethod ForgeBlock_doesSideBlockRendering = new ReflectorMethod(ForgeBlock, "doesSideBlockRendering");
-    public static ReflectorMethod ForgeBlock_getBedDirection = new ReflectorMethod(ForgeBlock, "getBedDirection");
-    public static ReflectorMethod ForgeBlock_getExtendedState = new ReflectorMethod(ForgeBlock, "getExtendedState");
-    public static ReflectorMethod ForgeBlock_getLightOpacity = new ReflectorMethod(ForgeBlock, "getLightOpacity", new Class[] {IBlockAccess.class, BlockPos.class});
-    public static ReflectorMethod ForgeBlock_getLightValue = new ReflectorMethod(ForgeBlock, "getLightValue", new Class[] {IBlockAccess.class, BlockPos.class});
-    public static ReflectorMethod ForgeBlock_hasTileEntity = new ReflectorMethod(ForgeBlock, "hasTileEntity", new Class[] {IBlockState.class});
-    public static ReflectorMethod ForgeBlock_isAir = new ReflectorMethod(ForgeBlock, "isAir");
-    public static ReflectorMethod ForgeBlock_isBed = new ReflectorMethod(ForgeBlock, "isBed");
-    public static ReflectorMethod ForgeBlock_isBedFoot = new ReflectorMethod(ForgeBlock, "isBedFoot");
-    public static ReflectorMethod ForgeBlock_isSideSolid = new ReflectorMethod(ForgeBlock, "isSideSolid");
-    public static ReflectorClass ForgeChunkCache = new ReflectorClass(ChunkCache.class);
-    public static ReflectorMethod ForgeChunkCache_isSideSolid = new ReflectorMethod(ForgeChunkCache, "isSideSolid");
-    public static ReflectorClass ForgeEntity = new ReflectorClass(Entity.class);
-    public static ReflectorMethod ForgeEntity_canRiderInteract = new ReflectorMethod(ForgeEntity, "canRiderInteract");
-    public static ReflectorField ForgeEntity_captureDrops = new ReflectorField(ForgeEntity, "captureDrops");
-    public static ReflectorField ForgeEntity_capturedDrops = new ReflectorField(ForgeEntity, "capturedDrops");
-    public static ReflectorMethod ForgeEntity_shouldRenderInPass = new ReflectorMethod(ForgeEntity, "shouldRenderInPass");
-    public static ReflectorMethod ForgeEntity_shouldRiderSit = new ReflectorMethod(ForgeEntity, "shouldRiderSit");
-    public static ReflectorClass ForgeEventFactory = new ReflectorClass("net.minecraftforge.event.ForgeEventFactory");
-    public static ReflectorMethod ForgeEventFactory_canEntityDespawn = new ReflectorMethod(ForgeEventFactory, "canEntityDespawn");
-    public static ReflectorMethod ForgeEventFactory_canEntitySpawn = new ReflectorMethod(ForgeEventFactory, "canEntitySpawn");
-    public static ReflectorMethod ForgeEventFactory_doSpecialSpawn = new ReflectorMethod(ForgeEventFactory, "doSpecialSpawn", new Class[] {EntityLiving.class, World.class, Float.TYPE, Float.TYPE, Float.TYPE});
-    public static ReflectorMethod ForgeEventFactory_getMaxSpawnPackSize = new ReflectorMethod(ForgeEventFactory, "getMaxSpawnPackSize");
-    public static ReflectorMethod ForgeEventFactory_renderBlockOverlay = new ReflectorMethod(ForgeEventFactory, "renderBlockOverlay");
-    public static ReflectorMethod ForgeEventFactory_renderFireOverlay = new ReflectorMethod(ForgeEventFactory, "renderFireOverlay");
-    public static ReflectorMethod ForgeEventFactory_renderWaterOverlay = new ReflectorMethod(ForgeEventFactory, "renderWaterOverlay");
-    public static ReflectorClass ForgeHooks = new ReflectorClass("net.minecraftforge.common.ForgeHooks");
-    public static ReflectorMethod ForgeHooks_onLivingAttack = new ReflectorMethod(ForgeHooks, "onLivingAttack");
-    public static ReflectorMethod ForgeHooks_onLivingDeath = new ReflectorMethod(ForgeHooks, "onLivingDeath");
-    public static ReflectorMethod ForgeHooks_onLivingDrops = new ReflectorMethod(ForgeHooks, "onLivingDrops");
-    public static ReflectorMethod ForgeHooks_onLivingFall = new ReflectorMethod(ForgeHooks, "onLivingFall");
-    public static ReflectorMethod ForgeHooks_onLivingHurt = new ReflectorMethod(ForgeHooks, "onLivingHurt");
-    public static ReflectorMethod ForgeHooks_onLivingJump = new ReflectorMethod(ForgeHooks, "onLivingJump");
-    public static ReflectorMethod ForgeHooks_onLivingSetAttackTarget = new ReflectorMethod(ForgeHooks, "onLivingSetAttackTarget");
-    public static ReflectorMethod ForgeHooks_onLivingUpdate = new ReflectorMethod(ForgeHooks, "onLivingUpdate");
-    public static ReflectorClass ForgeHooksClient = new ReflectorClass("net.minecraftforge.client.ForgeHooksClient");
-    public static ReflectorMethod ForgeHooksClient_applyTransform = new ReflectorMethod(ForgeHooksClient, "applyTransform", new Class[] {Matrix4f.class, Optional.class});
-    public static ReflectorMethod ForgeHooksClient_dispatchRenderLast = new ReflectorMethod(ForgeHooksClient, "dispatchRenderLast");
-    public static ReflectorMethod ForgeHooksClient_drawScreen = new ReflectorMethod(ForgeHooksClient, "drawScreen");
-    public static ReflectorMethod ForgeHooksClient_fillNormal = new ReflectorMethod(ForgeHooksClient, "fillNormal");
-    public static ReflectorMethod ForgeHooksClient_handleCameraTransforms = new ReflectorMethod(ForgeHooksClient, "handleCameraTransforms");
-    public static ReflectorMethod ForgeHooksClient_getArmorModel = new ReflectorMethod(ForgeHooksClient, "getArmorModel");
-    public static ReflectorMethod ForgeHooksClient_getArmorTexture = new ReflectorMethod(ForgeHooksClient, "getArmorTexture");
-    public static ReflectorMethod ForgeHooksClient_getFogDensity = new ReflectorMethod(ForgeHooksClient, "getFogDensity");
-    public static ReflectorMethod ForgeHooksClient_getFOVModifier = new ReflectorMethod(ForgeHooksClient, "getFOVModifier");
-    public static ReflectorMethod ForgeHooksClient_getMatrix = new ReflectorMethod(ForgeHooksClient, "getMatrix", new Class[] {ModelRotation.class});
-    public static ReflectorMethod ForgeHooksClient_getOffsetFOV = new ReflectorMethod(ForgeHooksClient, "getOffsetFOV");
-    public static ReflectorMethod ForgeHooksClient_loadEntityShader = new ReflectorMethod(ForgeHooksClient, "loadEntityShader");
-    public static ReflectorMethod ForgeHooksClient_onDrawBlockHighlight = new ReflectorMethod(ForgeHooksClient, "onDrawBlockHighlight");
-    public static ReflectorMethod ForgeHooksClient_onFogRender = new ReflectorMethod(ForgeHooksClient, "onFogRender");
-    public static ReflectorMethod ForgeHooksClient_onTextureStitchedPre = new ReflectorMethod(ForgeHooksClient, "onTextureStitchedPre");
-    public static ReflectorMethod ForgeHooksClient_onTextureStitchedPost = new ReflectorMethod(ForgeHooksClient, "onTextureStitchedPost");
-    public static ReflectorMethod ForgeHooksClient_orientBedCamera = new ReflectorMethod(ForgeHooksClient, "orientBedCamera");
-    public static ReflectorMethod ForgeHooksClient_putQuadColor = new ReflectorMethod(ForgeHooksClient, "putQuadColor");
-    public static ReflectorMethod ForgeHooksClient_renderFirstPersonHand = new ReflectorMethod(ForgeHooksClient, "renderFirstPersonHand");
-    public static ReflectorMethod ForgeHooksClient_renderMainMenu = new ReflectorMethod(ForgeHooksClient, "renderMainMenu");
-    public static ReflectorMethod ForgeHooksClient_setRenderLayer = new ReflectorMethod(ForgeHooksClient, "setRenderLayer");
-    public static ReflectorMethod ForgeHooksClient_setRenderPass = new ReflectorMethod(ForgeHooksClient, "setRenderPass");
-    public static ReflectorMethod ForgeHooksClient_transform = new ReflectorMethod(ForgeHooksClient, "transform");
-    public static ReflectorClass ForgeItem = new ReflectorClass(Item.class);
-    public static ReflectorField ForgeItem_delegate = new ReflectorField(ForgeItem, "delegate");
-    public static ReflectorMethod ForgeItem_getDurabilityForDisplay = new ReflectorMethod(ForgeItem, "getDurabilityForDisplay");
-    public static ReflectorMethod ForgeItem_getModel = new ReflectorMethod(ForgeItem, "getModel");
-    public static ReflectorMethod ForgeItem_onEntitySwing = new ReflectorMethod(ForgeItem, "onEntitySwing");
-    public static ReflectorMethod ForgeItem_shouldCauseReequipAnimation = new ReflectorMethod(ForgeItem, "shouldCauseReequipAnimation");
-    public static ReflectorMethod ForgeItem_showDurabilityBar = new ReflectorMethod(ForgeItem, "showDurabilityBar");
-    public static ReflectorClass ForgeModContainer = new ReflectorClass("net.minecraftforge.common.ForgeModContainer");
-    public static ReflectorField ForgeModContainer_forgeLightPipelineEnabled = new ReflectorField(ForgeModContainer, "forgeLightPipelineEnabled");
-    public static ReflectorClass ForgePotionEffect = new ReflectorClass(PotionEffect.class);
-    public static ReflectorMethod ForgePotionEffect_isCurativeItem = new ReflectorMethod(ForgePotionEffect, "isCurativeItem");
-    public static ReflectorClass ForgeTileEntity = new ReflectorClass(TileEntity.class);
-    public static ReflectorMethod ForgeTileEntity_canRenderBreaking = new ReflectorMethod(ForgeTileEntity, "canRenderBreaking");
-    public static ReflectorMethod ForgeTileEntity_getRenderBoundingBox = new ReflectorMethod(ForgeTileEntity, "getRenderBoundingBox");
-    public static ReflectorMethod ForgeTileEntity_hasFastRenderer = new ReflectorMethod(ForgeTileEntity, "hasFastRenderer");
-    public static ReflectorMethod ForgeTileEntity_shouldRenderInPass = new ReflectorMethod(ForgeTileEntity, "shouldRenderInPass");
-    public static ReflectorClass ForgeVertexFormatElementEnumUseage = new ReflectorClass(VertexFormatElement.EnumUsage.class);
-    public static ReflectorMethod ForgeVertexFormatElementEnumUseage_preDraw = new ReflectorMethod(ForgeVertexFormatElementEnumUseage, "preDraw");
-    public static ReflectorMethod ForgeVertexFormatElementEnumUseage_postDraw = new ReflectorMethod(ForgeVertexFormatElementEnumUseage, "postDraw");
-    public static ReflectorClass ForgeWorld = new ReflectorClass(World.class);
-    public static ReflectorMethod ForgeWorld_countEntities = new ReflectorMethod(ForgeWorld, "countEntities", new Class[] {EnumCreatureType.class, Boolean.TYPE});
-    public static ReflectorMethod ForgeWorld_getPerWorldStorage = new ReflectorMethod(ForgeWorld, "getPerWorldStorage");
-    public static ReflectorClass ForgeWorldProvider = new ReflectorClass(WorldProvider.class);
-    public static ReflectorMethod ForgeWorldProvider_getCloudRenderer = new ReflectorMethod(ForgeWorldProvider, "getCloudRenderer");
-    public static ReflectorMethod ForgeWorldProvider_getSkyRenderer = new ReflectorMethod(ForgeWorldProvider, "getSkyRenderer");
-    public static ReflectorMethod ForgeWorldProvider_getWeatherRenderer = new ReflectorMethod(ForgeWorldProvider, "getWeatherRenderer");
-    public static ReflectorMethod ForgeWorldProvider_getSaveFolder = new ReflectorMethod(ForgeWorldProvider, "getSaveFolder");
-    public static ReflectorClass GuiModList = new ReflectorClass("net.minecraftforge.fml.client.GuiModList");
-    public static ReflectorConstructor GuiModList_Constructor = new ReflectorConstructor(GuiModList, new Class[] {GuiScreen.class});
-    public static ReflectorClass IColoredBakedQuad = new ReflectorClass("net.minecraftforge.client.model.IColoredBakedQuad");
-    public static ReflectorClass IExtendedBlockState = new ReflectorClass("net.minecraftforge.common.property.IExtendedBlockState");
-    public static ReflectorMethod IExtendedBlockState_getClean = new ReflectorMethod(IExtendedBlockState, "getClean");
-    public static ReflectorClass IModel = new ReflectorClass("net.minecraftforge.client.model.IModel");
-    public static ReflectorMethod IModel_getTextures = new ReflectorMethod(IModel, "getTextures");
-    public static ReflectorClass IRenderHandler = new ReflectorClass("net.minecraftforge.client.IRenderHandler");
-    public static ReflectorMethod IRenderHandler_render = new ReflectorMethod(IRenderHandler, "render");
-    public static ReflectorClass ItemModelMesherForge = new ReflectorClass("net.minecraftforge.client.ItemModelMesherForge");
-    public static ReflectorConstructor ItemModelMesherForge_Constructor = new ReflectorConstructor(ItemModelMesherForge, new Class[] {ModelManager.class});
-    public static ReflectorClass Launch = new ReflectorClass("net.minecraft.launchwrapper.Launch");
-    public static ReflectorField Launch_blackboard = new ReflectorField(Launch, "blackboard");
-    public static ReflectorClass LightUtil = new ReflectorClass("net.minecraftforge.client.model.pipeline.LightUtil");
-    public static ReflectorField LightUtil_itemConsumer = new ReflectorField(LightUtil, "itemConsumer");
-    public static ReflectorMethod LightUtil_putBakedQuad = new ReflectorMethod(LightUtil, "putBakedQuad");
-    public static ReflectorMethod LightUtil_renderQuadColor = new ReflectorMethod(LightUtil, "renderQuadColor");
-    public static ReflectorField LightUtil_tessellator = new ReflectorField(LightUtil, "tessellator");
-    public static ReflectorClass Loader = new ReflectorClass("net.minecraftforge.fml.common.Loader");
-    public static ReflectorMethod Loader_getActiveModList = new ReflectorMethod(Loader, "getActiveModList");
-    public static ReflectorMethod Loader_instance = new ReflectorMethod(Loader, "instance");
-    public static ReflectorClass MinecraftForge = new ReflectorClass("net.minecraftforge.common.MinecraftForge");
-    public static ReflectorField MinecraftForge_EVENT_BUS = new ReflectorField(MinecraftForge, "EVENT_BUS");
-    public static ReflectorClass MinecraftForgeClient = new ReflectorClass("net.minecraftforge.client.MinecraftForgeClient");
-    public static ReflectorMethod MinecraftForgeClient_getRenderPass = new ReflectorMethod(MinecraftForgeClient, "getRenderPass");
-    public static ReflectorMethod MinecraftForgeClient_onRebuildChunk = new ReflectorMethod(MinecraftForgeClient, "onRebuildChunk");
-    public static ReflectorClass ModContainer = new ReflectorClass("net.minecraftforge.fml.common.ModContainer");
-    public static ReflectorMethod ModContainer_getModId = new ReflectorMethod(ModContainer, "getModId");
-    public static ReflectorClass ModelLoader = new ReflectorClass("net.minecraftforge.client.model.ModelLoader");
-    public static ReflectorField ModelLoader_stateModels = new ReflectorField(ModelLoader, "stateModels");
-    public static ReflectorMethod ModelLoader_onRegisterItems = new ReflectorMethod(ModelLoader, "onRegisterItems");
-    public static ReflectorMethod ModelLoader_getInventoryVariant = new ReflectorMethod(ModelLoader, "getInventoryVariant");
-    public static ReflectorField ModelLoader_textures = new ReflectorField(ModelLoader, "textures", true);
-    public static ReflectorClass ModelLoader_VanillaLoader = new ReflectorClass("net.minecraftforge.client.model.ModelLoader$VanillaLoader", true);
-    public static ReflectorField ModelLoader_VanillaLoader_INSTANCE = new ReflectorField(ModelLoader_VanillaLoader, "instance", true);
-    public static ReflectorMethod ModelLoader_VanillaLoader_loadModel = new ReflectorMethod(ModelLoader_VanillaLoader, "loadModel", (Class[])null, true);
-    public static ReflectorClass RenderBlockOverlayEvent_OverlayType = new ReflectorClass("net.minecraftforge.client.event.RenderBlockOverlayEvent$OverlayType");
-    public static ReflectorField RenderBlockOverlayEvent_OverlayType_BLOCK = new ReflectorField(RenderBlockOverlayEvent_OverlayType, "BLOCK");
-    public static ReflectorClass RenderingRegistry = new ReflectorClass("net.minecraftforge.fml.client.registry.RenderingRegistry");
-    public static ReflectorMethod RenderingRegistry_loadEntityRenderers = new ReflectorMethod(RenderingRegistry, "loadEntityRenderers", new Class[] {RenderManager.class, Map.class});
-    public static ReflectorClass RenderItemInFrameEvent = new ReflectorClass("net.minecraftforge.client.event.RenderItemInFrameEvent");
-    public static ReflectorConstructor RenderItemInFrameEvent_Constructor = new ReflectorConstructor(RenderItemInFrameEvent, new Class[] {EntityItemFrame.class, RenderItemFrame.class});
-    public static ReflectorClass RenderLivingEvent_Pre = new ReflectorClass("net.minecraftforge.client.event.RenderLivingEvent$Pre");
-    public static ReflectorConstructor RenderLivingEvent_Pre_Constructor = new ReflectorConstructor(RenderLivingEvent_Pre, new Class[] {EntityLivingBase.class, RendererLivingEntity.class, Double.TYPE, Double.TYPE, Double.TYPE});
-    public static ReflectorClass RenderLivingEvent_Post = new ReflectorClass("net.minecraftforge.client.event.RenderLivingEvent$Post");
-    public static ReflectorConstructor RenderLivingEvent_Post_Constructor = new ReflectorConstructor(RenderLivingEvent_Post, new Class[] {EntityLivingBase.class, RendererLivingEntity.class, Double.TYPE, Double.TYPE, Double.TYPE});
-    public static ReflectorClass RenderLivingEvent_Specials_Pre = new ReflectorClass("net.minecraftforge.client.event.RenderLivingEvent$Specials$Pre");
-    public static ReflectorConstructor RenderLivingEvent_Specials_Pre_Constructor = new ReflectorConstructor(RenderLivingEvent_Specials_Pre, new Class[] {EntityLivingBase.class, RendererLivingEntity.class, Double.TYPE, Double.TYPE, Double.TYPE});
-    public static ReflectorClass RenderLivingEvent_Specials_Post = new ReflectorClass("net.minecraftforge.client.event.RenderLivingEvent$Specials$Post");
-    public static ReflectorConstructor RenderLivingEvent_Specials_Post_Constructor = new ReflectorConstructor(RenderLivingEvent_Specials_Post, new Class[] {EntityLivingBase.class, RendererLivingEntity.class, Double.TYPE, Double.TYPE, Double.TYPE});
-    public static ReflectorClass SplashScreen = new ReflectorClass("net.minecraftforge.fml.client.SplashProgress");
-    public static ReflectorClass WorldEvent_Load = new ReflectorClass("net.minecraftforge.event.world.WorldEvent$Load");
-    public static ReflectorConstructor WorldEvent_Load_Constructor = new ReflectorConstructor(WorldEvent_Load, new Class[] {World.class});
     private static boolean logVanilla = logEntry("*** Reflector Vanilla ***");
     public static ReflectorClass ChunkProviderClient = new ReflectorClass(ChunkProviderClient.class);
     public static ReflectorField ChunkProviderClient_chunkMapping = new ReflectorField(ChunkProviderClient, LongHashMap.class);
@@ -411,11 +221,11 @@ public class Reflector
                 return;
             }
 
-            method.invoke((Object)null, params);
+            method.invoke(null, params);
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, refMethod, params);
+            handleException(throwable, null, refMethod, params);
         }
     }
 
@@ -431,13 +241,13 @@ public class Reflector
             }
             else
             {
-                Boolean obool = (Boolean)method.invoke((Object)null, params);
-                return obool.booleanValue();
+                boolean obool = (boolean)method.invoke(null, params);
+                return obool;
             }
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, refMethod, params);
+            handleException(throwable, null, refMethod, params);
             return false;
         }
     }
@@ -454,13 +264,13 @@ public class Reflector
             }
             else
             {
-                Integer integer = (Integer)method.invoke((Object)null, params);
-                return integer.intValue();
+                int integer = (int)method.invoke(null, params);
+                return integer;
             }
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, refMethod, params);
+            handleException(throwable, null, refMethod, params);
             return 0;
         }
     }
@@ -477,13 +287,13 @@ public class Reflector
             }
             else
             {
-                Float f = (Float)method.invoke((Object)null, params);
-                return f.floatValue();
+                Float f = (Float)method.invoke(null, params);
+                return f;
             }
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, refMethod, params);
+            handleException(throwable, null, refMethod, params);
             return 0.0F;
         }
     }
@@ -500,13 +310,13 @@ public class Reflector
             }
             else
             {
-                Double d0 = (Double)method.invoke((Object)null, params);
-                return d0.doubleValue();
+                double d0 = (double)method.invoke(null, params);
+                return d0;
             }
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, refMethod, params);
+            handleException(throwable, null, refMethod, params);
             return 0.0D;
         }
     }
@@ -523,13 +333,13 @@ public class Reflector
             }
             else
             {
-                String s = (String)method.invoke((Object)null, params);
+                String s = (String)method.invoke(null, params);
                 return s;
             }
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, refMethod, params);
+            handleException(throwable, null, refMethod, params);
             return null;
         }
     }
@@ -546,13 +356,13 @@ public class Reflector
             }
             else
             {
-                Object object = method.invoke((Object)null, params);
+                Object object = method.invoke(null, params);
                 return object;
             }
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, refMethod, params);
+            handleException(throwable, null, refMethod, params);
             return null;
         }
     }
@@ -593,8 +403,8 @@ public class Reflector
             }
             else
             {
-                Boolean obool = (Boolean)method.invoke(obj, params);
-                return obool.booleanValue();
+                boolean obool = (boolean)method.invoke(obj, params);
+                return obool;
             }
         }
         catch (Throwable throwable)
@@ -616,8 +426,8 @@ public class Reflector
             }
             else
             {
-                Integer integer = (Integer)method.invoke(obj, params);
-                return integer.intValue();
+                int integer = (int)method.invoke(obj, params);
+                return integer;
             }
         }
         catch (Throwable throwable)
@@ -640,7 +450,7 @@ public class Reflector
             else
             {
                 Float f = (Float)method.invoke(obj, params);
-                return f.floatValue();
+                return f;
             }
         }
         catch (Throwable throwable)
@@ -662,8 +472,8 @@ public class Reflector
             }
             else
             {
-                Double d0 = (Double)method.invoke(obj, params);
-                return d0.doubleValue();
+                double d0 = (double)method.invoke(obj, params);
+                return d0;
             }
         }
         catch (Throwable throwable)
@@ -721,7 +531,7 @@ public class Reflector
 
     public static Object getFieldValue(ReflectorField refField)
     {
-        return getFieldValue((Object)null, refField);
+        return getFieldValue(null, refField);
     }
 
     public static Object getFieldValue(Object obj, ReflectorField refField)
@@ -742,7 +552,7 @@ public class Reflector
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return null;
         }
     }
@@ -759,13 +569,13 @@ public class Reflector
             }
             else
             {
-                boolean flag = field.getBoolean((Object)null);
+                boolean flag = field.getBoolean(null);
                 return flag;
             }
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return def;
         }
     }
@@ -788,7 +598,7 @@ public class Reflector
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return def;
         }
     }
@@ -823,7 +633,7 @@ public class Reflector
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return def;
         }
     }
@@ -846,7 +656,7 @@ public class Reflector
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return def;
         }
     }
@@ -869,14 +679,14 @@ public class Reflector
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return def;
         }
     }
 
     public static boolean setFieldValue(ReflectorField refField, Object value)
     {
-        return setFieldValue((Object)null, refField, value);
+        return setFieldValue(null, refField, value);
     }
 
     public static boolean setFieldValue(Object obj, ReflectorField refField, Object value)
@@ -897,14 +707,14 @@ public class Reflector
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return false;
         }
     }
 
     public static boolean setFieldValueInt(ReflectorField refField, int value)
     {
-        return setFieldValueInt((Object)null, refField, value);
+        return setFieldValueInt(null, refField, value);
     }
 
     public static boolean setFieldValueInt(Object obj, ReflectorField refField, int value)
@@ -925,7 +735,7 @@ public class Reflector
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace();
+            Log.error("", throwable);
             return false;
         }
     }
@@ -938,33 +748,7 @@ public class Reflector
 
     public static boolean postForgeBusEvent(Object event)
     {
-        if (event == null)
-        {
-            return false;
-        }
-        else
-        {
-            Object object = getFieldValue(MinecraftForge_EVENT_BUS);
-
-            if (object == null)
-            {
-                return false;
-            }
-            else
-            {
-                Object object1 = call(object, EventBus_post, new Object[] {event});
-
-                if (!(object1 instanceof Boolean))
-                {
-                    return false;
-                }
-                else
-                {
-                    Boolean obool = (Boolean)object1;
-                    return obool.booleanValue();
-                }
-            }
-        }
+        return false;
     }
 
     public static Object newInstance(ReflectorConstructor constr, Object... params)
@@ -1024,7 +808,7 @@ public class Reflector
             s2 = " static";
         }
 
-        Config.dbg(callType + s2 + " " + s + "." + s1 + "(" + Config.arrayToString(params) + ") => " + retVal);
+        Log.dbg(callType + s2 + " " + s + "." + s1 + "(" + ArrayUtils.arrayToString(params) + ") => " + retVal);
     }
 
     private static void dbgCallVoid(boolean isStatic, String callType, ReflectorMethod refMethod, Object[] params)
@@ -1038,7 +822,7 @@ public class Reflector
             s2 = " static";
         }
 
-        Config.dbg(callType + s2 + " " + s + "." + s1 + "(" + Config.arrayToString(params) + ")");
+        Log.dbg(callType + s2 + " " + s + "." + s1 + "(" + ArrayUtils.arrayToString(params) + ")");
     }
 
     private static void dbgFieldValue(boolean isStatic, String accessType, ReflectorField refField, Object val)
@@ -1052,7 +836,7 @@ public class Reflector
             s2 = " static";
         }
 
-        Config.dbg(accessType + s2 + " " + s + "." + s1 + " => " + val);
+        Log.dbg(accessType + s2 + " " + s + "." + s1 + " => " + val);
     }
 
     private static void handleException(Throwable e, Object obj, ReflectorMethod refMethod, Object[] params)
@@ -1068,24 +852,25 @@ public class Reflector
             }
             else
             {
-                e.printStackTrace();
+                Log.error("", e);
             }
         }
         else
         {
+            Log.warn("*** Exception outside of method ***");
+            Log.warn("Method deactivated: " + refMethod.getTargetMethod());
+            refMethod.deactivate();
+
             if (e instanceof IllegalArgumentException)
             {
-                Config.warn("*** IllegalArgumentException ***");
-                Config.warn("Method: " + refMethod.getTargetMethod());
-                Config.warn("Object: " + obj);
-                Config.warn("Parameter classes: " + Config.arrayToString(getClasses(params)));
-                Config.warn("Parameters: " + Config.arrayToString(params));
+                Log.warn("*** IllegalArgumentException ***");
+                Log.warn("Method: " + refMethod.getTargetMethod());
+                Log.warn("Object: " + obj);
+                Log.warn("Parameter classes: " + ArrayUtils.arrayToString(getClasses(params)));
+                Log.warn("Parameters: " + ArrayUtils.arrayToString(params));
             }
 
-            Config.warn("*** Exception outside of method ***");
-            Config.warn("Method deactivated: " + refMethod.getTargetMethod());
-            refMethod.deactivate();
-            e.printStackTrace();
+            Log.warn("", e);
         }
     }
 
@@ -1093,22 +878,23 @@ public class Reflector
     {
         if (e instanceof InvocationTargetException)
         {
-            e.printStackTrace();
+            Log.error("", e);
         }
         else
         {
+            Log.warn("*** Exception outside of constructor ***");
+            Log.warn("Constructor deactivated: " + refConstr.getTargetConstructor());
+            refConstr.deactivate();
+
             if (e instanceof IllegalArgumentException)
             {
-                Config.warn("*** IllegalArgumentException ***");
-                Config.warn("Constructor: " + refConstr.getTargetConstructor());
-                Config.warn("Parameter classes: " + Config.arrayToString(getClasses(params)));
-                Config.warn("Parameters: " + Config.arrayToString(params));
+                Log.warn("*** IllegalArgumentException ***");
+                Log.warn("Constructor: " + refConstr.getTargetConstructor());
+                Log.warn("Parameter classes: " + ArrayUtils.arrayToString(getClasses(params)));
+                Log.warn("Parameters: " + ArrayUtils.arrayToString(params));
             }
 
-            Config.warn("*** Exception outside of constructor ***");
-            Config.warn("Constructor deactivated: " + refConstr.getTargetConstructor());
-            refConstr.deactivate();
-            e.printStackTrace();
+            Log.warn("", e);
         }
     }
 
@@ -1150,7 +936,20 @@ public class Reflector
 
     private static boolean logEntry(String str)
     {
-        Config.dbg(str);
+        LOGGER.info("[OptiFine] " + str);
+        return true;
+    }
+
+    private static boolean registerResolvable(final String str)
+    {
+        IResolvable iresolvable = new IResolvable()
+        {
+            public void resolve()
+            {
+                Reflector.LOGGER.info("[OptiFine] " + str);
+            }
+        };
+        ReflectorResolver.register(iresolvable);
         return true;
     }
 }

@@ -36,8 +36,6 @@ public class BlockFurnace extends BlockContainer
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -57,23 +55,26 @@ public class BlockFurnace extends BlockContainer
             Block block1 = worldIn.getBlockState(pos.south()).getBlock();
             Block block2 = worldIn.getBlockState(pos.west()).getBlock();
             Block block3 = worldIn.getBlockState(pos.east()).getBlock();
-            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+            EnumFacing enumfacing = state.getValue(FACING);
 
-            if (enumfacing == EnumFacing.NORTH && block.isFullBlock() && !block1.isFullBlock())
-            {
-                enumfacing = EnumFacing.SOUTH;
-            }
-            else if (enumfacing == EnumFacing.SOUTH && block1.isFullBlock() && !block.isFullBlock())
-            {
-                enumfacing = EnumFacing.NORTH;
-            }
-            else if (enumfacing == EnumFacing.WEST && block2.isFullBlock() && !block3.isFullBlock())
-            {
-                enumfacing = EnumFacing.EAST;
-            }
-            else if (enumfacing == EnumFacing.EAST && block3.isFullBlock() && !block2.isFullBlock())
-            {
-                enumfacing = EnumFacing.WEST;
+            switch(enumfacing) {
+            case NORTH:
+            	if (block.isFullBlock() && !block1.isFullBlock())
+            		enumfacing = EnumFacing.SOUTH;
+            	break;
+            case SOUTH:
+            	if (block1.isFullBlock() && !block.isFullBlock())
+            	enumfacing = EnumFacing.NORTH;
+            	break;
+            case WEST:
+            	if (block2.isFullBlock() && !block3.isFullBlock())
+            		enumfacing = EnumFacing.EAST;
+            	break;
+            case EAST:
+            	if (block3.isFullBlock() && !block2.isFullBlock())
+            		enumfacing = EnumFacing.WEST;
+            	break;
+            default:
             }
 
             worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
@@ -85,7 +86,7 @@ public class BlockFurnace extends BlockContainer
     {
         if (this.isBurning)
         {
-            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+            EnumFacing enumfacing = state.getValue(FACING);
             double d0 = (double)pos.getX() + 0.5D;
             double d1 = (double)pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
             double d2 = (double)pos.getZ() + 0.5D;
@@ -95,23 +96,23 @@ public class BlockFurnace extends BlockContainer
             switch (enumfacing)
             {
                 case WEST:
-                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1, d2 + d4, 0, 0, 0);
+                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 - d3, d1, d2 + d4, 0, 0, 0);
                     break;
 
                 case EAST:
-                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d3, d1, d2 + d4, 0, 0, 0);
+                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d3, d1, d2 + d4, 0, 0, 0);
                     break;
 
                 case NORTH:
-                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D, new int[0]);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D, new int[0]);
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - d3, 0, 0, 0);
+                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 - d3, 0, 0, 0);
                     break;
 
                 case SOUTH:
-                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D, new int[0]);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D, new int[0]);
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + d3, 0, 0, 0);
+                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + d3, 0, 0, 0);
             }
         }
     }
@@ -119,9 +120,7 @@ public class BlockFurnace extends BlockContainer
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
-        {
             return true;
-        }
         else
         {
             TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -191,9 +190,7 @@ public class BlockFurnace extends BlockContainer
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
             if (tileentity instanceof TileEntityFurnace)
-            {
                 ((TileEntityFurnace)tileentity).setCustomInventoryName(stack.getDisplayName());
-            }
         }
     }
 
@@ -223,9 +220,6 @@ public class BlockFurnace extends BlockContainer
         return Container.calcRedstone(worldIn.getTileEntity(pos));
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Item.getItemFromBlock(Blocks.furnace);
@@ -255,9 +249,7 @@ public class BlockFurnace extends BlockContainer
         EnumFacing enumfacing = EnumFacing.getFront(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
             enumfacing = EnumFacing.NORTH;
-        }
 
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
@@ -267,7 +259,7 @@ public class BlockFurnace extends BlockContainer
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((EnumFacing)state.getValue(FACING)).getIndex();
+        return state.getValue(FACING).getIndex();
     }
 
     protected BlockState createBlockState()

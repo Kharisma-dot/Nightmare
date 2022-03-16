@@ -39,9 +39,7 @@ public class BlockNote extends BlockContainer
             if (tileentitynote.previousRedstoneState != flag)
             {
                 if (flag)
-                {
                     tileentitynote.triggerNote(worldIn, pos);
-                }
 
                 tileentitynote.previousRedstoneState = flag;
             }
@@ -51,9 +49,7 @@ public class BlockNote extends BlockContainer
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
-        {
             return true;
-        }
         else
         {
             TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -95,9 +91,7 @@ public class BlockNote extends BlockContainer
     private String getInstrument(int id)
     {
         if (id < 0 || id >= INSTRUMENTS.size())
-        {
             id = 0;
-        }
 
         return (String)INSTRUMENTS.get(id);
     }
@@ -108,8 +102,10 @@ public class BlockNote extends BlockContainer
     public boolean onBlockEventReceived(World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam)
     {
         float f = (float)Math.pow(2.0D, (double)(eventParam - 12) / 12.0D);
-        worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "note." + this.getInstrument(eventID), 3.0F, f);
-        worldIn.spawnParticle(EnumParticleTypes.NOTE, (double)pos.getX() + 0.5D, (double)pos.getY() + 1.2D, (double)pos.getZ() + 0.5D, (double)eventParam / 24.0D, 0.0D, 0.0D, new int[0]);
+        worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D,
+        		(double)pos.getZ() + 0.5D, "note." + this.getInstrument(eventID), 3.0F, f);
+        worldIn.spawnParticle(EnumParticleTypes.NOTE,
+        		(double)pos.getX() + 0.5D, (double)pos.getY() + 1.2D, (double)pos.getZ() + 0.5D, (double)eventParam / 24.0D, 0, 0, 0);
         return true;
     }
 

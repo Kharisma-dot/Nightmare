@@ -377,7 +377,10 @@ public class TextureAtlasSprite
 
                 if (k > 0 && (bufferedimage.getWidth() != i >> k || bufferedimage.getHeight() != j >> k))
                 {
-                    throw new RuntimeException(String.format("Unable to load miplevel: %d, image is size: %dx%d, expected %dx%d", new Object[] {Integer.valueOf(k), Integer.valueOf(bufferedimage.getWidth()), Integer.valueOf(bufferedimage.getHeight()), Integer.valueOf(i >> k), Integer.valueOf(j >> k)}));
+                    throw new RuntimeException(String.format(
+                    		"Unable to load miplevel: %d, image is size: %dx%d, expected %dx%d",
+                    		new Object[] {k, bufferedimage.getWidth(),
+                    				bufferedimage.getHeight(), i >> k, j >> k}));
                 }
 
                 aint[k] = new int[bufferedimage.getWidth() * bufferedimage.getHeight()];
@@ -407,7 +410,7 @@ public class TextureAtlasSprite
 
                 while (iterator.hasNext())
                 {
-                    int i1 = ((Integer)iterator.next()).intValue();
+                    int i1 = (int) iterator.next();
 
                     if (i1 >= j1)
                     {
@@ -480,7 +483,7 @@ public class TextureAtlasSprite
                 {
                     CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Generating mipmaps for frame");
                     CrashReportCategory crashreportcategory = crashreport.makeCategory("Frame being iterated");
-                    crashreportcategory.addCrashSection("Frame index", Integer.valueOf(i));
+                    crashreportcategory.addCrashSection("Frame index", i);
                     crashreportcategory.addCrashSectionCallable("Frame sizes", new Callable<String>()
                     {
                         public String call() throws Exception
@@ -494,7 +497,7 @@ public class TextureAtlasSprite
                                     stringbuilder.append(", ");
                                 }
 
-                                stringbuilder.append(aint1 == null ? "null" : Integer.valueOf(aint1.length));
+                                stringbuilder.append(aint1 == null ? "null" : aint1.length);
                             }
 
                             return stringbuilder.toString();
@@ -519,7 +522,7 @@ public class TextureAtlasSprite
         {
             for (int i = this.framesTextureData.size(); i <= index; ++i)
             {
-                this.framesTextureData.add((int[][])((int[][])null));
+                this.framesTextureData.add(null);
             }
         }
 

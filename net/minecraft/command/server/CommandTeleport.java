@@ -34,8 +34,6 @@ public class CommandTeleport extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -44,15 +42,12 @@ public class CommandTeleport extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.tp.usage", new Object[0]);
+            throw new WrongUsageException("commands.tp.usage");
         }
         else
         {
@@ -65,7 +60,7 @@ public class CommandTeleport extends CommandBase
             }
             else
             {
-                entity = func_175768_b(sender, args[0]);
+                entity = getEntity(sender, args[0]);
                 i = 1;
             }
 
@@ -73,7 +68,7 @@ public class CommandTeleport extends CommandBase
             {
                 if (args.length < i + 3)
                 {
-                    throw new WrongUsageException("commands.tp.usage", new Object[0]);
+                    throw new WrongUsageException("commands.tp.usage");
                 }
                 else if (entity.worldObj != null)
                 {
@@ -133,7 +128,7 @@ public class CommandTeleport extends CommandBase
                             f = MathHelper.wrapAngleTo180_float(f + 180.0F);
                         }
 
-                        entity.mountEntity((Entity)null);
+                        entity.mountEntity(null);
                         ((EntityPlayerMP)entity).playerNetServerHandler.setPlayerLocation(commandbase$coordinatearg.func_179629_b(), commandbase$coordinatearg1.func_179629_b(), commandbase$coordinatearg2.func_179629_b(), f, f1, set);
                         entity.setRotationYawHead(f);
                     }
@@ -152,20 +147,22 @@ public class CommandTeleport extends CommandBase
                         entity.setRotationYawHead(f2);
                     }
 
-                    notifyOperators(sender, this, "commands.tp.success.coordinates", new Object[] {entity.getName(), Double.valueOf(commandbase$coordinatearg.func_179628_a()), Double.valueOf(commandbase$coordinatearg1.func_179628_a()), Double.valueOf(commandbase$coordinatearg2.func_179628_a())});
+                    notifyOperators(sender, this, "commands.tp.success.coordinates",
+                    		new Object[] {entity.getName(), commandbase$coordinatearg.func_179628_a(),
+                    				commandbase$coordinatearg1.func_179628_a(), commandbase$coordinatearg2.func_179628_a()});
                 }
             }
             else
             {
-                Entity entity1 = func_175768_b(sender, args[args.length - 1]);
+                Entity entity1 = getEntity(sender, args[args.length - 1]);
 
                 if (entity1.worldObj != entity.worldObj)
                 {
-                    throw new CommandException("commands.tp.notSameDimension", new Object[0]);
+                    throw new CommandException("commands.tp.notSameDimension");
                 }
                 else
                 {
-                    entity.mountEntity((Entity)null);
+                    entity.mountEntity(null);
 
                     if (entity instanceof EntityPlayerMP)
                     {
@@ -189,9 +186,6 @@ public class CommandTeleport extends CommandBase
 
     /**
      * Return whether the specified command parameter index is a username parameter.
-     *  
-     * @param args The arguments that were given
-     * @param index The argument index that we are checking
      */
     public boolean isUsernameIndex(String[] args, int index)
     {

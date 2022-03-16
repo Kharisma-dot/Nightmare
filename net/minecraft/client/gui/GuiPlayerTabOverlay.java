@@ -53,8 +53,6 @@ public class GuiPlayerTabOverlay extends Gui
     /**
      * Called by GuiIngame to update the information stored in the playerlist, does not actually render the list,
      * however.
-     *  
-     * @param willBeRendered True if the playerlist is intended to be renderd subsequently.
      */
     public void updatePlayerList(boolean willBeRendered)
     {
@@ -379,7 +377,7 @@ public class GuiPlayerTabOverlay extends Gui
         this.header = headerIn;
     }
 
-    public void func_181030_a()
+    public void resetFooterHeader()
     {
         this.header = null;
         this.footer = null;

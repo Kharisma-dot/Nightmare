@@ -56,11 +56,6 @@ public abstract class NodeProcessor
 
     /**
      * Returns PathPoint for given coordinates
-     *  
-     * @param entityIn entity which size will be used to center position
-     * @param x target x coordinate
-     * @param y target y coordinate
-     * @param target z coordinate
      */
     public abstract PathPoint getPathPointToCoords(Entity entityIn, double x, double y, double target);
 

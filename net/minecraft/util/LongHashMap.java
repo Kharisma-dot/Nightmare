@@ -36,8 +36,6 @@ public class LongHashMap<V>
 
     /**
      * the hash function
-     *  
-     * @param integer Integer to make suitable for hashing
      */
     private static int hash(int integer)
     {
@@ -73,7 +71,7 @@ public class LongHashMap<V>
             }
         }
 
-        return (V)((Object)null);
+        return (V)(null);
     }
 
     public boolean containsItem(long p_76161_1_)
@@ -281,8 +279,8 @@ public class LongHashMap<V>
             else
             {
                 LongHashMap.Entry<V> entry = (LongHashMap.Entry)p_equals_1_;
-                Object object = Long.valueOf(this.getKey());
-                Object object1 = Long.valueOf(entry.getKey());
+                Object object = this.getKey();
+                Object object1 = entry.getKey();
 
                 if (object == object1 || object != null && object.equals(object1))
                 {

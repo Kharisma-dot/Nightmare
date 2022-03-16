@@ -28,7 +28,8 @@ public class BlockPistonMoving extends BlockContainer
     public BlockPistonMoving()
     {
         super(Material.piston);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TYPE, BlockPistonExtension.EnumPistonType.DEFAULT));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH)
+        		.withProperty(TYPE, BlockPistonExtension.EnumPistonType.DEFAULT));
         this.setHardness(-1.0F);
     }
 
@@ -50,13 +51,9 @@ public class BlockPistonMoving extends BlockContainer
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
         if (tileentity instanceof TileEntityPiston)
-        {
             ((TileEntityPiston)tileentity).clearPistonTileEntity();
-        }
         else
-        {
             super.breakBlock(worldIn, pos, state);
-        }
     }
 
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
@@ -77,13 +74,11 @@ public class BlockPistonMoving extends BlockContainer
      */
     public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
     {
-        BlockPos blockpos = pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite());
+        BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
         IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
-        if (iblockstate.getBlock() instanceof BlockPistonBase && ((Boolean)iblockstate.getValue(BlockPistonBase.EXTENDED)).booleanValue())
-        {
+        if (iblockstate.getBlock() instanceof BlockPistonBase && iblockstate.getValue(BlockPistonBase.EXTENDED))
             worldIn.setBlockToAir(blockpos);
-        }
     }
 
     /**
@@ -107,15 +102,11 @@ public class BlockPistonMoving extends BlockContainer
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -124,9 +115,6 @@ public class BlockPistonMoving extends BlockContainer
 
     /**
      * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
      */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
@@ -144,9 +132,6 @@ public class BlockPistonMoving extends BlockContainer
 
     /**
      * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit.
-     *  
-     * @param start The start vector
-     * @param end The end vector
      */
     public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
     {
@@ -159,9 +144,7 @@ public class BlockPistonMoving extends BlockContainer
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         if (!worldIn.isRemote)
-        {
             worldIn.getTileEntity(pos);
-        }
     }
 
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
@@ -169,17 +152,13 @@ public class BlockPistonMoving extends BlockContainer
         TileEntityPiston tileentitypiston = this.getTileEntity(worldIn, pos);
 
         if (tileentitypiston == null)
-        {
             return null;
-        }
         else
         {
-            float f = tileentitypiston.getProgress(0.0F);
+            float f = tileentitypiston.getProgress(0f);
 
             if (tileentitypiston.isExtending())
-            {
                 f = 1.0F - f;
-            }
 
             return this.getBoundingBox(worldIn, pos, tileentitypiston.getPistonState(), f, tileentitypiston.getFacing());
         }
@@ -195,23 +174,17 @@ public class BlockPistonMoving extends BlockContainer
             Block block = iblockstate.getBlock();
 
             if (block == this || block.getMaterial() == Material.air)
-            {
                 return;
-            }
 
-            float f = tileentitypiston.getProgress(0.0F);
+            float f = tileentitypiston.getProgress(0f);
 
             if (tileentitypiston.isExtending())
-            {
                 f = 1.0F - f;
-            }
 
             block.setBlockBoundsBasedOnState(worldIn, pos);
 
             if (block == Blocks.piston || block == Blocks.sticky_piston)
-            {
-                f = 0.0F;
-            }
+                f = 0f;
 
             EnumFacing enumfacing = tileentitypiston.getFacing();
             this.minX = block.getBlockBoundsMinX() - (double)((float)enumfacing.getFrontOffsetX() * f);
@@ -230,9 +203,7 @@ public class BlockPistonMoving extends BlockContainer
             AxisAlignedBB axisalignedbb = extendingBlock.getBlock().getCollisionBoundingBox(worldIn, pos, extendingBlock);
 
             if (axisalignedbb == null)
-            {
                 return null;
-            }
             else
             {
                 double d0 = axisalignedbb.minX;
@@ -243,39 +214,35 @@ public class BlockPistonMoving extends BlockContainer
                 double d5 = axisalignedbb.maxZ;
 
                 if (direction.getFrontOffsetX() < 0)
-                {
+                	
                     d0 -= (double)((float)direction.getFrontOffsetX() * progress);
-                }
                 else
-                {
+                	
                     d3 -= (double)((float)direction.getFrontOffsetX() * progress);
-                }
 
                 if (direction.getFrontOffsetY() < 0)
-                {
+                	
                     d1 -= (double)((float)direction.getFrontOffsetY() * progress);
-                }
+                
                 else
-                {
+                
                     d4 -= (double)((float)direction.getFrontOffsetY() * progress);
-                }
+                
 
                 if (direction.getFrontOffsetZ() < 0)
-                {
+                
                     d2 -= (double)((float)direction.getFrontOffsetZ() * progress);
-                }
+                
                 else
-                {
+                
                     d5 -= (double)((float)direction.getFrontOffsetZ() * progress);
-                }
+                
 
                 return new AxisAlignedBB(d0, d1, d2, d3, d4, d5);
             }
         }
         else
-        {
             return null;
-        }
     }
 
     private TileEntityPiston getTileEntity(IBlockAccess worldIn, BlockPos pos)
@@ -284,9 +251,6 @@ public class BlockPistonMoving extends BlockContainer
         return tileentity instanceof TileEntityPiston ? (TileEntityPiston)tileentity : null;
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return null;
@@ -297,7 +261,8 @@ public class BlockPistonMoving extends BlockContainer
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, BlockPistonExtension.getFacing(meta)).withProperty(TYPE, (meta & 8) > 0 ? BlockPistonExtension.EnumPistonType.STICKY : BlockPistonExtension.EnumPistonType.DEFAULT);
+        return this.getDefaultState().withProperty(FACING, BlockPistonExtension.getFacing(meta)).withProperty(TYPE, (meta & 8) > 0 ?
+        				BlockPistonExtension.EnumPistonType.STICKY : BlockPistonExtension.EnumPistonType.DEFAULT);
     }
 
     /**
@@ -306,12 +271,10 @@ public class BlockPistonMoving extends BlockContainer
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | ((EnumFacing)state.getValue(FACING)).getIndex();
+        i = i | state.getValue(FACING).getIndex();
 
         if (state.getValue(TYPE) == BlockPistonExtension.EnumPistonType.STICKY)
-        {
             i |= 8;
-        }
 
         return i;
     }

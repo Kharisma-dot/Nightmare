@@ -23,9 +23,7 @@ public class GuiButtonLanguage extends GuiButton
             int i = 106;
 
             if (flag)
-            {
                 i += this.height;
-            }
 
             this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, i, this.width, this.height);
         }

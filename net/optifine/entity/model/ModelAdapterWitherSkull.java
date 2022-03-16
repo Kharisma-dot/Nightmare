@@ -25,9 +25,7 @@ public class ModelAdapterWitherSkull extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelSkeletonHead))
-        {
             return null;
-        }
         else
         {
             ModelSkeletonHead modelskeletonhead = (ModelSkeletonHead)model;

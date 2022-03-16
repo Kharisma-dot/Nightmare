@@ -31,13 +31,9 @@ public class BlockHay extends BlockRotatedPillar
         int i = meta & 12;
 
         if (i == 4)
-        {
             enumfacing$axis = EnumFacing.Axis.X;
-        }
         else if (i == 8)
-        {
             enumfacing$axis = EnumFacing.Axis.Z;
-        }
 
         return this.getDefaultState().withProperty(AXIS, enumfacing$axis);
     }
@@ -51,13 +47,9 @@ public class BlockHay extends BlockRotatedPillar
         EnumFacing.Axis enumfacing$axis = (EnumFacing.Axis)state.getValue(AXIS);
 
         if (enumfacing$axis == EnumFacing.Axis.X)
-        {
             i |= 4;
-        }
         else if (enumfacing$axis == EnumFacing.Axis.Z)
-        {
             i |= 8;
-        }
 
         return i;
     }

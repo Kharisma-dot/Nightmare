@@ -112,7 +112,7 @@ public class TileEntityRendererDispatcher {
       if(p_180546_1_.func_145835_a(this.field_147560_j, this.field_147561_k, this.field_147558_l) < p_180546_1_.func_145833_n()) {
          boolean flag = true;
          if(Reflector.ForgeTileEntity_hasFastRenderer.exists()) {
-            flag = !this.drawingBatch || !Reflector.callBoolean(p_180546_1_, Reflector.ForgeTileEntity_hasFastRenderer, new Object[0]);
+            flag = !this.drawingBatch || !Reflector.callBoolean(p_180546_1_, Reflector.ForgeTileEntity_hasFastRenderer);
          }
 
          if(flag) {
@@ -156,7 +156,7 @@ public class TileEntityRendererDispatcher {
       if(tileentityspecialrenderer != null) {
          try {
             this.tileEntityRendered = p_178469_1_;
-            if(this.drawingBatch && Reflector.callBoolean(p_178469_1_, Reflector.ForgeTileEntity_hasFastRenderer, new Object[0])) {
+            if(this.drawingBatch && Reflector.callBoolean(p_178469_1_, Reflector.ForgeTileEntity_hasFastRenderer)) {
                tileentityspecialrenderer.renderTileEntityFast(p_178469_1_, p_178469_2_, p_178469_4_, p_178469_6_, p_178469_8_, p_178469_9_, this.batchBuffer.func_178180_c());
             } else {
                tileentityspecialrenderer.func_180535_a(p_178469_1_, p_178469_2_, p_178469_4_, p_178469_6_, p_178469_8_, p_178469_9_);

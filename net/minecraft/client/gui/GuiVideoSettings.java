@@ -39,7 +39,7 @@ public class GuiVideoSettings extends GuiScreenOF
      */
     public void initGui()
     {
-        this.screenTitle = I18n.format("options.videoTitle", new Object[0]);
+        this.screenTitle = I18n.format("options.videoTitle");
         this.buttonList.clear();
 
         for (int i = 0; i < videoOptions.length; ++i)
@@ -52,13 +52,10 @@ public class GuiVideoSettings extends GuiScreenOF
                 int k = this.height / 6 + 21 * (i / 2) - 12;
 
                 if (gamesettings$options.getEnumFloat())
-                {
                     this.buttonList.add(new GuiOptionSliderOF(gamesettings$options.returnEnumOrdinal(), j, k, gamesettings$options));
-                }
                 else
-                {
-                    this.buttonList.add(new GuiOptionButtonOF(gamesettings$options.returnEnumOrdinal(), j, k, gamesettings$options, this.guiGameSettings.getKeyBinding(gamesettings$options)));
-                }
+                    this.buttonList.add(new GuiOptionButtonOF(gamesettings$options.returnEnumOrdinal(), j, k, gamesettings$options, 
+                    		this.guiGameSettings.getKeyBinding(gamesettings$options)));
             }
         }
 
@@ -79,7 +76,7 @@ public class GuiVideoSettings extends GuiScreenOF
         i1 = this.width / 2 - 155 + 160;
         this.buttonList.add(new GuiOptionButton(222, i1, l, Lang.get("of.options.other")));
         l = l + 21;
-        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168 + 11, I18n.format("gui.done", new Object[0])));
+        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168 + 11, I18n.format("gui.done")));
     }
 
     /**
@@ -90,12 +87,10 @@ public class GuiVideoSettings extends GuiScreenOF
         this.actionPerformed(button, 1);
     }
 
-    protected void actionPerformedRightClick(GuiButton p_actionPerformedRightClick_1_)
+    protected void actionPerformedRightClick(GuiButton button)
     {
-        if (p_actionPerformedRightClick_1_.id == GameSettings.Options.GUI_SCALE.ordinal())
-        {
-            this.actionPerformed(p_actionPerformedRightClick_1_, -1);
-        }
+        if (button.id == GameSettings.Options.GUI_SCALE.ordinal())
+            this.actionPerformed(button, -1);
     }
 
     private void actionPerformed(GuiButton p_actionPerformed_1_, int p_actionPerformed_2_)
@@ -204,17 +199,17 @@ public class GuiVideoSettings extends GuiScreenOF
 
         if (s1.equals("HD"))
         {
-            s = "OptiFine HD L5";
+            s = "OptiFine HD M5";
         }
 
         if (s1.equals("HD_U"))
         {
-            s = "OptiFine HD L5 Ultra";
+            s = "OptiFine HD M5 Ultra";
         }
 
         if (s1.equals("L"))
         {
-            s = "OptiFine L5 Light";
+            s = "OptiFine M5 Light";
         }
 
         this.drawString(this.fontRendererObj, s, 2, this.height - 10, 8421504);

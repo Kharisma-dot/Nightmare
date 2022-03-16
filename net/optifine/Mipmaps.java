@@ -1,14 +1,17 @@
 package net.optifine;
 
 import java.awt.Dimension;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.src.Config;
 import net.optifine.util.TextureUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public class Mipmaps
 {
@@ -171,11 +174,11 @@ public class Mipmaps
         return k << 24 | j2 << 16 | k2 << 8 | l2;
     }
 
-    private int averageColor(int i, int j)
+    private int averageColor(int i1, int j1)
     {
-        int k = (i & -16777216) >> 24 & 255;
-        int p = (j & -16777216) >> 24 & 255;
-        return (k + j >> 1 << 24) + ((k & 16711422) + (p & 16711422) >> 1);
+        int i = (i1 & -16777216) >> 24 & 255;
+        int j = (j1 & -16777216) >> 24 & 255;
+        return (i + j >> 1 << 24) + ((i1 & 16711422) + (j1 & 16711422) >> 1);
     }
 
     public static IntBuffer[] makeMipmapBuffers(Dimension[] mipmapDimensions, int[][] mipmapDatas)
@@ -214,7 +217,7 @@ public class Mipmaps
             int j = dimension.width;
             int k = dimension.height;
             int l = i + 1;
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, l, GL11.GL_RGBA, j, k, 0, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)((IntBuffer)null));
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, l, GL11.GL_RGBA, j, k, 0, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (ByteBuffer)null);
         }
     }
 }

@@ -32,9 +32,6 @@ public class ItemSkull extends Item
 
     /**
      * Called when a Block is right-clicked with this Item
-     *  
-     * @param pos The block being right-clicked
-     * @param side The side being right-clicked
      */
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
@@ -98,7 +95,7 @@ public class ItemSkull extends Item
                                 }
                                 else if (nbttagcompound.hasKey("SkullOwner", 8) && nbttagcompound.getString("SkullOwner").length() > 0)
                                 {
-                                    gameprofile = new GameProfile((UUID)null, nbttagcompound.getString("SkullOwner"));
+                                    gameprofile = new GameProfile(null, nbttagcompound.getString("SkullOwner"));
                                 }
                             }
 
@@ -123,8 +120,6 @@ public class ItemSkull extends Item
 
     /**
      * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     *  
-     * @param subItems The List of sub-items. This is a List of ItemStacks.
      */
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
@@ -191,7 +186,7 @@ public class ItemSkull extends Item
 
         if (nbt.hasKey("SkullOwner", 8) && nbt.getString("SkullOwner").length() > 0)
         {
-            GameProfile gameprofile = new GameProfile((UUID)null, nbt.getString("SkullOwner"));
+            GameProfile gameprofile = new GameProfile(null, nbt.getString("SkullOwner"));
             gameprofile = TileEntitySkull.updateGameprofile(gameprofile);
             nbt.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), gameprofile));
             return true;

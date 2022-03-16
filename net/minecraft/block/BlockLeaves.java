@@ -58,31 +58,23 @@ public abstract class BlockLeaves extends BlockLeavesBase
         int i1 = pos.getZ();
 
         if (worldIn.isAreaLoaded(new BlockPos(k - j, l - j, i1 - j), new BlockPos(k + j, l + j, i1 + j)))
-        {
             for (int j1 = -i; j1 <= i; ++j1)
-            {
                 for (int k1 = -i; k1 <= i; ++k1)
-                {
                     for (int l1 = -i; l1 <= i; ++l1)
                     {
                         BlockPos blockpos = pos.add(j1, k1, l1);
                         IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
-                        if (iblockstate.getBlock().getMaterial() == Material.leaves && !((Boolean)iblockstate.getValue(CHECK_DECAY)).booleanValue())
-                        {
-                            worldIn.setBlockState(blockpos, iblockstate.withProperty(CHECK_DECAY, Boolean.valueOf(true)), 4);
-                        }
+                        if (iblockstate.getBlock().getMaterial() == Material.leaves && !iblockstate.getValue(CHECK_DECAY))
+                            worldIn.setBlockState(blockpos, iblockstate.withProperty(CHECK_DECAY, true), 4);
                     }
-                }
-            }
-        }
     }
 
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (!worldIn.isRemote)
         {
-            if (((Boolean)state.getValue(CHECK_DECAY)).booleanValue() && ((Boolean)state.getValue(DECAYABLE)).booleanValue())
+            if (state.getValue(CHECK_DECAY) && state.getValue(DECAYABLE))
             {
                 int i = 4;
                 int j = i + 1;
@@ -94,109 +86,85 @@ public abstract class BlockLeaves extends BlockLeavesBase
                 int l1 = j1 / 2;
 
                 if (this.surroundings == null)
-                {
                     this.surroundings = new int[j1 * j1 * j1];
-                }
 
                 if (worldIn.isAreaLoaded(new BlockPos(k - j, l - j, i1 - j), new BlockPos(k + j, l + j, i1 + j)))
                 {
                     BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
                     for (int i2 = -i; i2 <= i; ++i2)
-                    {
                         for (int j2 = -i; j2 <= i; ++j2)
-                        {
                             for (int k2 = -i; k2 <= i; ++k2)
                             {
-                                Block block = worldIn.getBlockState(blockpos$mutableblockpos.func_181079_c(k + i2, l + j2, i1 + k2)).getBlock();
+                                Block block = worldIn.getBlockState(blockpos$mutableblockpos.set(k + i2, l + j2, i1 + k2)).getBlock();
 
                                 if (block != Blocks.log && block != Blocks.log2)
                                 {
                                     if (block.getMaterial() == Material.leaves)
-                                    {
                                         this.surroundings[(i2 + l1) * k1 + (j2 + l1) * j1 + k2 + l1] = -2;
-                                    }
                                     else
-                                    {
                                         this.surroundings[(i2 + l1) * k1 + (j2 + l1) * j1 + k2 + l1] = -1;
-                                    }
                                 }
                                 else
-                                {
                                     this.surroundings[(i2 + l1) * k1 + (j2 + l1) * j1 + k2 + l1] = 0;
-                                }
                             }
-                        }
-                    }
 
                     for (int i3 = 1; i3 <= 4; ++i3)
-                    {
                         for (int j3 = -i; j3 <= i; ++j3)
-                        {
                             for (int k3 = -i; k3 <= i; ++k3)
-                            {
                                 for (int l3 = -i; l3 <= i; ++l3)
-                                {
                                     if (this.surroundings[(j3 + l1) * k1 + (k3 + l1) * j1 + l3 + l1] == i3 - 1)
                                     {
                                         if (this.surroundings[(j3 + l1 - 1) * k1 + (k3 + l1) * j1 + l3 + l1] == -2)
-                                        {
+                                        
                                             this.surroundings[(j3 + l1 - 1) * k1 + (k3 + l1) * j1 + l3 + l1] = i3;
-                                        }
+                                        
 
                                         if (this.surroundings[(j3 + l1 + 1) * k1 + (k3 + l1) * j1 + l3 + l1] == -2)
-                                        {
+                                        
                                             this.surroundings[(j3 + l1 + 1) * k1 + (k3 + l1) * j1 + l3 + l1] = i3;
-                                        }
+                                        
 
                                         if (this.surroundings[(j3 + l1) * k1 + (k3 + l1 - 1) * j1 + l3 + l1] == -2)
-                                        {
+                                        
                                             this.surroundings[(j3 + l1) * k1 + (k3 + l1 - 1) * j1 + l3 + l1] = i3;
-                                        }
+                                        
 
                                         if (this.surroundings[(j3 + l1) * k1 + (k3 + l1 + 1) * j1 + l3 + l1] == -2)
-                                        {
+                                        
                                             this.surroundings[(j3 + l1) * k1 + (k3 + l1 + 1) * j1 + l3 + l1] = i3;
-                                        }
+                                        
 
                                         if (this.surroundings[(j3 + l1) * k1 + (k3 + l1) * j1 + (l3 + l1 - 1)] == -2)
-                                        {
+                                        
                                             this.surroundings[(j3 + l1) * k1 + (k3 + l1) * j1 + (l3 + l1 - 1)] = i3;
-                                        }
+                                        
 
                                         if (this.surroundings[(j3 + l1) * k1 + (k3 + l1) * j1 + l3 + l1 + 1] == -2)
-                                        {
+                                        
                                             this.surroundings[(j3 + l1) * k1 + (k3 + l1) * j1 + l3 + l1 + 1] = i3;
-                                        }
+                                        
                                     }
-                                }
-                            }
-                        }
-                    }
                 }
 
                 int l2 = this.surroundings[l1 * k1 + l1 * j1 + l1];
 
                 if (l2 >= 0)
-                {
-                    worldIn.setBlockState(pos, state.withProperty(CHECK_DECAY, Boolean.valueOf(false)), 4);
-                }
+                    worldIn.setBlockState(pos, state.withProperty(CHECK_DECAY, false), 4);
                 else
-                {
                     this.destroy(worldIn, pos);
-                }
             }
         }
     }
 
     public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
-        if (worldIn.canLightningStrike(pos.up()) && !World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && rand.nextInt(15) == 1)
+        if (worldIn.isRainingAt(pos.up()) && !World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && rand.nextInt(15) == 1)
         {
             double d0 = (double)((float)pos.getX() + rand.nextFloat());
             double d1 = (double)pos.getY() - 0.05D;
             double d2 = (double)((float)pos.getZ() + rand.nextFloat());
-            worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+            worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0, 0, 0);
         }
     }
 
@@ -216,8 +184,6 @@ public abstract class BlockLeaves extends BlockLeavesBase
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -226,9 +192,6 @@ public abstract class BlockLeaves extends BlockLeavesBase
 
     /**
      * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
      */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
@@ -241,9 +204,7 @@ public abstract class BlockLeaves extends BlockLeavesBase
                 i -= 2 << fortune;
 
                 if (i < 10)
-                {
                     i = 10;
-                }
             }
 
             if (worldIn.rand.nextInt(i) == 0)
@@ -259,9 +220,7 @@ public abstract class BlockLeaves extends BlockLeavesBase
                 i -= 10 << fortune;
 
                 if (i < 40)
-                {
                     i = 40;
-                }
             }
 
             this.dropApple(worldIn, pos, state, i);

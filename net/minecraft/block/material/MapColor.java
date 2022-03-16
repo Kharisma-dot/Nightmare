@@ -58,33 +58,25 @@ public class MapColor
             mapColorArray[index] = this;
         }
         else
-        {
             throw new IndexOutOfBoundsException("Map colour ID must be between 0 and 63 (inclusive)");
-        }
     }
 
-    public int func_151643_b(int p_151643_1_)
+    public int getMapColor(int value)
     {
-        int i = 220;
-
-        if (p_151643_1_ == 3)
-        {
-            i = 135;
-        }
-
-        if (p_151643_1_ == 2)
-        {
-            i = 255;
-        }
-
-        if (p_151643_1_ == 1)
-        {
-            i = 220;
-        }
-
-        if (p_151643_1_ == 0)
-        {
-            i = 180;
+        int i;
+        
+        switch(value) {
+        case 0:
+        	i = 180;
+        	break;
+        case 2:
+        	i = 255;
+        	break;
+        case 3:
+        	i = 135;
+        	break;
+        default:
+        	i = 220;
         }
 
         int j = (this.colorValue >> 16 & 255) * i / 255;

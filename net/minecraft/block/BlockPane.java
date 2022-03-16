@@ -29,7 +29,10 @@ public class BlockPane extends Block
     protected BlockPane(Material materialIn, boolean canDrop)
     {
         super(materialIn);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(NORTH, false)
+        		.withProperty(EAST, false)
+        		.withProperty(SOUTH, false)
+        		.withProperty(WEST, false));
         this.canDrop = canDrop;
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
@@ -40,13 +43,14 @@ public class BlockPane extends Block
      */
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
-        return state.withProperty(NORTH, Boolean.valueOf(this.canPaneConnectToBlock(worldIn.getBlockState(pos.north()).getBlock()))).withProperty(SOUTH, Boolean.valueOf(this.canPaneConnectToBlock(worldIn.getBlockState(pos.south()).getBlock()))).withProperty(WEST, Boolean.valueOf(this.canPaneConnectToBlock(worldIn.getBlockState(pos.west()).getBlock()))).withProperty(EAST, Boolean.valueOf(this.canPaneConnectToBlock(worldIn.getBlockState(pos.east()).getBlock())));
+        return state.withProperty(NORTH, this.canPaneConnectToBlock(worldIn.getBlockState(pos.north()).getBlock()))
+        		.withProperty(SOUTH, this.canPaneConnectToBlock(worldIn.getBlockState(pos.south()).getBlock()))
+        		.withProperty(WEST, this.canPaneConnectToBlock(worldIn.getBlockState(pos.west()).getBlock()))
+        		.withProperty(EAST, this.canPaneConnectToBlock(worldIn.getBlockState(pos.east()).getBlock()));
     }
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -73,8 +77,6 @@ public class BlockPane extends Block
 
     /**
      * Add all collision boxes of this Block to the list that intersect with the given mask.
-     *  
-     * @param collidingEntity the Entity colliding with this Block
      */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
@@ -87,18 +89,18 @@ public class BlockPane extends Block
         {
             if (flag2)
             {
-                this.setBlockBounds(0.0F, 0.0F, 0.4375F, 0.5F, 1.0F, 0.5625F);
+                this.setBlockBounds(0f, 0f, 0.4375F, 0.5F, 1f, 0.5625F);
                 super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
             }
             else if (flag3)
             {
-                this.setBlockBounds(0.5F, 0.0F, 0.4375F, 1.0F, 1.0F, 0.5625F);
+                this.setBlockBounds(0.5F, 0f, 0.4375F, 1f, 1f, 0.5625F);
                 super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
             }
         }
         else
         {
-            this.setBlockBounds(0.0F, 0.0F, 0.4375F, 1.0F, 1.0F, 0.5625F);
+            this.setBlockBounds(0f, 0f, 0.4375F, 1f, 1f, 0.5625F);
             super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
         }
 
@@ -106,18 +108,18 @@ public class BlockPane extends Block
         {
             if (flag)
             {
-                this.setBlockBounds(0.4375F, 0.0F, 0.0F, 0.5625F, 1.0F, 0.5F);
+                this.setBlockBounds(0.4375F, 0f, 0f, 0.5625F, 1f, 0.5F);
                 super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
             }
             else if (flag1)
             {
-                this.setBlockBounds(0.4375F, 0.0F, 0.5F, 0.5625F, 1.0F, 1.0F);
+                this.setBlockBounds(0.4375F, 0f, 0.5F, 0.5625F, 1f, 1f);
                 super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
             }
         }
         else
         {
-            this.setBlockBounds(0.4375F, 0.0F, 0.0F, 0.5625F, 1.0F, 1.0F);
+            this.setBlockBounds(0.4375F, 0f, 0f, 0.5625F, 1f, 1f);
             super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
         }
     }
@@ -127,7 +129,7 @@ public class BlockPane extends Block
      */
     public void setBlockBoundsForItemRender()
     {
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
@@ -144,43 +146,36 @@ public class BlockPane extends Block
         if ((!flag2 || !flag3) && (flag2 || flag3 || flag || flag1))
         {
             if (flag2)
-            {
                 f = 0.0F;
-            }
             else if (flag3)
-            {
                 f1 = 1.0F;
-            }
         }
         else
         {
-            f = 0.0F;
-            f1 = 1.0F;
+            f = 0f;
+            f1 = 1f;
         }
 
         if ((!flag || !flag1) && (flag2 || flag3 || flag || flag1))
         {
             if (flag)
-            {
-                f2 = 0.0F;
-            }
+                f2 = 0f;
             else if (flag1)
-            {
-                f3 = 1.0F;
-            }
+                f3 = 1f;
         }
         else
         {
-            f2 = 0.0F;
-            f3 = 1.0F;
+            f2 = 0f;
+            f3 = 1f;
         }
 
-        this.setBlockBounds(f, 0.0F, f2, f1, 1.0F, f3);
+        this.setBlockBounds(f, 0f, f2, f1, 1f, f3);
     }
 
     public final boolean canPaneConnectToBlock(Block blockIn)
     {
-        return blockIn.isFullBlock() || blockIn == this || blockIn == Blocks.glass || blockIn == Blocks.stained_glass || blockIn == Blocks.stained_glass_pane || blockIn instanceof BlockPane;
+        return blockIn.isFullBlock() || blockIn == this || blockIn == Blocks.glass ||
+        		blockIn == Blocks.stained_glass || blockIn == Blocks.stained_glass_pane || blockIn instanceof BlockPane;
     }
 
     protected boolean canSilkHarvest()

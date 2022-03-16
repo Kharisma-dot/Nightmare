@@ -30,9 +30,7 @@ public class FunctionFloat implements IExpressionFloat
                     float f2 = aiexpression.length > 2 ? evalFloat(aiexpression, 2) : f1;
 
                     if (this.smoothId < 0)
-                    {
                         this.smoothId = Smoother.getNextId();
-                    }
 
                     float f3 = Smoother.getSmoothValue(this.smoothId, f, f1, f2);
                     return f3;
@@ -57,6 +55,6 @@ public class FunctionFloat implements IExpressionFloat
 
     public String toString()
     {
-        return "" + this.type + "()";
+        return this.type + "()";
     }
 }

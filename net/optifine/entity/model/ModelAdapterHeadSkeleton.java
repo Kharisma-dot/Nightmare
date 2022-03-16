@@ -25,9 +25,7 @@ public class ModelAdapterHeadSkeleton extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelSkeletonHead))
-        {
             return null;
-        }
         else
         {
             ModelSkeletonHead modelskeletonhead = (ModelSkeletonHead)model;
@@ -46,9 +44,7 @@ public class ModelAdapterHeadSkeleton extends ModelAdapter
         TileEntitySpecialRenderer tileentityspecialrenderer = tileentityrendererdispatcher.getSpecialRendererByClass(TileEntitySkull.class);
 
         if (!(tileentityspecialrenderer instanceof TileEntitySkullRenderer))
-        {
             return null;
-        }
         else
         {
             if (tileentityspecialrenderer.getEntityClass() == null)

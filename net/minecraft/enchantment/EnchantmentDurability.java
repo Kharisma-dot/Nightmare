@@ -39,8 +39,6 @@ public class EnchantmentDurability extends Enchantment
 
     /**
      * Determines if this enchantment can be applied to a specific ItemStack.
-     *  
-     * @param stack The ItemStack that is attempting to become enchanted with with enchantment.
      */
     public boolean canApply(ItemStack stack)
     {

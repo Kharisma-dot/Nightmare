@@ -32,8 +32,6 @@ public class CommandStats extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -42,15 +40,12 @@ public class CommandStats extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.stats.usage", new Object[0]);
+            throw new WrongUsageException("commands.stats.usage");
         }
         else
         {
@@ -64,7 +59,7 @@ public class CommandStats extends CommandBase
             {
                 if (!args[0].equals("block"))
                 {
-                    throw new WrongUsageException("commands.stats.usage", new Object[0]);
+                    throw new WrongUsageException("commands.stats.usage");
                 }
 
                 flag = true;
@@ -76,7 +71,7 @@ public class CommandStats extends CommandBase
             {
                 if (args.length < 5)
                 {
-                    throw new WrongUsageException("commands.stats.block.usage", new Object[0]);
+                    throw new WrongUsageException("commands.stats.block.usage");
                 }
 
                 i = 4;
@@ -85,7 +80,7 @@ public class CommandStats extends CommandBase
             {
                 if (args.length < 3)
                 {
-                    throw new WrongUsageException("commands.stats.entity.usage", new Object[0]);
+                    throw new WrongUsageException("commands.stats.entity.usage");
                 }
 
                 i = 2;
@@ -99,27 +94,27 @@ public class CommandStats extends CommandBase
                 {
                     if (i == 5)
                     {
-                        throw new WrongUsageException("commands.stats.block.set.usage", new Object[0]);
+                        throw new WrongUsageException("commands.stats.block.set.usage");
                     }
 
-                    throw new WrongUsageException("commands.stats.entity.set.usage", new Object[0]);
+                    throw new WrongUsageException("commands.stats.entity.set.usage");
                 }
             }
             else
             {
                 if (!"clear".equals(s))
                 {
-                    throw new WrongUsageException("commands.stats.usage", new Object[0]);
+                    throw new WrongUsageException("commands.stats.usage");
                 }
 
                 if (args.length < i + 1)
                 {
                     if (i == 5)
                     {
-                        throw new WrongUsageException("commands.stats.block.clear.usage", new Object[0]);
+                        throw new WrongUsageException("commands.stats.block.clear.usage");
                     }
 
-                    throw new WrongUsageException("commands.stats.entity.clear.usage", new Object[0]);
+                    throw new WrongUsageException("commands.stats.entity.clear.usage");
                 }
             }
 
@@ -127,7 +122,7 @@ public class CommandStats extends CommandBase
 
             if (commandresultstats$type == null)
             {
-                throw new CommandException("commands.stats.failed", new Object[0]);
+                throw new CommandException("commands.stats.failed");
             }
             else
             {
@@ -141,7 +136,7 @@ public class CommandStats extends CommandBase
 
                     if (tileentity == null)
                     {
-                        throw new CommandException("commands.stats.noCompatibleBlock", new Object[] {Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())});
+                        throw new CommandException("commands.stats.noCompatibleBlock", blockpos.getX(), blockpos.getY(), blockpos.getZ());
                     }
 
                     if (tileentity instanceof TileEntityCommandBlock)
@@ -152,7 +147,7 @@ public class CommandStats extends CommandBase
                     {
                         if (!(tileentity instanceof TileEntitySign))
                         {
-                            throw new CommandException("commands.stats.noCompatibleBlock", new Object[] {Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())});
+                            throw new CommandException("commands.stats.noCompatibleBlock", blockpos.getX(), blockpos.getY(), blockpos.getZ());
                         }
 
                         commandresultstats = ((TileEntitySign)tileentity).getStats();
@@ -160,7 +155,7 @@ public class CommandStats extends CommandBase
                 }
                 else
                 {
-                    Entity entity = func_175768_b(sender, args[1]);
+                    Entity entity = getEntity(sender, args[1]);
                     commandresultstats = entity.getCommandStats();
                 }
 
@@ -171,15 +166,15 @@ public class CommandStats extends CommandBase
 
                     if (s1.length() == 0 || s2.length() == 0)
                     {
-                        throw new CommandException("commands.stats.failed", new Object[0]);
+                        throw new CommandException("commands.stats.failed");
                     }
 
-                    CommandResultStats.func_179667_a(commandresultstats, commandresultstats$type, s1, s2);
+                    CommandResultStats.setScoreBoardStat(commandresultstats, commandresultstats$type, s1, s2);
                     notifyOperators(sender, this, "commands.stats.success", new Object[] {commandresultstats$type.getTypeName(), s2, s1});
                 }
                 else if ("clear".equals(s))
                 {
-                    CommandResultStats.func_179667_a(commandresultstats, commandresultstats$type, (String)null, (String)null);
+                    CommandResultStats.setScoreBoardStat(commandresultstats, commandresultstats$type, null, null);
                     notifyOperators(sender, this, "commands.stats.cleared", new Object[] {commandresultstats$type.getTypeName()});
                 }
 
@@ -221,9 +216,6 @@ public class CommandStats extends CommandBase
 
     /**
      * Return whether the specified command parameter index is a username parameter.
-     *  
-     * @param args The arguments that were given
-     * @param index The argument index that we are checking
      */
     public boolean isUsernameIndex(String[] args, int index)
     {

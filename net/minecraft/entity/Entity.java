@@ -228,9 +228,19 @@ public abstract class Entity implements ICommandSender
 
     /** Which dimension the player is in (-1 = the Nether, 0 = normal world) */
     public int dimension;
-    protected BlockPos field_181016_an;
-    protected Vec3 field_181017_ao;
-    protected EnumFacing field_181018_ap;
+
+    /** The position of the last portal the entity was in */
+    protected BlockPos lastPortalPos;
+
+    /**
+     * A horizontal vector related to the position of the last portal the entity was in
+     */
+    protected Vec3 lastPortalVec;
+
+    /**
+     * A direction related to the position of the last portal the entity was in
+     */
+    protected EnumFacing teleportDirection;
     private boolean invulnerable;
     protected UUID entityUniqueID;
 
@@ -277,11 +287,11 @@ public abstract class Entity implements ICommandSender
         }
 
         this.dataWatcher = new DataWatcher(this);
-        this.dataWatcher.addObject(0, Byte.valueOf((byte)0));
-        this.dataWatcher.addObject(1, Short.valueOf((short)300));
-        this.dataWatcher.addObject(3, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(0, (byte)0);
+        this.dataWatcher.addObject(1, (short)300);
+        this.dataWatcher.addObject(3, (byte)0);
         this.dataWatcher.addObject(2, "");
-        this.dataWatcher.addObject(4, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(4, (byte)0);
         this.entityInit();
     }
 
@@ -591,6 +601,7 @@ public abstract class Entity implements ICommandSender
      */
     public void moveEntity(double x, double y, double z)
     {
+    	
 		EventMove event;
 		boolean ground = false;
 		if (this == Minecraft.getMinecraft().thePlayer) {
@@ -1020,12 +1031,10 @@ public abstract class Entity implements ICommandSender
 
     /**
      * When set to true the entity will not play sounds.
-     *  
-     * @param isSilent Should the mob be set to silent?
      */
     public void setSilent(boolean isSilent)
     {
-        this.dataWatcher.updateObject(4, Byte.valueOf((byte)(isSilent ? 1 : 0)));
+        this.dataWatcher.updateObject(4, (byte)(isSilent ? 1 : 0));
     }
 
     /**
@@ -1099,7 +1108,7 @@ public abstract class Entity implements ICommandSender
      */
     public boolean isWet()
     {
-        return this.inWater || this.worldObj.canLightningStrike(new BlockPos(this.posX, this.posY, this.posZ)) || this.worldObj.canLightningStrike(new BlockPos(this.posX, this.posY + (double)this.height, this.posZ));
+        return this.inWater || this.worldObj.isRainingAt(new BlockPos(this.posX, this.posY, this.posZ)) || this.worldObj.isRainingAt(new BlockPos(this.posX, this.posY + (double)this.height, this.posZ));
     }
 
     /**
@@ -1478,9 +1487,6 @@ public abstract class Entity implements ICommandSender
 
     /**
      * Creates a Vec3 using the pitch and yaw of the entities rotation.
-     *  
-     * @param pitch The rotational pitch of the entity.
-     * @param yaw The rotational yaw of the entity.
      */
     protected final Vec3 getVectorForRotation(float pitch, float yaw)
     {
@@ -1694,7 +1700,7 @@ public abstract class Entity implements ICommandSender
             this.prevRotationYaw = this.rotationYaw = nbttaglist2.getFloatAt(0);
             this.prevRotationPitch = this.rotationPitch = nbttaglist2.getFloatAt(1);
             this.setRotationYawHead(this.rotationYaw);
-            this.func_181013_g(this.rotationYaw);
+            this.setRenderYawOffset(this.rotationYaw);
             this.fallDistance = tagCompund.getFloat("FallDistance");
             this.fire = tagCompund.getShort("Fire");
             this.setAir(tagCompund.getShort("Air"));
@@ -1853,7 +1859,7 @@ public abstract class Entity implements ICommandSender
 
                 if (blockpos$mutableblockpos.getX() != k || blockpos$mutableblockpos.getY() != j || blockpos$mutableblockpos.getZ() != l)
                 {
-                    blockpos$mutableblockpos.func_181079_c(k, j, l);
+                    blockpos$mutableblockpos.set(k, j, l);
 
                     if (this.worldObj.getBlockState(blockpos$mutableblockpos).getBlock().isVisuallyOpaque())
                     {
@@ -2055,7 +2061,13 @@ public abstract class Entity implements ICommandSender
         return null;
     }
 
-    public void func_181015_d(BlockPos p_181015_1_)
+    /**
+     * Marks the entity as being inside a portal, activating teleportation logic in onEntityUpdate() in the following
+     * tick(s).
+     *  
+     * @param pos The postion of the portal that the entity is in
+     */
+    public void setPortal(BlockPos pos)
     {
         if (this.timeUntilPortal > 0)
         {
@@ -2063,16 +2075,16 @@ public abstract class Entity implements ICommandSender
         }
         else
         {
-            if (!this.worldObj.isRemote && !p_181015_1_.equals(this.field_181016_an))
+            if (!this.worldObj.isRemote && !pos.equals(this.lastPortalPos))
             {
-                this.field_181016_an = p_181015_1_;
-                BlockPattern.PatternHelper blockpattern$patternhelper = Blocks.portal.func_181089_f(this.worldObj, p_181015_1_);
-                double d0 = blockpattern$patternhelper.getFinger().getAxis() == EnumFacing.Axis.X ? (double)blockpattern$patternhelper.func_181117_a().getZ() : (double)blockpattern$patternhelper.func_181117_a().getX();
+                this.lastPortalPos = pos;
+                BlockPattern.PatternHelper blockpattern$patternhelper = Blocks.portal.func_181089_f(this.worldObj, pos);
+                double d0 = blockpattern$patternhelper.getFinger().getAxis() == EnumFacing.Axis.X ? (double)blockpattern$patternhelper.getPos().getZ() : (double)blockpattern$patternhelper.getPos().getX();
                 double d1 = blockpattern$patternhelper.getFinger().getAxis() == EnumFacing.Axis.X ? this.posZ : this.posX;
-                d1 = Math.abs(MathHelper.func_181160_c(d1 - (double)(blockpattern$patternhelper.getFinger().rotateY().getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE ? 1 : 0), d0, d0 - (double)blockpattern$patternhelper.func_181118_d()));
-                double d2 = MathHelper.func_181160_c(this.posY - 1.0D, (double)blockpattern$patternhelper.func_181117_a().getY(), (double)(blockpattern$patternhelper.func_181117_a().getY() - blockpattern$patternhelper.func_181119_e()));
-                this.field_181017_ao = new Vec3(d1, d2, 0.0D);
-                this.field_181018_ap = blockpattern$patternhelper.getFinger();
+                d1 = Math.abs(MathHelper.func_181160_c(d1 - (double)(blockpattern$patternhelper.getFinger().rotateY().getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE ? 1 : 0), d0, d0 - (double)blockpattern$patternhelper.width()));
+                double d2 = MathHelper.func_181160_c(this.posY - 1.0D, (double)blockpattern$patternhelper.getPos().getY(), (double)(blockpattern$patternhelper.getPos().getY() - blockpattern$patternhelper.height()));
+                this.lastPortalVec = new Vec3(d1, d2, 0.0D);
+                this.teleportDirection = blockpattern$patternhelper.getFinger();
             }
 
             this.inPortal = true;
@@ -2097,7 +2109,7 @@ public abstract class Entity implements ICommandSender
         this.motionZ = z;
     }
 
-    public void handleHealthUpdate(byte id)
+    public void handleStatusUpdate(byte id)
     {
     }
 
@@ -2221,11 +2233,11 @@ public abstract class Entity implements ICommandSender
 
         if (set)
         {
-            this.dataWatcher.updateObject(0, Byte.valueOf((byte)(b0 | 1 << flag)));
+            this.dataWatcher.updateObject(0, (byte)(b0 | 1 << flag));
         }
         else
         {
-            this.dataWatcher.updateObject(0, Byte.valueOf((byte)(b0 & ~(1 << flag))));
+            this.dataWatcher.updateObject(0, (byte)(b0 & ~(1 << flag)));
         }
     }
 
@@ -2236,9 +2248,12 @@ public abstract class Entity implements ICommandSender
 
     public void setAir(int air)
     {
-        this.dataWatcher.updateObject(1, Short.valueOf((short)air));
+        this.dataWatcher.updateObject(1, (short)air);
     }
-    
+
+    /**
+     * Called when a lightning bolt hits the entity.
+     */
     public void onStruckByLightning(EntityLightningBolt lightningBolt)
     {
         this.attackEntityFrom(DamageSource.lightningBolt, 5.0F);
@@ -2249,7 +2264,10 @@ public abstract class Entity implements ICommandSender
             this.setFire(8);
         }
     }
-    
+
+    /**
+     * This method gets called when the entity kills another one.
+     */
     public void onKillEntity(EntityLivingBase entityLivingIn)
     {
     }
@@ -2260,7 +2278,7 @@ public abstract class Entity implements ICommandSender
         double d0 = x - (double)blockpos.getX();
         double d1 = y - (double)blockpos.getY();
         double d2 = z - (double)blockpos.getZ();
-        List<AxisAlignedBB> list = this.worldObj.func_147461_a(this.getEntityBoundingBox());
+        List<AxisAlignedBB> list = this.worldObj.getCollisionBoxes(this.getEntityBoundingBox());
 
         if (list.isEmpty() && !this.worldObj.isBlockFullCube(blockpos))
         {
@@ -2332,13 +2350,18 @@ public abstract class Entity implements ICommandSender
         }
     }
 
-    
+    /**
+     * Sets the Entity inside a web block.
+     */
     public void setInWeb()
     {
         this.isInWeb = true;
         this.fallDistance = 0.0F;
     }
-    
+
+    /**
+     * Get the name of this object. For players this returns their username
+     */
     public String getName()
     {
         if (this.hasCustomName())
@@ -2386,7 +2409,12 @@ public abstract class Entity implements ICommandSender
     {
     }
 
-    public void func_181013_g(float p_181013_1_)
+    /**
+     * Set the render yaw offset
+     *  
+     * @param offset The render yaw offset
+     */
+    public void setRenderYawOffset(float offset)
     {
     }
 
@@ -2408,7 +2436,9 @@ public abstract class Entity implements ICommandSender
 
     public String toString()
     {
-        return String.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]", new Object[] {this.getClass().getSimpleName(), this.getName(), Integer.valueOf(this.entityId), this.worldObj == null ? "~NULL~" : this.worldObj.getWorldInfo().getWorldName(), Double.valueOf(this.posX), Double.valueOf(this.posY), Double.valueOf(this.posZ)});
+        return String.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]", 
+        		new Object[] {this.getClass().getSimpleName(), this.getName(), this.entityId, this.worldObj == null ?
+        				"~NULL~" : this.worldObj.getWorldInfo().getWorldName(), this.posX, this.posY, this.posZ});
     }
 
     public boolean isEntityInvulnerable(DamageSource source)
@@ -2433,9 +2463,9 @@ public abstract class Entity implements ICommandSender
         entityIn.writeToNBT(nbttagcompound);
         this.readFromNBT(nbttagcompound);
         this.timeUntilPortal = entityIn.timeUntilPortal;
-        this.field_181016_an = entityIn.field_181016_an;
-        this.field_181017_ao = entityIn.field_181017_ao;
-        this.field_181018_ap = entityIn.field_181018_ap;
+        this.lastPortalPos = entityIn.lastPortalPos;
+        this.lastPortalVec = entityIn.lastPortalVec;
+        this.teleportDirection = entityIn.teleportDirection;
     }
 
     /**
@@ -2509,12 +2539,12 @@ public abstract class Entity implements ICommandSender
 
     public Vec3 func_181014_aG()
     {
-        return this.field_181017_ao;
+        return this.lastPortalVec;
     }
 
-    public EnumFacing func_181012_aH()
+    public EnumFacing getTeleportDirection()
     {
-        return this.field_181018_ap;
+        return this.teleportDirection;
     }
 
     /**
@@ -2534,7 +2564,7 @@ public abstract class Entity implements ICommandSender
                 return EntityList.getEntityString(Entity.this) + " (" + Entity.this.getClass().getCanonicalName() + ")";
             }
         });
-        category.addCrashSection("Entity ID", Integer.valueOf(this.entityId));
+        category.addCrashSection("Entity ID", this.entityId);
         category.addCrashSectionCallable("Entity Name", new Callable<String>()
         {
             public String call() throws Exception
@@ -2542,9 +2572,9 @@ public abstract class Entity implements ICommandSender
                 return Entity.this.getName();
             }
         });
-        category.addCrashSection("Entity\'s Exact location", String.format("%.2f, %.2f, %.2f", new Object[] {Double.valueOf(this.posX), Double.valueOf(this.posY), Double.valueOf(this.posZ)}));
+        category.addCrashSection("Entity\'s Exact location", String.format("%.2f, %.2f, %.2f", this.posX, posY, posZ));
         category.addCrashSection("Entity\'s Block location", CrashReportCategory.getCoordinateInfo((double)MathHelper.floor_double(this.posX), (double)MathHelper.floor_double(this.posY), (double)MathHelper.floor_double(this.posZ)));
-        category.addCrashSection("Entity\'s Momentum", String.format("%.2f, %.2f, %.2f", new Object[] {Double.valueOf(this.motionX), Double.valueOf(this.motionY), Double.valueOf(this.motionZ)}));
+        category.addCrashSection("Entity\'s Momentum", String.format("%.2f, %.2f, %.2f", motionX, motionY, motionZ));
         category.addCrashSectionCallable("Entity\'s Rider", new Callable<String>()
         {
             public String call() throws Exception
@@ -2613,7 +2643,7 @@ public abstract class Entity implements ICommandSender
 
     public void setAlwaysRenderNameTag(boolean alwaysRenderNameTag)
     {
-        this.dataWatcher.updateObject(3, Byte.valueOf((byte)(alwaysRenderNameTag ? 1 : 0)));
+        this.dataWatcher.updateObject(3, (byte)(alwaysRenderNameTag ? 1 : 0));
     }
 
     public boolean getAlwaysRenderNameTag()
@@ -2695,8 +2725,6 @@ public abstract class Entity implements ICommandSender
 
     /**
      * Send a chat message to the CommandSender
-     *  
-     * @param component The ChatComponent to send
      */
     public void addChatMessage(IChatComponent component)
     {
@@ -2704,9 +2732,6 @@ public abstract class Entity implements ICommandSender
 
     /**
      * Returns {@code true} if the CommandSender is allowed to execute the command, {@code false} if not
-     *  
-     * @param permLevel The permission level required to execute the command
-     * @param commandName The name of the command
      */
     public boolean canCommandSenderUseCommand(int permLevel, String commandName)
     {
@@ -2758,7 +2783,7 @@ public abstract class Entity implements ICommandSender
 
     public void setCommandStat(CommandResultStats.Type type, int amount)
     {
-        this.cmdResultStats.func_179672_a(this, type, amount);
+        this.cmdResultStats.setCommandStatScore(this, type, amount);
     }
 
     public CommandResultStats getCommandStats()
@@ -2766,9 +2791,12 @@ public abstract class Entity implements ICommandSender
         return this.cmdResultStats;
     }
 
-    public void func_174817_o(Entity entityIn)
+    /**
+     * Set the CommandResultStats from the entity
+     */
+    public void setCommandStats(Entity entityIn)
     {
-        this.cmdResultStats.func_179671_a(entityIn.getCommandStats());
+        this.cmdResultStats.addAllStats(entityIn.getCommandStats());
     }
 
     public NBTTagCompound getNBTTagCompound()

@@ -32,7 +32,6 @@ import net.optifine.CustomColors;
 import net.optifine.render.GlBlendState;
 import net.optifine.util.FontUtils;
 import nightmare.Nightmare;
-import nightmare.module.misc.NameProtect;
 
 public class FontRenderer implements IResourceManagerReloadListener
 {
@@ -282,29 +281,32 @@ public class FontRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private float func_181559_a(char p_181559_1_, boolean p_181559_2_)
+    /**
+     * Render the given char
+     */
+    private float renderChar(char ch, boolean italic)
     {
-        if (p_181559_1_ != 32 && p_181559_1_ != 160)
+        if (ch != 32 && ch != 160)
         {
-            int i = "\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000".indexOf(p_181559_1_);
-            return i != -1 && !this.unicodeFlag ? this.renderDefaultChar(i, p_181559_2_) : this.renderUnicodeChar(p_181559_1_, p_181559_2_);
+            int i = "\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000".indexOf(ch);
+            return i != -1 && !this.unicodeFlag ? this.renderDefaultChar(i, italic) : this.renderUnicodeChar(ch, italic);
         }
         else
         {
-            return !this.unicodeFlag ? this.charWidthFloat[p_181559_1_] : 4.0F;
+            return !this.unicodeFlag ? this.charWidthFloat[ch] : 4.0F;
         }
     }
 
     /**
      * Render a single character with the default.png font at current (posX,posY) location...
      */
-    private float renderDefaultChar(int p_78266_1_, boolean p_78266_2_)
+    private float renderDefaultChar(int ch, boolean italic)
     {
-        int i = p_78266_1_ % 16 * 8;
-        int j = p_78266_1_ / 16 * 8;
-        int k = p_78266_2_ ? 1 : 0;
+        int i = ch % 16 * 8;
+        int j = ch / 16 * 8;
+        int k = italic ? 1 : 0;
         this.bindTexture(this.locationFontTexture);
-        float f = this.charWidthFloat[p_78266_1_];
+        float f = this.charWidthFloat[ch];
         float f1 = 7.99F;
         GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
         GL11.glTexCoord2f((float)i / 128.0F, (float)j / 128.0F);
@@ -319,46 +321,46 @@ public class FontRenderer implements IResourceManagerReloadListener
         return f;
     }
 
-    private ResourceLocation getUnicodePageLocation(int p_111271_1_)
+    private ResourceLocation getUnicodePageLocation(int page)
     {
-        if (unicodePageLocations[p_111271_1_] == null)
+        if (unicodePageLocations[page] == null)
         {
-            unicodePageLocations[p_111271_1_] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", new Object[] {Integer.valueOf(p_111271_1_)}));
-            unicodePageLocations[p_111271_1_] = FontUtils.getHdFontLocation(unicodePageLocations[p_111271_1_]);
+            unicodePageLocations[page] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", new Object[] {page}));
+            unicodePageLocations[page] = FontUtils.getHdFontLocation(unicodePageLocations[page]);
         }
 
-        return unicodePageLocations[p_111271_1_];
+        return unicodePageLocations[page];
     }
 
     /**
      * Load one of the /font/glyph_XX.png into a new GL texture and store the texture ID in glyphTextureName array.
      */
-    private void loadGlyphTexture(int p_78257_1_)
+    private void loadGlyphTexture(int page)
     {
-        this.bindTexture(this.getUnicodePageLocation(p_78257_1_));
+        this.bindTexture(this.getUnicodePageLocation(page));
     }
 
     /**
      * Render a single Unicode character at current (posX,posY) location using one of the /font/glyph_XX.png files...
      */
-    private float renderUnicodeChar(char p_78277_1_, boolean p_78277_2_)
+    private float renderUnicodeChar(char ch, boolean italic)
     {
-        if (this.glyphWidth[p_78277_1_] == 0)
+        if (this.glyphWidth[ch] == 0)
         {
             return 0.0F;
         }
         else
         {
-            int i = p_78277_1_ / 256;
+            int i = ch / 256;
             this.loadGlyphTexture(i);
-            int j = this.glyphWidth[p_78277_1_] >>> 4;
-            int k = this.glyphWidth[p_78277_1_] & 15;
+            int j = this.glyphWidth[ch] >>> 4;
+            int k = this.glyphWidth[ch] & 15;
             float f = (float)j;
             float f1 = (float)(k + 1);
-            float f2 = (float)(p_78277_1_ % 16 * 16) + f;
-            float f3 = (float)((p_78277_1_ & 255) / 16 * 16);
+            float f2 = (float)(ch % 16 * 16) + f;
+            float f3 = (float)((ch & 255) / 16 * 16);
             float f4 = f1 - f - 0.02F;
-            float f5 = p_78277_2_ ? 1.0F : 0.0F;
+            float f5 = italic ? 1.0F : 0.0F;
             GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
             GL11.glTexCoord2f(f2 / 256.0F, f3 / 256.0F);
             GL11.glVertex3f(this.posX + f5, this.posY, 0.0F);
@@ -427,17 +429,17 @@ public class FontRenderer implements IResourceManagerReloadListener
     /**
      * Apply Unicode Bidirectional Algorithm to string and return a new possibly reordered string for visual rendering.
      */
-    private String bidiReorder(String p_147647_1_)
+    private String bidiReorder(String text)
     {
         try
         {
-            Bidi bidi = new Bidi((new ArabicShaping(8)).shape(p_147647_1_), 127);
+            Bidi bidi = new Bidi((new ArabicShaping(8)).shape(text), 127);
             bidi.setReorderingMode(0);
             return bidi.writeReordered(2);
         }
         catch (ArabicShapingException var3)
         {
-            return p_147647_1_;
+            return text;
         }
     }
 
@@ -456,19 +458,19 @@ public class FontRenderer implements IResourceManagerReloadListener
     /**
      * Render a single line string at the current (posX,posY) and update posX
      */
-    private void renderStringAtPos(String p_78255_1_, boolean p_78255_2_)
+    private void renderStringAtPos(String text, boolean shadow)
     {
-    	if (Nightmare.instance.moduleManager.getModuleByName("NameProtect").isToggled() && Minecraft.getMinecraft().thePlayer != null && p_78255_1_.contains(Minecraft.getMinecraft().thePlayer.getName())) {
-    		p_78255_1_ = p_78255_1_.replace(Minecraft.getMinecraft().thePlayer.getName(), "You");
+    	if (Nightmare.instance.moduleManager.getModuleByName("NameProtect").isToggled() && Minecraft.getMinecraft().thePlayer != null && text.contains(Minecraft.getMinecraft().thePlayer.getName())) {
+    		text = text.replace(Minecraft.getMinecraft().thePlayer.getName(), "You");
     	}
     	
-        for (int i = 0; i < p_78255_1_.length(); ++i)
+        for (int i = 0; i < text.length(); ++i)
         {
-            char c0 = p_78255_1_.charAt(i);
+            char c0 = text.charAt(i);
 
-            if (c0 == 167 && i + 1 < p_78255_1_.length())
+            if (c0 == 167 && i + 1 < text.length())
             {
-                int l = "0123456789abcdefklmnor".indexOf(p_78255_1_.toLowerCase(Locale.ENGLISH).charAt(i + 1));
+                int l = "0123456789abcdefklmnor".indexOf(text.toLowerCase(Locale.ENGLISH).charAt(i + 1));
 
                 if (l < 16)
                 {
@@ -483,7 +485,7 @@ public class FontRenderer implements IResourceManagerReloadListener
                         l = 15;
                     }
 
-                    if (p_78255_2_)
+                    if (shadow)
                     {
                         l += 16;
                     }
@@ -554,7 +556,7 @@ public class FontRenderer implements IResourceManagerReloadListener
                 }
 
                 float f1 = j != -1 && !this.unicodeFlag ? this.offsetBold : 0.5F;
-                boolean flag = (c0 == 0 || j == -1 || this.unicodeFlag) && p_78255_2_;
+                boolean flag = (c0 == 0 || j == -1 || this.unicodeFlag) && shadow;
 
                 if (flag)
                 {
@@ -562,7 +564,7 @@ public class FontRenderer implements IResourceManagerReloadListener
                     this.posY -= f1;
                 }
 
-                float f = this.func_181559_a(c0, this.italicStyle);
+                float f = this.renderChar(c0, this.italicStyle);
 
                 if (flag)
                 {
@@ -580,7 +582,7 @@ public class FontRenderer implements IResourceManagerReloadListener
                         this.posY -= f1;
                     }
 
-                    this.func_181559_a(c0, this.italicStyle);
+                    this.renderChar(c0, this.italicStyle);
                     this.posX -= f1;
 
                     if (flag)
@@ -634,12 +636,12 @@ public class FontRenderer implements IResourceManagerReloadListener
     /**
      * Render string either left or right aligned depending on bidiFlag
      */
-    private int renderStringAligned(String text, int x, int y, int p_78274_4_, int color, boolean dropShadow)
+    private int renderStringAligned(String text, int x, int y, int width, int color, boolean dropShadow)
     {
         if (this.bidiFlag)
         {
             int i = this.getStringWidth(this.bidiReorder(text));
-            x = x + p_78274_4_ - i;
+            x = x + width - i;
         }
 
         return this.renderString(text, (float)x, (float)y, color, dropShadow);
@@ -905,10 +907,13 @@ public class FontRenderer implements IResourceManagerReloadListener
 
     /**
      * Returns the width of the wordwrapped String (maximum length is parameter k)
+     *  
+     * @param str The string to split
+     * @param maxLength The maximum length of a word
      */
-    public int splitStringWidth(String p_78267_1_, int p_78267_2_)
+    public int splitStringWidth(String str, int maxLength)
     {
-        return this.FONT_HEIGHT * this.listFormattedStringToWidth(p_78267_1_, p_78267_2_).size();
+        return this.FONT_HEIGHT * this.listFormattedStringToWidth(str, maxLength).size();
     }
 
     /**

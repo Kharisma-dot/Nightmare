@@ -25,33 +25,25 @@ public class ModelAdapterGuardian extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelGuardian))
-        {
             return null;
-        }
         else
         {
             ModelGuardian modelguardian = (ModelGuardian)model;
 
             if (modelPart.equals("body"))
-            {
                 return (ModelRenderer)Reflector.getFieldValue(modelguardian, Reflector.ModelGuardian_body);
-            }
             else if (modelPart.equals("eye"))
-            {
                 return (ModelRenderer)Reflector.getFieldValue(modelguardian, Reflector.ModelGuardian_eye);
-            }
             else
             {
                 String s = "spine";
 
                 if (modelPart.startsWith(s))
                 {
-                    ModelRenderer[] amodelrenderer1 = (ModelRenderer[])((ModelRenderer[])Reflector.getFieldValue(modelguardian, Reflector.ModelGuardian_spines));
+                    ModelRenderer[] amodelrenderer1 = (ModelRenderer[])Reflector.getFieldValue(modelguardian, Reflector.ModelGuardian_spines);
 
                     if (amodelrenderer1 == null)
-                    {
                         return null;
-                    }
                     else
                     {
                         String s3 = modelPart.substring(s.length());
@@ -66,12 +58,10 @@ public class ModelAdapterGuardian extends ModelAdapter
 
                     if (modelPart.startsWith(s1))
                     {
-                        ModelRenderer[] amodelrenderer = (ModelRenderer[])((ModelRenderer[])Reflector.getFieldValue(modelguardian, Reflector.ModelGuardian_tail));
+                        ModelRenderer[] amodelrenderer = (ModelRenderer[])Reflector.getFieldValue(modelguardian, Reflector.ModelGuardian_tail);
 
                         if (amodelrenderer == null)
-                        {
                             return null;
-                        }
                         else
                         {
                             String s2 = modelPart.substring(s1.length());
@@ -81,9 +71,7 @@ public class ModelAdapterGuardian extends ModelAdapter
                         }
                     }
                     else
-                    {
                         return null;
-                    }
                 }
             }
         }
@@ -91,7 +79,8 @@ public class ModelAdapterGuardian extends ModelAdapter
 
     public String[] getModelRendererNames()
     {
-        return new String[] {"body", "eye", "spine1", "spine2", "spine3", "spine4", "spine5", "spine6", "spine7", "spine8", "spine9", "spine10", "spine11", "spine12", "tail1", "tail2", "tail3"};
+        return new String[] {"body", "eye", "spine1", "spine2", "spine3", "spine4", "spine5", "spine6", "spine7", 
+        		"spine8", "spine9", "spine10", "spine11", "spine12", "tail1", "tail2", "tail3"};
     }
 
     public IEntityRenderer makeEntityRender(ModelBase modelBase, float shadowSize)

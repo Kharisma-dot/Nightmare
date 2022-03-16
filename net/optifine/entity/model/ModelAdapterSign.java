@@ -25,9 +25,7 @@ public class ModelAdapterSign extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelSign))
-        {
             return null;
-        }
         else
         {
             ModelSign modelsign = (ModelSign)model;
@@ -46,9 +44,7 @@ public class ModelAdapterSign extends ModelAdapter
         TileEntitySpecialRenderer tileentityspecialrenderer = tileentityrendererdispatcher.getSpecialRendererByClass(TileEntitySign.class);
 
         if (!(tileentityspecialrenderer instanceof TileEntitySignRenderer))
-        {
             return null;
-        }
         else
         {
             if (tileentityspecialrenderer.getEntityClass() == null)

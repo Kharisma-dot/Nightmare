@@ -52,7 +52,7 @@ public class SimpleResource implements IResource
     {
         if (!this.hasMetadata())
         {
-            return (T)null;
+            return null;
         }
         else
         {

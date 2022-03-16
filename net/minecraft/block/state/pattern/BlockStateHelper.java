@@ -24,34 +24,28 @@ public class BlockStateHelper implements Predicate<IBlockState>
         return new BlockStateHelper(blockIn.getBlockState());
     }
 
-    public boolean apply(IBlockState p_apply_1_)
+    public boolean apply(IBlockState state)
     {
-        if (p_apply_1_ != null && p_apply_1_.getBlock().equals(this.blockstate.getBlock()))
+        if (state != null && state.getBlock().equals(this.blockstate.getBlock()))
         {
             for (Entry<IProperty, Predicate> entry : this.propertyPredicates.entrySet())
             {
-                Object object = p_apply_1_.getValue((IProperty)entry.getKey());
+                Object object = state.getValue((IProperty)entry.getKey());
 
                 if (!((Predicate)entry.getValue()).apply(object))
-                {
                     return false;
-                }
             }
 
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
     public <V extends Comparable<V>> BlockStateHelper where(IProperty<V> property, Predicate <? extends V > is)
     {
         if (!this.blockstate.getProperties().contains(property))
-        {
             throw new IllegalArgumentException(this.blockstate + " cannot support property " + property);
-        }
         else
         {
             this.propertyPredicates.put(property, is);

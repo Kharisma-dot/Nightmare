@@ -14,21 +14,15 @@ public class PropertyInteger extends PropertyHelper<Integer>
         super(name, Integer.class);
 
         if (min < 0)
-        {
             throw new IllegalArgumentException("Min value of " + name + " must be 0 or greater");
-        }
         else if (max <= min)
-        {
             throw new IllegalArgumentException("Max value of " + name + " must be greater than min (" + min + ")");
-        }
         else
         {
             Set<Integer> set = Sets.<Integer>newHashSet();
 
             for (int i = min; i <= max; ++i)
-            {
-                set.add(Integer.valueOf(i));
-            }
+                set.add(i);
 
             this.allowedValues = ImmutableSet.copyOf(set);
         }
@@ -39,28 +33,22 @@ public class PropertyInteger extends PropertyHelper<Integer>
         return this.allowedValues;
     }
 
-    public boolean equals(Object p_equals_1_)
+    public boolean equals(Object object)
     {
-        if (this == p_equals_1_)
-        {
+        if (this == object)
             return true;
-        }
-        else if (p_equals_1_ != null && this.getClass() == p_equals_1_.getClass())
+        else if (object != null && this.getClass() == object.getClass())
         {
-            if (!super.equals(p_equals_1_))
-            {
+            if (!super.equals(object))
                 return false;
-            }
             else
             {
-                PropertyInteger propertyinteger = (PropertyInteger)p_equals_1_;
+                PropertyInteger propertyinteger = (PropertyInteger)object;
                 return this.allowedValues.equals(propertyinteger.allowedValues);
             }
         }
         else
-        {
             return false;
-        }
     }
 
     public int hashCode()

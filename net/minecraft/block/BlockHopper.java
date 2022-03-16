@@ -28,47 +28,40 @@ import net.minecraft.world.World;
 
 public class BlockHopper extends BlockContainer
 {
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", new Predicate<EnumFacing>()
-    {
-        public boolean apply(EnumFacing p_apply_1_)
-        {
-            return p_apply_1_ != EnumFacing.UP;
-        }
-    });
+    public static final PropertyDirection FACING = PropertyDirection.create("facing",
+    		(facing) -> facing != EnumFacing.UP);
     public static final PropertyBool ENABLED = PropertyBool.create("enabled");
 
     public BlockHopper()
     {
         super(Material.iron, MapColor.stoneColor);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.DOWN).withProperty(ENABLED, Boolean.valueOf(true)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.DOWN).withProperty(ENABLED, true));
         this.setCreativeTab(CreativeTabs.tabRedstone);
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
     }
 
     /**
      * Add all collision boxes of this Block to the list that intersect with the given mask.
-     *  
-     * @param collidingEntity the Entity colliding with this Block
      */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.625F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.625F, 1f);
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-        float f = 0.125F;
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
+        
+        this.setBlockBounds(0f, 0f, 0f, 0.125f, 1f, 1f);
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 1f, 0.125f);
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-        this.setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        this.setBlockBounds(0.875f, 0f, 0f, 1f, 1f, 1f);
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-        this.setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0.875f, 1f, 1f, 1f);
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
     }
 
     /**
@@ -80,11 +73,9 @@ public class BlockHopper extends BlockContainer
         EnumFacing enumfacing = facing.getOpposite();
 
         if (enumfacing == EnumFacing.UP)
-        {
             enumfacing = EnumFacing.DOWN;
-        }
 
-        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ENABLED, Boolean.valueOf(true));
+        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ENABLED, true);
     }
 
     /**
@@ -107,9 +98,7 @@ public class BlockHopper extends BlockContainer
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
             if (tileentity instanceof TileEntityHopper)
-            {
                 ((TileEntityHopper)tileentity).setCustomName(stack.getDisplayName());
-            }
         }
     }
 
@@ -121,9 +110,7 @@ public class BlockHopper extends BlockContainer
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
-        {
             return true;
-        }
         else
         {
             TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -150,10 +137,8 @@ public class BlockHopper extends BlockContainer
     {
         boolean flag = !worldIn.isBlockPowered(pos);
 
-        if (flag != ((Boolean)state.getValue(ENABLED)).booleanValue())
-        {
-            worldIn.setBlockState(pos, state.withProperty(ENABLED, Boolean.valueOf(flag)), 4);
-        }
+        if (flag != state.getValue(ENABLED))
+            worldIn.setBlockState(pos, state.withProperty(ENABLED, flag), 4);
     }
 
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
@@ -229,7 +214,7 @@ public class BlockHopper extends BlockContainer
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(ENABLED, Boolean.valueOf(isEnabled(meta)));
+        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(ENABLED, isEnabled(meta));
     }
 
     /**
@@ -238,12 +223,10 @@ public class BlockHopper extends BlockContainer
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | ((EnumFacing)state.getValue(FACING)).getIndex();
+        i = i | state.getValue(FACING).getIndex();
 
-        if (!((Boolean)state.getValue(ENABLED)).booleanValue())
-        {
+        if (!state.getValue(ENABLED))
             i |= 8;
-        }
 
         return i;
     }

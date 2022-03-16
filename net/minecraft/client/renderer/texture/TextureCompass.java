@@ -12,12 +12,12 @@ public class TextureCompass extends TextureAtlasSprite
 
     /** Speed and direction of compass rotation */
     public double angleDelta;
-    public static String field_176608_l;
+    public static String locationSprite;
 
     public TextureCompass(String iconName)
     {
         super(iconName);
-        field_176608_l = iconName;
+        locationSprite = iconName;
     }
 
     public void updateAnimation()
@@ -30,7 +30,7 @@ public class TextureCompass extends TextureAtlasSprite
         }
         else
         {
-            this.updateCompass((World)null, 0.0D, 0.0D, 0.0D, true, false);
+            this.updateCompass(null, 0.0D, 0.0D, 0.0D, true, false);
         }
     }
 

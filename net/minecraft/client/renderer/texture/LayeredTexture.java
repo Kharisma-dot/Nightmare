@@ -48,7 +48,7 @@ public class LayeredTexture extends AbstractTexture
                         bufferedimage = new BufferedImage(bufferedimage1.getWidth(), bufferedimage1.getHeight(), 2);
                     }
 
-                    bufferedimage.getGraphics().drawImage(bufferedimage1, 0, 0, (ImageObserver)null);
+                    bufferedimage.getGraphics().drawImage(bufferedimage1, 0, 0, null);
                 }
             }
         }

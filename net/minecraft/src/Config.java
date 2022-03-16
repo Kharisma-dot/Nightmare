@@ -42,7 +42,6 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.ResourcePackRepository;
-import net.minecraft.client.resources.ResourcePackRepository.Entry;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.BlockPos;
@@ -81,8 +80,8 @@ public class Config
     public static final String OF_NAME = "OptiFine";
     public static final String MC_VERSION = "1.8.9";
     public static final String OF_EDITION = "HD_U";
-    public static final String OF_RELEASE = "L5";
-    public static final String VERSION = "OptiFine_1.8.9_HD_U_L5";
+    public static final String OF_RELEASE = "M5";
+    public static final String VERSION = "OptiFine_1.8.9_HD_U_M5";
     private static String build = null;
     private static String newRelease = null;
     private static boolean notify64BitJava = false;
@@ -104,12 +103,13 @@ public class Config
     private static int antialiasingLevel = 0;
     private static int availableProcessors = 0;
     public static boolean zoomMode = false;
+    public static boolean zoomSmoothCamera = false;
     private static int texturePackClouds = 0;
     public static boolean waterOpacityChanged = false;
     private static boolean fullscreenModeChecked = false;
     private static boolean desktopModeChecked = false;
     private static DefaultResourcePack defaultResourcePackLazy = null;
-    public static final Float DEF_ALPHA_FUNC_LEVEL = Float.valueOf(0.1F);
+    public static final Float DEF_ALPHA_FUNC_LEVEL = 0.1f;
     private static final Logger LOGGER = LogManager.getLogger();
     public static final boolean logDetail = System.getProperty("log.detail", "false").equals("true");
     private static String mcDebugLast = null;
@@ -118,7 +118,7 @@ public class Config
 
     public static String getVersion()
     {
-        return "OptiFine_1.8.9_HD_U_L5";
+        return "OptiFine_1.8.9_HD_U_M5";
     }
 
     public static String getVersionDebug()
@@ -132,7 +132,7 @@ public class Config
             stringbuffer.append(", ");
         }
 
-        stringbuffer.append("OptiFine_1.8.9_HD_U_L5");
+        stringbuffer.append("OptiFine_1.8.9_HD_U_M5");
         String s = Shaders.getShaderPackName();
 
         if (s != null)
@@ -144,14 +144,13 @@ public class Config
         return stringbuffer.toString();
     }
 
-    public static void initGameSettings(GameSettings p_initGameSettings_0_)
+    public static void initGameSettings(GameSettings settings)
     {
         if (gameSettings == null)
         {
-            gameSettings = p_initGameSettings_0_;
+            gameSettings = settings;
             desktopDisplayMode = Display.getDesktopDisplayMode();
             updateAvailableProcessors();
-            ReflectorForge.putLaunchBlackboard("optifine.ForgeSplashCompatible", Boolean.TRUE);
         }
     }
 
@@ -168,14 +167,11 @@ public class Config
 
     public static void checkInitialized()
     {
-        if (!initialized)
+        if (!initialized && Display.isCreated())
         {
-            if (Display.isCreated())
-            {
-                initialized = true;
-                checkOpenGlCaps();
-                startVersionCheckThread();
-            }
+        	initialized = true;
+            checkOpenGlCaps();
+            startVersionCheckThread();
         }
     }
 
@@ -297,7 +293,7 @@ public class Config
         if (glVersion == null)
         {
             String s = GL11.glGetString(GL11.GL_VERSION);
-            glVersion = parseGlVersion(s, (GlVersion)null);
+            glVersion = parseGlVersion(s, null);
 
             if (glVersion == null)
             {
@@ -318,7 +314,7 @@ public class Config
         if (glslVersion == null)
         {
             String s = GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION);
-            glslVersion = parseGlVersion(s, (GlVersion)null);
+            glslVersion = parseGlVersion(s, null);
 
             if (glslVersion == null)
             {
@@ -525,12 +521,12 @@ public class Config
     public static boolean isUseAlphaFunc()
     {
         float f = getAlphaFuncLevel();
-        return f > DEF_ALPHA_FUNC_LEVEL.floatValue() + 1.0E-5F;
+        return f > DEF_ALPHA_FUNC_LEVEL + 1.0E-5F;
     }
 
     public static float getAlphaFuncLevel()
     {
-        return DEF_ALPHA_FUNC_LEVEL.floatValue();
+        return DEF_ALPHA_FUNC_LEVEL;
     }
 
     public static boolean isFogFancy()
@@ -984,9 +980,9 @@ public class Config
         List list = resourcepackrepository.getRepositoryEntries();
         List list1 = new ArrayList();
 
-        for (Object e: list)
+        for (Object resourcepackrepository$entry0 : list)
         {
-            ResourcePackRepository.Entry resourcepackrepository$entry = (Entry) e;
+            ResourcePackRepository.Entry resourcepackrepository$entry = (ResourcePackRepository.Entry) resourcepackrepository$entry0;
             list1.add(resourcepackrepository$entry.getResourcePack());
         }
 
@@ -1515,12 +1511,12 @@ public class Config
         if (i != 0 && GlErrors.isEnabled(i))
         {
             String s = getGlErrorString(i);
-            String s1 = String.format("OpenGL error: %s (%s), at: %s", new Object[] {Integer.valueOf(i), s, p_checkGlError_0_});
+            String s1 = String.format("OpenGL error: %s (%s), at: %s", new Object[] {i, s, p_checkGlError_0_});
             error(s1);
 
             if (isShowGlErrors() && TimedEvent.isActive("ShowGlError", 10000L))
             {
-                String s2 = I18n.format("of.message.openglError", new Object[] {Integer.valueOf(i), s});
+                String s2 = I18n.format("of.message.openglError", new Object[] {i, s});
                 minecraft.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(s2));
             }
         }
@@ -1958,7 +1954,7 @@ public class Config
     private static ByteBuffer readIconImage(InputStream p_readIconImage_0_) throws IOException
     {
         BufferedImage bufferedimage = ImageIO.read(p_readIconImage_0_);
-        int[] aint = bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), (int[])null, 0, bufferedimage.getWidth());
+        int[] aint = bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), null, 0, bufferedimage.getWidth());
         ByteBuffer bytebuffer = ByteBuffer.allocate(4 * aint.length);
 
         for (int i : aint)
@@ -2166,10 +2162,10 @@ public class Config
         else
         {
             mcDebugLast = minecraft.debug;
-            FrameTimer frametimer = minecraft.func_181539_aj();
-            long[] along = frametimer.func_181746_c();
-            int i = frametimer.func_181750_b();
-            int j = frametimer.func_181749_a();
+            FrameTimer frametimer = minecraft.getFrameTimer();
+            long[] along = frametimer.getFrames();
+            int i = frametimer.getIndex();
+            int j = frametimer.getLastIndex();
 
             if (i == j)
             {
@@ -2386,7 +2382,7 @@ public class Config
 
             for (int i = 0; i < aint.length; ++i)
             {
-                aint[i] = p_toPrimitive_0_[i].intValue();
+                aint[i] = p_toPrimitive_0_[i];
             }
 
             return aint;
@@ -2499,11 +2495,19 @@ public class Config
 
     public static boolean isTrue(Boolean p_isTrue_0_)
     {
-        return p_isTrue_0_ != null && p_isTrue_0_.booleanValue();
+        return p_isTrue_0_ != null && p_isTrue_0_;
     }
 
     public static boolean isQuadsToTriangles()
     {
         return !isShaders() ? false : !Shaders.canRenderQuads();
+    }
+
+    public static void checkNull(Object p_checkNull_0_, String p_checkNull_1_) throws NullPointerException
+    {
+        if (p_checkNull_0_ == null)
+        {
+            throw new NullPointerException(p_checkNull_1_);
+        }
     }
 }

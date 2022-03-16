@@ -54,8 +54,6 @@ public class ItemFishFood extends ItemFood
 
     /**
      * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     *  
-     * @param subItems The List of sub-items. This is a List of ItemStacks.
      */
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
@@ -153,7 +151,7 @@ public class ItemFishFood extends ItemFood
 
         public static ItemFishFood.FishType byMetadata(int meta)
         {
-            ItemFishFood.FishType itemfishfood$fishtype = (ItemFishFood.FishType)META_LOOKUP.get(Integer.valueOf(meta));
+            ItemFishFood.FishType itemfishfood$fishtype = (ItemFishFood.FishType)META_LOOKUP.get(meta);
             return itemfishfood$fishtype == null ? COD : itemfishfood$fishtype;
         }
 
@@ -165,7 +163,7 @@ public class ItemFishFood extends ItemFood
         static {
             for (ItemFishFood.FishType itemfishfood$fishtype : values())
             {
-                META_LOOKUP.put(Integer.valueOf(itemfishfood$fishtype.getMetadata()), itemfishfood$fishtype);
+                META_LOOKUP.put(itemfishfood$fishtype.getMetadata(), itemfishfood$fishtype);
             }
         }
     }

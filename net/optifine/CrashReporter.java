@@ -28,13 +28,12 @@ public class CrashReporter
                 return;
             }
 
-            extendCrashReport(category);
-
             if (throwable.getClass() == Throwable.class)
             {
                 return;
             }
 
+            extendCrashReport(category);
             GameSettings gamesettings = Config.getGameSettings();
 
             if (gamesettings == null)

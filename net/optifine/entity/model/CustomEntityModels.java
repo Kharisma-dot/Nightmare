@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
 import net.optifine.entity.model.anim.ModelResolver;
@@ -37,13 +36,9 @@ public class CustomEntityModels
         Map<Class, TileEntitySpecialRenderer> map1 = getTileEntityRenderMap();
 
         if (map == null)
-        {
             Config.warn("Entity render map not found, custom entity models are DISABLED.");
-        }
         else if (map1 == null)
-        {
             Config.warn("Tile entity render map not found, custom entity models are DISABLED.");
-        }
         else
         {
             active = false;
@@ -69,17 +64,11 @@ public class CustomEntityModels
                         if (oclass != null)
                         {
                             if (ientityrenderer instanceof Render)
-                            {
                                 map.put(oclass, (Render)ientityrenderer);
-                            }
                             else if (ientityrenderer instanceof TileEntitySpecialRenderer)
-                            {
                                 map1.put(oclass, (TileEntitySpecialRenderer)ientityrenderer);
-                            }
                             else
-                            {
                                 Config.warn("Unknown renderer type: " + ientityrenderer.getClass().getName());
-                            }
 
                             active = true;
                         }
@@ -95,15 +84,11 @@ public class CustomEntityModels
         Map<Class, Render> map = rendermanager.getEntityRenderMap();
 
         if (map == null)
-        {
             return null;
-        }
         else
         {
             if (originalEntityRenderMap == null)
-            {
-                originalEntityRenderMap = new HashMap<>(map);
-            }
+                originalEntityRenderMap = new HashMap(map);
 
             return map;
         }
@@ -114,9 +99,7 @@ public class CustomEntityModels
         Map<Class, TileEntitySpecialRenderer> map = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 
         if (originalTileEntityRenderMap == null)
-        {
-            originalTileEntityRenderMap = new HashMap<>(map);
-        }
+            originalTileEntityRenderMap = new HashMap(map);
 
         return map;
     }
@@ -125,7 +108,7 @@ public class CustomEntityModels
     {
         String s = "optifine/cem/";
         String s1 = ".jem";
-        List<ResourceLocation> list = new ArrayList<>();
+        List<ResourceLocation> list = new ArrayList();
         String[] astring = CustomModelRegistry.getModelNames();
 
         for (int i = 0; i < astring.length; ++i)
@@ -135,12 +118,10 @@ public class CustomEntityModels
             ResourceLocation resourcelocation = new ResourceLocation(s3);
 
             if (Config.hasResource(resourcelocation))
-            {
                 list.add(resourcelocation);
-            }
         }
 
-        ResourceLocation[] aresourcelocation = (ResourceLocation[])((ResourceLocation[])list.toArray(new ResourceLocation[list.size()]));
+        ResourceLocation[] aresourcelocation = (ResourceLocation[])list.toArray(new ResourceLocation[list.size()]);
         return aresourcelocation;
     }
 
@@ -180,9 +161,7 @@ public class CustomEntityModels
         IEntityRenderer ientityrenderer = makeEntityRender(modeladapter, customentityrenderer);
 
         if (ientityrenderer == null)
-        {
             return null;
-        }
         else
         {
             ientityrenderer.setEntityClass(oclass);
@@ -197,38 +176,29 @@ public class CustomEntityModels
         float f = cer.getShadowSize();
 
         if (f < 0.0F)
-        {
             f = modelAdapter.getShadowSize();
-        }
 
         ModelBase modelbase = modelAdapter.makeModel();
 
         if (modelbase == null)
-        {
             return null;
-        }
         else
         {
             ModelResolver modelresolver = new ModelResolver(modelAdapter, modelbase, acustommodelrenderer);
 
             if (!modifyModel(modelAdapter, modelbase, acustommodelrenderer, modelresolver))
-            {
                 return null;
-            }
             else
             {
                 IEntityRenderer ientityrenderer = modelAdapter.makeEntityRender(modelbase, f);
 
                 if (ientityrenderer == null)
-                {
-                    throw new JsonParseException("Entity renderer is null, model: " + modelAdapter.getName() + ", adapter: " + modelAdapter.getClass().getName());
-                }
+                    throw new JsonParseException("Entity renderer is null, model: "+modelAdapter.getName()+
+                    		", adapter: "+modelAdapter.getClass().getName());
                 else
                 {
                     if (resourcelocation != null)
-                    {
                         ientityrenderer.setLocationTextureCustom(resourcelocation);
-                    }
 
                     return ientityrenderer;
                 }
@@ -239,14 +209,8 @@ public class CustomEntityModels
     private static boolean modifyModel(ModelAdapter modelAdapter, ModelBase model, CustomModelRenderer[] modelRenderers, ModelResolver mr)
     {
         for (int i = 0; i < modelRenderers.length; ++i)
-        {
-            CustomModelRenderer custommodelrenderer = modelRenderers[i];
-
-            if (!modifyModel(modelAdapter, model, custommodelrenderer, mr))
-            {
+            if (!modifyModel(modelAdapter, model, modelRenderers[i], mr))
                 return false;
-            }
-        }
 
         return true;
     }
@@ -266,14 +230,10 @@ public class CustomEntityModels
             if (!customModelRenderer.isAttach())
             {
                 if (modelrenderer.cubeList != null)
-                {
                     modelrenderer.cubeList.clear();
-                }
 
                 if (modelrenderer.spriteList != null)
-                {
                     modelrenderer.spriteList.clear();
-                }
 
                 if (modelrenderer.childModels != null)
                 {
@@ -284,14 +244,8 @@ public class CustomEntityModels
                     Iterator iterator = list.iterator();
 
                     while (iterator.hasNext())
-                    {
-                        ModelRenderer modelrenderer1 = (ModelRenderer)iterator.next();
-
-                        if (!set.contains(modelrenderer1))
-                        {
+                        if (!set.contains((ModelRenderer)iterator.next()))
                             iterator.remove();
-                        }
-                    }
                 }
             }
 
@@ -304,9 +258,7 @@ public class CustomEntityModels
                 modelResolver.setPartModelRenderer(modelrenderer);
 
                 if (!modelupdater.initialize(modelResolver))
-                {
                     return false;
-                }
 
                 customModelRenderer.getModelRenderer().setModelUpdater(modelupdater);
             }
@@ -318,9 +270,7 @@ public class CustomEntityModels
     private static void checkNull(Object obj, String msg)
     {
         if (obj == null)
-        {
             throw new JsonParseException(msg);
-        }
     }
 
     public static boolean isActive()

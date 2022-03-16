@@ -180,7 +180,7 @@ public class EntityEnderman extends EntityMob
 
             if (f > 0.5F && this.worldObj.canSeeSky(new BlockPos(this)) && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F)
             {
-                this.setAttackTarget((EntityLivingBase)null);
+                this.setAttackTarget(null);
                 this.setScreaming(false);
                 this.isAggressive = false;
                 this.teleportRandomly();
@@ -318,14 +318,18 @@ public class EntityEnderman extends EntityMob
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         Item item = this.getDropItem();
 
         if (item != null)
         {
-            int i = this.rand.nextInt(2 + p_70628_2_);
+            int i = this.rand.nextInt(2 + lootingModifier);
 
             for (int j = 0; j < i; ++j)
             {
@@ -339,7 +343,7 @@ public class EntityEnderman extends EntityMob
      */
     public void setHeldBlockState(IBlockState state)
     {
-        this.dataWatcher.updateObject(16, Short.valueOf((short)(Block.getStateId(state) & 65535)));
+        this.dataWatcher.updateObject(16, (short)(Block.getStateId(state) & 65535));
     }
 
     /**
@@ -414,7 +418,7 @@ public class EntityEnderman extends EntityMob
 
     public void setScreaming(boolean screaming)
     {
-        this.dataWatcher.updateObject(18, Byte.valueOf((byte)(screaming ? 1 : 0)));
+        this.dataWatcher.updateObject(18, (byte)(screaming ? 1 : 0));
     }
 
     static
@@ -551,7 +555,7 @@ public class EntityEnderman extends EntityMob
 
         public boolean shouldExecute()
         {
-            return !this.enderman.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing") ? false : (this.enderman.getHeldBlockState().getBlock().getMaterial() == Material.air ? false : this.enderman.getRNG().nextInt(2000) == 0);
+            return !this.enderman.worldObj.getGameRules().getBoolean("mobGriefing") ? false : (this.enderman.getHeldBlockState().getBlock().getMaterial() == Material.air ? false : this.enderman.getRNG().nextInt(2000) == 0);
         }
 
         public void updateTask()
@@ -589,7 +593,7 @@ public class EntityEnderman extends EntityMob
 
         public boolean shouldExecute()
         {
-            return !this.enderman.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing") ? false : (this.enderman.getHeldBlockState().getBlock().getMaterial() != Material.air ? false : this.enderman.getRNG().nextInt(20) == 0);
+            return !this.enderman.worldObj.getGameRules().getBoolean("mobGriefing") ? false : (this.enderman.getHeldBlockState().getBlock().getMaterial() != Material.air ? false : this.enderman.getRNG().nextInt(20) == 0);
         }
 
         public void updateTask()

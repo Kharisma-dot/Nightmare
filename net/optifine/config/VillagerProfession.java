@@ -9,7 +9,7 @@ public class VillagerProfession
 
     public VillagerProfession(int profession)
     {
-        this(profession, (int[])null);
+        this(profession, null);
     }
 
     public VillagerProfession(int profession, int career)
@@ -41,9 +41,7 @@ public class VillagerProfession
             return true;
         }
         else if (this.hasCareer(car))
-        {
             return false;
-        }
         else
         {
             this.careers = Config.addIntToArray(this.careers, car);
@@ -63,6 +61,6 @@ public class VillagerProfession
 
     public String toString()
     {
-        return this.careers == null ? "" + this.profession : "" + this.profession + ":" + Config.arrayToString(this.careers);
+        return this.careers == null ? ""+this.profession : this.profession + ":" + Config.arrayToString(this.careers);
     }
 }

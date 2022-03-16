@@ -33,7 +33,7 @@ public class BlockStainedGlass extends BlockBreakable
      */
     public int damageDropped(IBlockState state)
     {
-        return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
+        return state.getValue(COLOR).getMetadata();
     }
 
     /**
@@ -42,9 +42,7 @@ public class BlockStainedGlass extends BlockBreakable
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         for (EnumDyeColor enumdyecolor : EnumDyeColor.values())
-        {
             list.add(new ItemStack(itemIn, 1, enumdyecolor.getMetadata()));
-        }
     }
 
     /**
@@ -52,7 +50,7 @@ public class BlockStainedGlass extends BlockBreakable
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return ((EnumDyeColor)state.getValue(COLOR)).getMapColor();
+        return state.getValue(COLOR).getMapColor();
     }
 
     public EnumWorldBlockLayer getBlockLayer()
@@ -89,17 +87,13 @@ public class BlockStainedGlass extends BlockBreakable
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
     {
         if (!worldIn.isRemote)
-        {
             BlockBeacon.updateColorAsync(worldIn, pos);
-        }
     }
 
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
         if (!worldIn.isRemote)
-        {
             BlockBeacon.updateColorAsync(worldIn, pos);
-        }
     }
 
     /**
@@ -107,7 +101,7 @@ public class BlockStainedGlass extends BlockBreakable
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
+        return state.getValue(COLOR).getMetadata();
     }
 
     protected BlockState createBlockState()

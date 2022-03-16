@@ -31,7 +31,7 @@ import oshi.hardware.Processor;
 public class OpenGlHelper
 {
     public static boolean nvidia;
-    public static boolean field_181063_b;
+    public static boolean ati;
     public static int GL_FRAMEBUFFER;
     public static int GL_RENDERBUFFER;
     public static int GL_COLOR_ATTACHMENT0;
@@ -88,9 +88,9 @@ public class OpenGlHelper
     public static boolean openGL21;
     public static boolean shadersSupported;
     private static String logText = "";
-    private static String field_183030_aa;
+    private static String cpu;
     public static boolean vboSupported;
-    public static boolean field_181062_Q;
+    public static boolean vboSupportedAti;
     private static boolean arbVbo;
     public static int GL_ARRAY_BUFFER;
     public static int GL_STATIC_DRAW;
@@ -327,13 +327,13 @@ public class OpenGlHelper
             }
         }
 
-        field_181063_b = s1.contains("ati");
+        ati = s1.contains("ati");
 
-        if (field_181063_b)
+        if (ati)
         {
             if (vboSupported)
             {
-                field_181062_Q = true;
+                vboSupportedAti = true;
             }
             else
             {
@@ -344,7 +344,7 @@ public class OpenGlHelper
         try
         {
             Processor[] aprocessor = (new SystemInfo()).getHardware().getProcessors();
-            field_183030_aa = String.format("%dx %s", new Object[] {Integer.valueOf(aprocessor.length), aprocessor[0]}).replaceAll("\\s+", " ");
+            cpu = String.format("%dx %s", new Object[] {aprocessor.length, aprocessor[0]}).replaceAll("\\s+", " ");
         }
         catch (Throwable var5)
         {
@@ -1008,8 +1008,8 @@ public class OpenGlHelper
         }
     }
 
-    public static String func_183029_j()
+    public static String getCpu()
     {
-        return field_183030_aa == null ? "<unknown>" : field_183030_aa;
+        return cpu == null ? "<unknown>" : cpu;
     }
 }

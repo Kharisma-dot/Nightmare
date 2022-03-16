@@ -29,7 +29,7 @@ public abstract class BlockStoneSlab extends BlockSlab
 
         if (this.isDouble())
         {
-            iblockstate = iblockstate.withProperty(SEAMLESS, Boolean.valueOf(false));
+            iblockstate = iblockstate.withProperty(SEAMLESS, false);
         }
         else
         {
@@ -42,17 +42,12 @@ public abstract class BlockStoneSlab extends BlockSlab
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(Blocks.stone_slab);
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Item.getItemFromBlock(Blocks.stone_slab);
@@ -102,7 +97,7 @@ public abstract class BlockStoneSlab extends BlockSlab
 
         if (this.isDouble())
         {
-            iblockstate = iblockstate.withProperty(SEAMLESS, Boolean.valueOf((meta & 8) != 0));
+            iblockstate = iblockstate.withProperty(SEAMLESS, (meta & 8) != 0);
         }
         else
         {
@@ -122,7 +117,7 @@ public abstract class BlockStoneSlab extends BlockSlab
 
         if (this.isDouble())
         {
-            if (((Boolean)state.getValue(SEAMLESS)).booleanValue())
+            if (state.getValue(SEAMLESS))
             {
                 i |= 8;
             }

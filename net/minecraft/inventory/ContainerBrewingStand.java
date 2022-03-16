@@ -39,7 +39,7 @@ public class ContainerBrewingStand extends Container
     public void onCraftGuiOpened(ICrafting listener)
     {
         super.onCraftGuiOpened(listener);
-        listener.func_175173_a(this, this.tileBrewingStand);
+        listener.sendAllWindowProperties(this, this.tileBrewingStand);
     }
 
     /**
@@ -132,7 +132,7 @@ public class ContainerBrewingStand extends Container
 
             if (itemstack1.stackSize == 0)
             {
-                slot.putStack((ItemStack)null);
+                slot.putStack(null);
             }
             else
             {

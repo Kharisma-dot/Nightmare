@@ -103,23 +103,6 @@ public class DynamicLights
         initialized = true;
         mapEntityLightLevels.clear();
         mapItemLightLevels.clear();
-        String[] astring = ReflectorForge.getForgeModIds();
-
-        for (int i = 0; i < astring.length; ++i)
-        {
-            String s = astring[i];
-
-            try
-            {
-                ResourceLocation resourcelocation = new ResourceLocation(s, "optifine/dynamic_lights.properties");
-                InputStream inputstream = Config.getResourceStream(resourcelocation);
-                loadModConfiguration(inputstream, resourcelocation.toString(), s);
-            }
-            catch (IOException var5)
-            {
-                ;
-            }
-        }
 
         if (mapEntityLightLevels.size() > 0)
         {
@@ -271,13 +254,14 @@ public class DynamicLights
         synchronized (mapDynamicLights)
         {
             List<DynamicLight> list = mapDynamicLights.valueList();
+            int i = list.size();
 
-            for (int i = 0; i < list.size(); ++i)
+            for (int j = 0; j < i; ++j)
             {
-                DynamicLight dynamiclight = (DynamicLight)list.get(i);
-                int j = dynamiclight.getLastLightLevel();
+                DynamicLight dynamiclight = (DynamicLight)list.get(j);
+                int k = dynamiclight.getLastLightLevel();
 
-                if (j > 0)
+                if (k > 0)
                 {
                     double d1 = dynamiclight.getLastPosX();
                     double d2 = dynamiclight.getLastPosY();
@@ -289,7 +273,7 @@ public class DynamicLights
 
                     if (dynamiclight.isUnderwater() && !Config.isClearWater())
                     {
-                        j = Config.limit(j - 2, 0, 15);
+                        k = Config.limit(k - 2, 0, 15);
                         d7 *= 2.0D;
                     }
 
@@ -297,7 +281,7 @@ public class DynamicLights
                     {
                         double d8 = Math.sqrt(d7);
                         double d9 = 1.0D - d8 / 7.5D;
-                        double d10 = d9 * (double)j;
+                        double d10 = d9 * (double)k;
 
                         if (d10 > d0)
                         {
@@ -359,11 +343,11 @@ public class DynamicLights
                 {
                     if (!mapItemLightLevels.isEmpty())
                     {
-                        Integer integer = (Integer)mapItemLightLevels.get(item);
+                        Integer integer = mapItemLightLevels.get(item);
 
                         if (integer != null)
                         {
-                            return integer.intValue();
+                            return integer;
                         }
                     }
 
@@ -403,11 +387,11 @@ public class DynamicLights
             {
                 if (!mapEntityLightLevels.isEmpty())
                 {
-                    Integer integer = (Integer)mapEntityLightLevels.get(entity.getClass());
+                    Integer integer = mapEntityLightLevels.get(entity.getClass());
 
                     if (integer != null)
                     {
-                        return integer.intValue();
+                        return integer;
                     }
                 }
 

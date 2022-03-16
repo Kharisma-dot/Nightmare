@@ -158,6 +158,7 @@ import net.minecraft.world.World;
 import net.optifine.entity.model.CustomEntityModels;
 import net.optifine.player.PlayerItemsLayer;
 import net.optifine.reflect.Reflector;
+import net.optifine.shaders.Shaders;
 
 public class RenderManager {
    private Map<Class<? extends Entity>, Render<? extends Entity>> field_78729_o = Maps.<Class<? extends Entity>, Render<? extends Entity>>newHashMap();
@@ -303,7 +304,7 @@ public class RenderManager {
          this.field_78732_j = p_180597_3_.field_70127_C + (p_180597_3_.field_70125_A - p_180597_3_.field_70127_C) * p_180597_6_;
       }
 
-      if(p_180597_5_.field_74320_O == 2) {
+      if(p_180597_5_.field_74330_P == 2) {
          this.field_78735_i += 180.0F;
       }
 
@@ -438,32 +439,34 @@ public class RenderManager {
    }
 
    private void func_85094_b(Entity p_85094_1_, double p_85094_2_, double p_85094_4_, double p_85094_6_, float p_85094_8_, float p_85094_9_) {
-      GlStateManager.func_179132_a(false);
-      GlStateManager.func_179090_x();
-      GlStateManager.func_179140_f();
-      GlStateManager.func_179129_p();
-      GlStateManager.func_179084_k();
-      float f = p_85094_1_.field_70130_N / 2.0F;
-      AxisAlignedBB axisalignedbb = p_85094_1_.func_174813_aQ();
-      AxisAlignedBB axisalignedbb1 = new AxisAlignedBB(axisalignedbb.field_72340_a - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72338_b - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72339_c - p_85094_1_.field_70161_v + p_85094_6_, axisalignedbb.field_72336_d - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72337_e - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72334_f - p_85094_1_.field_70161_v + p_85094_6_);
-      RenderGlobal.func_181563_a(axisalignedbb1, 255, 255, 255, 255);
-      if(p_85094_1_ instanceof EntityLivingBase) {
-         float f1 = 0.01F;
-         RenderGlobal.func_181563_a(new AxisAlignedBB(p_85094_2_ - (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() - 0.009999999776482582D, p_85094_6_ - (double)f, p_85094_2_ + (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() + 0.009999999776482582D, p_85094_6_ + (double)f), 255, 0, 0, 255);
-      }
+      if(!Shaders.isShadowPass) {
+         GlStateManager.func_179132_a(false);
+         GlStateManager.func_179090_x();
+         GlStateManager.func_179140_f();
+         GlStateManager.func_179129_p();
+         GlStateManager.func_179084_k();
+         float f = p_85094_1_.field_70130_N / 2.0F;
+         AxisAlignedBB axisalignedbb = p_85094_1_.func_174813_aQ();
+         AxisAlignedBB axisalignedbb1 = new AxisAlignedBB(axisalignedbb.field_72340_a - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72338_b - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72339_c - p_85094_1_.field_70161_v + p_85094_6_, axisalignedbb.field_72336_d - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72337_e - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72334_f - p_85094_1_.field_70161_v + p_85094_6_);
+         RenderGlobal.func_181563_a(axisalignedbb1, 255, 255, 255, 255);
+         if(p_85094_1_ instanceof EntityLivingBase) {
+            float f1 = 0.01F;
+            RenderGlobal.func_181563_a(new AxisAlignedBB(p_85094_2_ - (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() - 0.009999999776482582D, p_85094_6_ - (double)f, p_85094_2_ + (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() + 0.009999999776482582D, p_85094_6_ + (double)f), 255, 0, 0, 255);
+         }
 
-      Tessellator tessellator = Tessellator.func_178181_a();
-      WorldRenderer worldrenderer = tessellator.func_178180_c();
-      Vec3 vec3 = p_85094_1_.func_70676_i(p_85094_9_);
-      worldrenderer.func_181668_a(3, DefaultVertexFormats.field_181706_f);
-      worldrenderer.func_181662_b(p_85094_2_, p_85094_4_ + (double)p_85094_1_.func_70047_e(), p_85094_6_).func_181669_b(0, 0, 255, 255).func_181675_d();
-      worldrenderer.func_181662_b(p_85094_2_ + vec3.field_72450_a * 2.0D, p_85094_4_ + (double)p_85094_1_.func_70047_e() + vec3.field_72448_b * 2.0D, p_85094_6_ + vec3.field_72449_c * 2.0D).func_181669_b(0, 0, 255, 255).func_181675_d();
-      tessellator.func_78381_a();
-      GlStateManager.func_179098_w();
-      GlStateManager.func_179145_e();
-      GlStateManager.func_179089_o();
-      GlStateManager.func_179084_k();
-      GlStateManager.func_179132_a(true);
+         Tessellator tessellator = Tessellator.func_178181_a();
+         WorldRenderer worldrenderer = tessellator.func_178180_c();
+         Vec3 vec3 = p_85094_1_.func_70676_i(p_85094_9_);
+         worldrenderer.func_181668_a(3, DefaultVertexFormats.field_181706_f);
+         worldrenderer.func_181662_b(p_85094_2_, p_85094_4_ + (double)p_85094_1_.func_70047_e(), p_85094_6_).func_181669_b(0, 0, 255, 255).func_181675_d();
+         worldrenderer.func_181662_b(p_85094_2_ + vec3.field_72450_a * 2.0D, p_85094_4_ + (double)p_85094_1_.func_70047_e() + vec3.field_72448_b * 2.0D, p_85094_6_ + vec3.field_72449_c * 2.0D).func_181669_b(0, 0, 255, 255).func_181675_d();
+         tessellator.func_78381_a();
+         GlStateManager.func_179098_w();
+         GlStateManager.func_179145_e();
+         GlStateManager.func_179089_o();
+         GlStateManager.func_179084_k();
+         GlStateManager.func_179132_a(true);
+      }
    }
 
    public void func_78717_a(World p_78717_1_) {

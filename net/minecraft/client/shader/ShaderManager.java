@@ -59,7 +59,7 @@ public class ShaderManager
             JsonObject jsonobject = jsonparser.parse(IOUtils.toString(inputstream, Charsets.UTF_8)).getAsJsonObject();
             String s = JsonUtils.getString(jsonobject, "vertex");
             String s1 = JsonUtils.getString(jsonobject, "fragment");
-            JsonArray jsonarray = JsonUtils.getJsonArray(jsonobject, "samplers", (JsonArray)null);
+            JsonArray jsonarray = JsonUtils.getJsonArray(jsonobject, "samplers", null);
 
             if (jsonarray != null)
             {
@@ -82,7 +82,7 @@ public class ShaderManager
                 }
             }
 
-            JsonArray jsonarray1 = JsonUtils.getJsonArray(jsonobject, "attributes", (JsonArray)null);
+            JsonArray jsonarray1 = JsonUtils.getJsonArray(jsonobject, "attributes", null);
 
             if (jsonarray1 != null)
             {
@@ -112,7 +112,7 @@ public class ShaderManager
                 this.attributes = null;
             }
 
-            JsonArray jsonarray2 = JsonUtils.getJsonArray(jsonobject, "uniforms", (JsonArray)null);
+            JsonArray jsonarray2 = JsonUtils.getJsonArray(jsonobject, "uniforms", null);
 
             if (jsonarray2 != null)
             {
@@ -135,7 +135,7 @@ public class ShaderManager
                 }
             }
 
-            this.field_148016_p = JsonBlendingMode.func_148110_a(JsonUtils.getJsonObject(jsonobject, "blend", (JsonObject)null));
+            this.field_148016_p = JsonBlendingMode.func_148110_a(JsonUtils.getJsonObject(jsonobject, "blend", null));
             this.useFaceCulling = JsonUtils.getBoolean(jsonobject, "cull", true);
             this.vertexShaderLoader = ShaderLoader.loadShader(resourceManager, ShaderLoader.ShaderType.VERTEX, s);
             this.fragmentShaderLoader = ShaderLoader.loadShader(resourceManager, ShaderLoader.ShaderType.FRAGMENT, s1);
@@ -148,7 +148,7 @@ public class ShaderManager
                 for (String s2 : this.attributes)
                 {
                     int l = OpenGlHelper.glGetAttribLocation(this.program, s2);
-                    this.attribLocations.add(Integer.valueOf(l));
+                    this.attribLocations.add(l);
                 }
             }
         }
@@ -228,7 +228,7 @@ public class ShaderManager
                 }
                 else if (object instanceof Integer)
                 {
-                    j = ((Integer)object).intValue();
+                    j = (int) object;
                 }
 
                 if (j != -1)
@@ -287,7 +287,7 @@ public class ShaderManager
             }
             else
             {
-                this.shaderSamplerLocations.add(Integer.valueOf(k));
+                this.shaderSamplerLocations.add(k);
             }
 
             ++i;
@@ -304,7 +304,7 @@ public class ShaderManager
             }
             else
             {
-                this.shaderUniformLocations.add(Integer.valueOf(l));
+                this.shaderUniformLocations.add(l);
                 shaderuniform.setUniformLocation(l);
                 this.mappedShaderUniforms.put(s1, shaderuniform);
             }
@@ -318,7 +318,7 @@ public class ShaderManager
 
         if (!JsonUtils.isString(jsonobject, "file"))
         {
-            this.shaderSamplers.put(s, (Object)null);
+            this.shaderSamplers.put(s, null);
             this.samplerNames.add(s);
         }
         else

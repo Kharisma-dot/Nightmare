@@ -28,8 +28,6 @@ public class CommandGameRule extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -38,9 +36,6 @@ public class CommandGameRule extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
@@ -60,7 +55,7 @@ public class CommandGameRule extends CommandBase
                     throw new CommandException("commands.gamerule.norule", new Object[] {s});
                 }
 
-                String s2 = gamerules.getGameRuleStringValue(s);
+                String s2 = gamerules.getString(s);
                 sender.addChatMessage((new ChatComponentText(s)).appendText(" = ").appendText(s2));
                 sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, gamerules.getInt(s));
                 break;
@@ -73,17 +68,17 @@ public class CommandGameRule extends CommandBase
 
                 gamerules.setOrCreateGameRule(s, s1);
                 func_175773_a(gamerules, s);
-                notifyOperators(sender, this, "commands.gamerule.success", new Object[0]);
+                notifyOperators(sender, this, "commands.gamerule.success");
         }
     }
 
-    public static void func_175773_a(GameRules p_175773_0_, String p_175773_1_)
+    public static void func_175773_a(GameRules rules, String p_175773_1_)
     {
         if ("reducedDebugInfo".equals(p_175773_1_))
         {
-            byte b0 = (byte)(p_175773_0_.getGameRuleBooleanValue(p_175773_1_) ? 22 : 23);
+            byte b0 = (byte)(rules.getBoolean(p_175773_1_) ? 22 : 23);
 
-            for (EntityPlayerMP entityplayermp : MinecraftServer.getServer().getConfigurationManager().func_181057_v())
+            for (EntityPlayerMP entityplayermp : MinecraftServer.getServer().getConfigurationManager().getPlayerList())
             {
                 entityplayermp.playerNetServerHandler.sendPacket(new S19PacketEntityStatus(entityplayermp, b0));
             }

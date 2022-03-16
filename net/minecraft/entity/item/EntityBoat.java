@@ -133,7 +133,7 @@ public class EntityBoat extends Entity
                         this.riddenByEntity.mountEntity(this);
                     }
 
-                    if (!flag && this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+                    if (!flag && this.worldObj.getGameRules().getBoolean("doEntityDrops"))
                     {
                         this.dropItemWithOffset(Items.boat, 1, 0.0F);
                     }
@@ -413,7 +413,7 @@ public class EntityBoat extends Entity
                 {
                     this.setDead();
 
-                    if (this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+                    if (this.worldObj.getGameRules().getBoolean("doEntityDrops"))
                     {
                         for (int j1 = 0; j1 < 3; ++j1)
                         {
@@ -441,7 +441,7 @@ public class EntityBoat extends Entity
 
             if (d18 * d18 + d21 * d21 > 0.001D)
             {
-                d15 = (double)((float)(MathHelper.func_181159_b(d21, d18) * 180.0D / Math.PI));
+                d15 = (double)((float)(MathHelper.atan2(d21, d18) * 180.0D / Math.PI));
             }
 
             double d23 = MathHelper.wrapAngleTo180_double(d15 - (double)this.rotationYaw);
@@ -540,7 +540,7 @@ public class EntityBoat extends Entity
                 {
                     this.setDead();
 
-                    if (this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+                    if (this.worldObj.getGameRules().getBoolean("doEntityDrops"))
                     {
                         for (int i = 0; i < 3; ++i)
                         {
@@ -568,7 +568,7 @@ public class EntityBoat extends Entity
      */
     public void setDamageTaken(float p_70266_1_)
     {
-        this.dataWatcher.updateObject(19, Float.valueOf(p_70266_1_));
+        this.dataWatcher.updateObject(19, p_70266_1_);
     }
 
     /**
@@ -584,7 +584,7 @@ public class EntityBoat extends Entity
      */
     public void setTimeSinceHit(int p_70265_1_)
     {
-        this.dataWatcher.updateObject(17, Integer.valueOf(p_70265_1_));
+        this.dataWatcher.updateObject(17, p_70265_1_);
     }
 
     /**
@@ -600,7 +600,7 @@ public class EntityBoat extends Entity
      */
     public void setForwardDirection(int p_70269_1_)
     {
-        this.dataWatcher.updateObject(18, Integer.valueOf(p_70269_1_));
+        this.dataWatcher.updateObject(18, p_70269_1_);
     }
 
     /**

@@ -16,16 +16,14 @@ public abstract class BlockStateBase implements IBlockState
     private static final Joiner COMMA_JOINER = Joiner.on(',');
     private static final Function<Entry<IProperty, Comparable>, String> MAP_ENTRY_TO_STRING = new Function<Entry<IProperty, Comparable>, String>()
     {
-        public String apply(Entry<IProperty, Comparable> p_apply_1_)
+        public String apply(Entry<IProperty, Comparable> entry)
         {
-            if (p_apply_1_ == null)
-            {
+            if (entry == null)
                 return "<NULL>";
-            }
             else
             {
-                IProperty iproperty = (IProperty)p_apply_1_.getKey();
-                return iproperty.getName() + "=" + iproperty.getName((Comparable)p_apply_1_.getValue());
+                IProperty iproperty = (IProperty)entry.getKey();
+                return iproperty.getName() + "=" + iproperty.getName((Comparable)entry.getValue());
             }
         }
     };
@@ -37,9 +35,7 @@ public abstract class BlockStateBase implements IBlockState
     public int getBlockId()
     {
         if (this.blockId < 0)
-        {
             this.blockId = Block.getIdFromBlock(this.getBlock());
-        }
 
         return this.blockId;
     }
@@ -47,9 +43,7 @@ public abstract class BlockStateBase implements IBlockState
     public int getBlockStateId()
     {
         if (this.blockStateId < 0)
-        {
             this.blockStateId = Block.getStateId(this);
-        }
 
         return this.blockStateId;
     }
@@ -57,9 +51,7 @@ public abstract class BlockStateBase implements IBlockState
     public int getMetadata()
     {
         if (this.metadata < 0)
-        {
             this.metadata = this.getBlock().getMetaFromState(this);
-        }
 
         return this.metadata;
     }
@@ -67,9 +59,7 @@ public abstract class BlockStateBase implements IBlockState
     public ResourceLocation getBlockLocation()
     {
         if (this.blockLocation == null)
-        {
             this.blockLocation = (ResourceLocation)Block.blockRegistry.getNameForObject(this.getBlock());
-        }
 
         return this.blockLocation;
     }
@@ -89,17 +79,13 @@ public abstract class BlockStateBase implements IBlockState
         Iterator<T> iterator = values.iterator();
 
         while (iterator.hasNext())
-        {
             if (iterator.next().equals(currentValue))
             {
                 if (iterator.hasNext())
-                {
                     return (T)iterator.next();
-                }
 
                 return (T)values.iterator().next();
             }
-        }
 
         return (T)iterator.next();
     }

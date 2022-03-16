@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -28,11 +30,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.MapData;
 import net.optifine.DynamicLights;
-import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
 import nightmare.Nightmare;
-
-import org.lwjgl.opengl.GL11;
 
 public class ItemRenderer
 {
@@ -74,17 +73,13 @@ public class ItemRenderer
                 GlStateManager.scale(2.0F, 2.0F, 2.0F);
 
                 if (this.isBlockTranslucent(block) && (!Config.isShaders() || !Shaders.renderItemKeepDepthMask))
-                {
                     GlStateManager.depthMask(false);
-                }
             }
 
             this.itemRenderer.renderItemModelForEntity(heldStack, entityIn, transform);
 
             if (this.isBlockTranslucent(block))
-            {
                 GlStateManager.depthMask(true);
-            }
 
             GlStateManager.popMatrix();
         }
@@ -98,30 +93,39 @@ public class ItemRenderer
         return blockIn != null && blockIn.getBlockLayer() == EnumWorldBlockLayer.TRANSLUCENT;
     }
 
-    private void func_178101_a(float angle, float p_178101_2_)
+    /**
+     * Rotate the render around X and Y
+     *  
+     * @param angleY The angle for the rotation arround Y
+     */
+    private void rotateArroundXAndY(float angle, float angleY)
     {
         GlStateManager.pushMatrix();
         GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(p_178101_2_, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(angleY, 0.0F, 1.0F, 0.0F);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
     }
 
-    private void func_178109_a(AbstractClientPlayer clientPlayer)
+    /**
+     * Set the OpenGL LightMapTextureCoords based on the AbstractClientPlayer
+     */
+    private void setLightMapFromPlayer(AbstractClientPlayer clientPlayer)
     {
         int i = this.mc.theWorld.getCombinedLight(new BlockPos(clientPlayer.posX, clientPlayer.posY + (double)clientPlayer.getEyeHeight(), clientPlayer.posZ), 0);
 
         if (Config.isDynamicLights())
-        {
             i = DynamicLights.getCombinedLight(this.mc.getRenderViewEntity(), i);
-        }
 
         float f = (float)(i & 65535);
         float f1 = (float)(i >> 16);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, f, f1);
     }
 
-    private void func_178110_a(EntityPlayerSP entityplayerspIn, float partialTicks)
+    /**
+     * Rotate the render according to the player's yaw and pitch
+     */
+    private void rotateWithPlayerRotations(EntityPlayerSP entityplayerspIn, float partialTicks)
     {
         float f = entityplayerspIn.prevRenderArmPitch + (entityplayerspIn.renderArmPitch - entityplayerspIn.prevRenderArmPitch) * partialTicks;
         float f1 = entityplayerspIn.prevRenderArmYaw + (entityplayerspIn.renderArmYaw - entityplayerspIn.prevRenderArmYaw) * partialTicks;
@@ -129,9 +133,14 @@ public class ItemRenderer
         GlStateManager.rotate((entityplayerspIn.rotationYaw - f1) * 0.1F, 0.0F, 1.0F, 0.0F);
     }
 
-    private float func_178100_c(float p_178100_1_)
+    /**
+     * Return the angle to render the Map
+     *  
+     * @param pitch The player's pitch
+     */
+    private float getMapAngleFromPitch(float pitch)
     {
-        float f = 1.0F - p_178100_1_ / 45.0F + 0.1F;
+        float f = 1.0F - pitch / 45.0F + 0.1F;
         f = MathHelper.clamp_float(f, 0.0F, 1.0F);
         f = -MathHelper.cos(f * (float)Math.PI) * 0.5F + 0.5F;
         return f;
@@ -174,22 +183,22 @@ public class ItemRenderer
         }
     }
 
-    private void renderItemMap(AbstractClientPlayer clientPlayer, float p_178097_2_, float p_178097_3_, float p_178097_4_)
+    private void renderItemMap(AbstractClientPlayer clientPlayer, float pitch, float equipmentProgress, float swingProgress)
     {
-        float f = -0.4F * MathHelper.sin(MathHelper.sqrt_float(p_178097_4_) * (float)Math.PI);
-        float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt_float(p_178097_4_) * (float)Math.PI * 2.0F);
-        float f2 = -0.2F * MathHelper.sin(p_178097_4_ * (float)Math.PI);
+        float f = -0.4F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI);
+        float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI * 2.0F);
+        float f2 = -0.2F * MathHelper.sin(swingProgress * (float)Math.PI);
         GlStateManager.translate(f, f1, f2);
-        float f3 = this.func_178100_c(p_178097_2_);
+        float f3 = this.getMapAngleFromPitch(pitch);
         GlStateManager.translate(0.0F, 0.04F, -0.72F);
-        GlStateManager.translate(0.0F, p_178097_3_ * -1.2F, 0.0F);
+        GlStateManager.translate(0.0F, equipmentProgress * -1.2F, 0.0F);
         GlStateManager.translate(0.0F, f3 * -0.5F, 0.0F);
         GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(f3 * -85.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(0.0F, 1.0F, 0.0F, 0.0F);
         this.renderPlayerArms(clientPlayer);
-        float f4 = MathHelper.sin(p_178097_4_ * p_178097_4_ * (float)Math.PI);
-        float f5 = MathHelper.sin(MathHelper.sqrt_float(p_178097_4_) * (float)Math.PI);
+        float f4 = MathHelper.sin(swingProgress * swingProgress * (float)Math.PI);
+        float f5 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI);
         GlStateManager.rotate(f4 * -20.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(f5 * -20.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(f5 * -80.0F, 1.0F, 0.0F, 0.0F);
@@ -212,22 +221,26 @@ public class ItemRenderer
         MapData mapdata = Items.filled_map.getMapData(this.itemToRender, this.mc.theWorld);
 
         if (mapdata != null)
-        {
             this.mc.entityRenderer.getMapItemRenderer().renderMap(mapdata, false);
-        }
     }
 
-    private void func_178095_a(AbstractClientPlayer clientPlayer, float p_178095_2_, float p_178095_3_)
+    /**
+     * Render the player's arm
+     *  
+     * @param equipProgress The progress of equiping the item
+     * @param swingProgress The swing movement progression
+     */
+    private void renderPlayerArm(AbstractClientPlayer clientPlayer, float equipProgress, float swingProgress)
     {
-        float f = -0.3F * MathHelper.sin(MathHelper.sqrt_float(p_178095_3_) * (float)Math.PI);
-        float f1 = 0.4F * MathHelper.sin(MathHelper.sqrt_float(p_178095_3_) * (float)Math.PI * 2.0F);
-        float f2 = -0.4F * MathHelper.sin(p_178095_3_ * (float)Math.PI);
+        float f = -0.3F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI);
+        float f1 = 0.4F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI * 2.0F);
+        float f2 = -0.4F * MathHelper.sin(swingProgress * (float)Math.PI);
         GlStateManager.translate(f, f1, f2);
         GlStateManager.translate(0.64000005F, -0.6F, -0.71999997F);
-        GlStateManager.translate(0.0F, p_178095_2_ * -0.6F, 0.0F);
+        GlStateManager.translate(0.0F, equipProgress * -0.6F, 0.0F);
         GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
-        float f3 = MathHelper.sin(p_178095_3_ * p_178095_3_ * (float)Math.PI);
-        float f4 = MathHelper.sin(MathHelper.sqrt_float(p_178095_3_) * (float)Math.PI);
+        float f3 = MathHelper.sin(swingProgress * swingProgress * (float)Math.PI);
+        float f4 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI);
         GlStateManager.rotate(f4 * 70.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(f3 * -20.0F, 0.0F, 0.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(clientPlayer.getLocationSkin());
@@ -244,24 +257,32 @@ public class ItemRenderer
         GlStateManager.enableCull();
     }
 
-    private void func_178105_d(float p_178105_1_)
+    /**
+     * Rotate and translate render to show item consumption
+     *  
+     * @param swingProgress The swing movement progress
+     */
+    private void doItemUsedTransformations(float swingProgress)
     {
-        float f = -0.4F * MathHelper.sin(MathHelper.sqrt_float(p_178105_1_) * (float)Math.PI);
-        float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt_float(p_178105_1_) * (float)Math.PI * 2.0F);
-        float f2 = -0.2F * MathHelper.sin(p_178105_1_ * (float)Math.PI);
+        float f = -0.4F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI);
+        float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI * 2.0F);
+        float f2 = -0.2F * MathHelper.sin(swingProgress * (float)Math.PI);
         GlStateManager.translate(f, f1, f2);
     }
 
-    private void func_178104_a(AbstractClientPlayer clientPlayer, float p_178104_2_)
+    /**
+     * Perform the drinking animation movement
+     *  
+     * @param partialTicks Partials ticks
+     */
+    private void performDrinking(AbstractClientPlayer clientPlayer, float partialTicks)
     {
-        float f = (float)clientPlayer.getItemInUseCount() - p_178104_2_ + 1.0F;
+        float f = (float)clientPlayer.getItemInUseCount() - partialTicks + 1.0F;
         float f1 = f / (float)this.itemToRender.getMaxItemUseDuration();
         float f2 = MathHelper.abs(MathHelper.cos(f / 4.0F * (float)Math.PI) * 0.1F);
 
         if (f1 >= 0.8F)
-        {
             f2 = 0.0F;
-        }
 
         GlStateManager.translate(0.0F, f2, 0.0F);
         float f3 = 1.0F - (float)Math.pow((double)f1, 27.0D);
@@ -273,9 +294,6 @@ public class ItemRenderer
 
     /**
      * Performs transformations prior to the rendering of a held item in first person.
-     *  
-     * @param equipProgress The progress of the animation to equip (raise from out of frame) while switching held items.
-     * @param swingProgress The progress of the arm swing animation.
      */
     private void transformFirstPersonItem(float equipProgress, float swingProgress)
     {
@@ -290,20 +308,23 @@ public class ItemRenderer
         GlStateManager.scale(0.4F, 0.4F, 0.4F);
     }
 
-    private void func_178098_a(float p_178098_1_, AbstractClientPlayer clientPlayer)
+    /**
+     * Translate and rotate the render to look like holding a bow
+     *  
+     * @param partialTicks Partial ticks
+     */
+    private void doBowTransformations(float partialTicks, AbstractClientPlayer clientPlayer)
     {
         GlStateManager.rotate(-18.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(-12.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(-8.0F, 1.0F, 0.0F, 0.0F);
         GlStateManager.translate(-0.9F, 0.2F, 0.0F);
-        float f = (float)this.itemToRender.getMaxItemUseDuration() - ((float)clientPlayer.getItemInUseCount() - p_178098_1_ + 1.0F);
+        float f = (float)this.itemToRender.getMaxItemUseDuration() - ((float)clientPlayer.getItemInUseCount() - partialTicks + 1.0F);
         float f1 = f / 20.0F;
         f1 = (f1 * f1 + f1 * 2.0F) / 3.0F;
 
         if (f1 > 1.0F)
-        {
             f1 = 1.0F;
-        }
 
         if (f1 > 0.1F)
         {
@@ -317,7 +338,10 @@ public class ItemRenderer
         GlStateManager.scale(1.0F, 1.0F, 1.0F + f1 * 0.2F);
     }
 
-    private void func_178103_d()
+    /**
+     * Translate and rotate the render for holding a block
+     */
+    private void doBlockTransformations()
     {
         GlStateManager.translate(-0.5F, 0.2F, 0.0F);
         GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
@@ -327,8 +351,6 @@ public class ItemRenderer
 
     /**
      * Renders the active item in the player's hand when in first person mode. Args: partialTickTime
-     *  
-     * @param partialTicks The amount of time passed during the current tick, ranging from 0 to 1.
      */
     public void renderItemInFirstPerson(float partialTicks)
     {
@@ -339,20 +361,18 @@ public class ItemRenderer
             float f1 = abstractclientplayer.getSwingProgress(partialTicks);
             float f2 = abstractclientplayer.prevRotationPitch + (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * partialTicks;
             float f3 = abstractclientplayer.prevRotationYaw + (abstractclientplayer.rotationYaw - abstractclientplayer.prevRotationYaw) * partialTicks;
-            this.func_178101_a(f2, f3);
-            this.func_178109_a(abstractclientplayer);
-            this.func_178110_a((EntityPlayerSP)abstractclientplayer, partialTicks);
+            this.rotateArroundXAndY(f2, f3);
+            this.setLightMapFromPlayer(abstractclientplayer);
+            this.rotateWithPlayerRotations((EntityPlayerSP)abstractclientplayer, partialTicks);
             GlStateManager.enableRescaleNormal();
             GlStateManager.pushMatrix();
             
             boolean oldAnimation = Nightmare.instance.moduleManager.getModuleByName("OldAnimation").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("OldAnimation"), "BlockHitting").getValBoolean();
-
+            
             if (this.itemToRender != null)
             {
                 if (this.itemToRender.getItem() instanceof ItemMap)
-                {
                     this.renderItemMap(abstractclientplayer, f2, f, f1);
-                }
                 else if (abstractclientplayer.getItemInUseCount() > 0)
                 {
                     EnumAction enumaction = this.itemToRender.getItemUseAction();
@@ -365,32 +385,30 @@ public class ItemRenderer
 
                         case EAT:
                         case DRINK:
-                            this.func_178104_a(abstractclientplayer, partialTicks);
+                            this.performDrinking(abstractclientplayer, partialTicks);
                             this.transformFirstPersonItem(f, oldAnimation ? f1 : 0.0F);
                             break;
 
                         case BLOCK:
                             this.transformFirstPersonItem(f, oldAnimation ? f1 : 0.0F);
-                            this.func_178103_d();
+                            this.doBlockTransformations();
                             break;
 
                         case BOW:
                             this.transformFirstPersonItem(f, oldAnimation ? f1 : 0.0F);
-                            this.func_178098_a(partialTicks, abstractclientplayer);
+                            this.doBowTransformations(partialTicks, abstractclientplayer);
                     }
                 }
                 else
                 {
-                    this.func_178105_d(f1);
+                    this.doItemUsedTransformations(f1);
                     this.transformFirstPersonItem(f, f1);
                 }
-
+                
                 this.renderItem(abstractclientplayer, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);
             }
             else if (!abstractclientplayer.isInvisible())
-            {
-                this.func_178095_a(abstractclientplayer, f, f1);
-            }
+                this.renderPlayerArm(abstractclientplayer, f, f1);
 
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
@@ -427,33 +445,28 @@ public class ItemRenderer
             }
 
             if (iblockstate.getBlock().getRenderType() != -1)
-            {
-                Object object = Reflector.getFieldValue(Reflector.RenderBlockOverlayEvent_OverlayType_BLOCK);
-
-                if (!Reflector.callBoolean(Reflector.ForgeEventFactory_renderBlockOverlay, new Object[] {this.mc.thePlayer, Float.valueOf(partialTicks), object, iblockstate, blockpos}))
-                {
-                    this.func_178108_a(partialTicks, this.mc.getBlockRendererDispatcher().getBlockModelShapes().getTexture(iblockstate));
-                }
-            }
+                this.renderBlockInHand(partialTicks, this.mc.getBlockRendererDispatcher().getBlockModelShapes().getTexture(iblockstate));
         }
 
         if (!this.mc.thePlayer.isSpectator())
         {
-            if (this.mc.thePlayer.isInsideOfMaterial(Material.water) && !Reflector.callBoolean(Reflector.ForgeEventFactory_renderWaterOverlay, new Object[] {this.mc.thePlayer, Float.valueOf(partialTicks)}))
-            {
+            if (this.mc.thePlayer.isInsideOfMaterial(Material.water))
                 this.renderWaterOverlayTexture(partialTicks);
-            }
 
-            if (this.mc.thePlayer.isBurning() && !Reflector.callBoolean(Reflector.ForgeEventFactory_renderFireOverlay, new Object[] {this.mc.thePlayer, Float.valueOf(partialTicks)}))
-            {
+            else if (this.mc.thePlayer.isBurning())
                 this.renderFireInFirstPerson(partialTicks);
-            }
         }
 
         GlStateManager.enableAlpha();
     }
 
-    private void func_178108_a(float p_178108_1_, TextureAtlasSprite p_178108_2_)
+    /**
+     * Render the block in the player's hand
+     *  
+     * @param partialTicks Partial ticks
+     * @param atlas The TextureAtlasSprite to render
+     */
+    private void renderBlockInHand(float partialTicks, TextureAtlasSprite atlas)
     {
         this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         Tessellator tessellator = Tessellator.getInstance();
@@ -466,10 +479,10 @@ public class ItemRenderer
         float f3 = -1.0F;
         float f4 = 1.0F;
         float f5 = -0.5F;
-        float f6 = p_178108_2_.getMinU();
-        float f7 = p_178108_2_.getMaxU();
-        float f8 = p_178108_2_.getMinV();
-        float f9 = p_178108_2_.getMaxV();
+        float f6 = atlas.getMinU();
+        float f7 = atlas.getMaxU();
+        float f8 = atlas.getMinV();
+        float f9 = atlas.getMaxV();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
         worldrenderer.pos(-1.0D, -1.0D, -0.5D).tex((double)f7, (double)f9).endVertex();
         worldrenderer.pos(1.0D, -1.0D, -0.5D).tex((double)f6, (double)f9).endVertex();
@@ -483,15 +496,17 @@ public class ItemRenderer
     /**
      * Renders a texture that warps around based on the direction the player is looking. Texture needs to be bound
      * before being called. Used for the water overlay. Args: parialTickTime
+     *  
+     * @param partialTicks Partial ticks
      */
-    private void renderWaterOverlayTexture(float p_78448_1_)
+    private void renderWaterOverlayTexture(float partialTicks)
     {
         if (!Config.isShaders() || Shaders.isUnderwaterOverlay())
         {
             this.mc.getTextureManager().bindTexture(RES_UNDERWATER_OVERLAY);
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-            float f = this.mc.thePlayer.getBrightness(p_78448_1_);
+            float f = this.mc.thePlayer.getBrightness(partialTicks);
             GlStateManager.color(f, f, f, 0.5F);
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -518,8 +533,10 @@ public class ItemRenderer
 
     /**
      * Renders the fire on the screen for first person mode. Arg: partialTickTime
+     *  
+     * @param partialTicks Partial ticks
      */
-    private void renderFireInFirstPerson(float p_78442_1_)
+    private void renderFireInFirstPerson(float partialTicks)
     {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -572,30 +589,10 @@ public class ItemRenderer
         if (this.itemToRender != null && itemstack != null)
         {
             if (!this.itemToRender.getIsItemStackEqual(itemstack))
-            {
-                if (Reflector.ForgeItem_shouldCauseReequipAnimation.exists())
-                {
-                    boolean flag1 = Reflector.callBoolean(this.itemToRender.getItem(), Reflector.ForgeItem_shouldCauseReequipAnimation, new Object[] {this.itemToRender, itemstack, Boolean.valueOf(this.equippedItemSlot != entityplayer.inventory.currentItem)});
-
-                    if (!flag1)
-                    {
-                        this.itemToRender = itemstack;
-                        this.equippedItemSlot = entityplayer.inventory.currentItem;
-                        return;
-                    }
-                }
-
-                flag = true;
-            }
+            	flag = true;
         }
-        else if (this.itemToRender == null && itemstack == null)
-        {
-            flag = false;
-        }
-        else
-        {
+        else if (!(this.itemToRender == null && itemstack == null))
             flag = true;
-        }
 
         float f2 = 0.4F;
         float f = flag ? 0.0F : 1.0F;
@@ -608,9 +605,7 @@ public class ItemRenderer
             this.equippedItemSlot = entityplayer.inventory.currentItem;
 
             if (Config.isShaders())
-            {
                 Shaders.setItemToRenderMain(itemstack);
-            }
         }
     }
 
@@ -618,14 +613,6 @@ public class ItemRenderer
      * Resets equippedProgress
      */
     public void resetEquippedProgress()
-    {
-        this.equippedProgress = 0.0F;
-    }
-
-    /**
-     * Resets equippedProgress
-     */
-    public void resetEquippedProgress2()
     {
         this.equippedProgress = 0.0F;
     }

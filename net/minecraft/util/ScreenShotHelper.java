@@ -40,7 +40,7 @@ public class ScreenShotHelper
      */
     public static IChatComponent saveScreenshot(File gameDirectory, int width, int height, Framebuffer buffer)
     {
-        return saveScreenshot(gameDirectory, (String)null, width, height, buffer);
+        return saveScreenshot(gameDirectory, null, width, height, buffer);
     }
 
     /**
@@ -67,7 +67,7 @@ public class ScreenShotHelper
                 GlStateManager.pushMatrix();
                 GlStateManager.clear(16640);
                 minecraft.getFramebuffer().bindFramebuffer(true);
-                minecraft.entityRenderer.func_181560_a(Config.renderPartialTicks, System.nanoTime());
+                minecraft.entityRenderer.updateCameraAndRender(Config.renderPartialTicks, System.nanoTime());
             }
 
             if (OpenGlHelper.isFramebufferEnabled())
@@ -144,7 +144,7 @@ public class ScreenShotHelper
             ImageIO.write(bufferedimage, "png", (File)file2);
             IChatComponent ichatcomponent = new ChatComponentText(file2.getName());
             ichatcomponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file2.getAbsolutePath()));
-            ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
+            ichatcomponent.getChatStyle().setUnderlined(true);
             return new ChatComponentTranslation("screenshot.success", new Object[] {ichatcomponent});
         }
         catch (Exception exception)

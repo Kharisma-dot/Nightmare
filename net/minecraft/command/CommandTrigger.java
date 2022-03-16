@@ -31,8 +31,6 @@ public class CommandTrigger extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -41,15 +39,12 @@ public class CommandTrigger extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 3)
         {
-            throw new WrongUsageException("commands.trigger.usage", new Object[0]);
+            throw new WrongUsageException("commands.trigger.usage");
         }
         else
         {
@@ -65,7 +60,7 @@ public class CommandTrigger extends CommandBase
 
                 if (!(entity instanceof EntityPlayerMP))
                 {
-                    throw new CommandException("commands.trigger.invalidPlayer", new Object[0]);
+                    throw new CommandException("commands.trigger.invalidPlayer");
                 }
 
                 entityplayermp = (EntityPlayerMP)entity;

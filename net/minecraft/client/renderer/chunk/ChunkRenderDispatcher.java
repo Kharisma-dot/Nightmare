@@ -85,7 +85,7 @@ public class ChunkRenderDispatcher
 
     public String getDebugInfo()
     {
-        return String.format("pC: %03d, pU: %1d, aB: %1d", new Object[] {Integer.valueOf(this.queueChunkUpdates.size()), Integer.valueOf(this.queueChunkUploads.size()), Integer.valueOf(this.queueFreeRenderBuilders.size())});
+        return String.format("pC: %03d, pU: %1d, aB: %1d", new Object[] {this.queueChunkUpdates.size(), this.queueChunkUploads.size(), this.queueFreeRenderBuilders.size()});
     }
 
     public boolean runChunkUploads(long p_178516_1_)
@@ -273,7 +273,7 @@ public class ChunkRenderDispatcher
             }
 
             p_178503_2_.setTranslation(0.0D, 0.0D, 0.0D);
-            return Futures.<Object>immediateFuture((Object)null);
+            return Futures.<Object>immediateFuture(null);
         }
         else
         {
@@ -283,7 +283,7 @@ public class ChunkRenderDispatcher
                 {
                     ChunkRenderDispatcher.this.uploadChunk(player, p_178503_2_, chunkRenderer, compiledChunkIn);
                 }
-            }, (Object)null);
+            }, null);
 
             synchronized (this.queueChunkUploads)
             {
@@ -298,7 +298,7 @@ public class ChunkRenderDispatcher
         GL11.glNewList(p_178510_2_, GL11.GL_COMPILE);
         GlStateManager.pushMatrix();
         chunkRenderer.multModelviewMatrix();
-        this.worldVertexUploader.func_181679_a(p_178510_1_);
+        this.worldVertexUploader.draw(p_178510_1_);
         GlStateManager.popMatrix();
         GL11.glEndList();
     }
@@ -306,7 +306,7 @@ public class ChunkRenderDispatcher
     private void uploadVertexBuffer(WorldRenderer p_178506_1_, VertexBuffer vertexBufferIn)
     {
         this.vertexUploader.setVertexBuffer(vertexBufferIn);
-        this.vertexUploader.func_181679_a(p_178506_1_);
+        this.vertexUploader.draw(p_178506_1_);
     }
 
     public void clearChunkUpdates()

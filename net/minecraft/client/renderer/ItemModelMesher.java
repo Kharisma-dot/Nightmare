@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ISmartItemModel;
 import net.optifine.CustomItems;
 import net.optifine.reflect.Reflector;
 
@@ -34,7 +33,7 @@ public class ItemModelMesher
 
     public TextureAtlasSprite getParticleIcon(Item item, int meta)
     {
-        return this.getItemModel(new ItemStack(item, 1, meta)).getTexture();
+        return this.getItemModel(new ItemStack(item, 1, meta)).getParticleTexture();
     }
 
     public IBakedModel getItemModel(ItemStack stack)
@@ -47,25 +46,13 @@ public class ItemModelMesher
             ItemMeshDefinition itemmeshdefinition = (ItemMeshDefinition)this.shapers.get(item);
 
             if (itemmeshdefinition != null)
-            {
                 ibakedmodel = this.modelManager.getModel(itemmeshdefinition.getModelLocation(stack));
-            }
         }
-
-        if (Reflector.ForgeHooksClient.exists() && ibakedmodel instanceof ISmartItemModel)
-        {
-            ibakedmodel = ((ISmartItemModel)ibakedmodel).handleItemState(stack);
-        }
-
         if (ibakedmodel == null)
-        {
             ibakedmodel = this.modelManager.getMissingModel();
-        }
 
         if (Config.isCustomItems())
-        {
-            ibakedmodel = CustomItems.getCustomItemModel(stack, ibakedmodel, (ResourceLocation)null, true);
-        }
+            ibakedmodel = CustomItems.getCustomItemModel(stack, ibakedmodel, null, true);
 
         return ibakedmodel;
     }
@@ -77,7 +64,7 @@ public class ItemModelMesher
 
     protected IBakedModel getItemModel(Item item, int meta)
     {
-        return (IBakedModel)this.simpleShapesCache.get(Integer.valueOf(this.getIndex(item, meta)));
+        return (IBakedModel)this.simpleShapesCache.get(this.getIndex(item, meta));
     }
 
     private int getIndex(Item item, int meta)
@@ -87,8 +74,8 @@ public class ItemModelMesher
 
     public void register(Item item, int meta, ModelResourceLocation location)
     {
-        this.simpleShapes.put(Integer.valueOf(this.getIndex(item, meta)), location);
-        this.simpleShapesCache.put(Integer.valueOf(this.getIndex(item, meta)), this.modelManager.getModel(location));
+        this.simpleShapes.put(this.getIndex(item, meta), location);
+        this.simpleShapesCache.put(this.getIndex(item, meta), this.modelManager.getModel(location));
     }
 
     public void register(Item item, ItemMeshDefinition definition)

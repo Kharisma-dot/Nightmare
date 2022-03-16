@@ -384,8 +384,6 @@ public final class ItemStack
 
     /**
      * Called when a Block is destroyed using this ItemStack
-     *  
-     * @param blockIn The block being destroyed
      */
     public void onBlockDestroyed(World worldIn, Block blockIn, BlockPos pos, EntityPlayer playerIn)
     {
@@ -518,8 +516,6 @@ public final class ItemStack
 
     /**
      * Called when the player releases the use item button. Args: world, entityplayer, itemInUseCount
-     *  
-     * @param timeLeft The amount of ticks left before the using would have been complete
      */
     public void onPlayerStoppedUsing(World worldIn, EntityPlayer playerIn, int timeLeft)
     {
@@ -544,9 +540,6 @@ public final class ItemStack
 
     /**
      * Get an NBTTagCompound from this stack's NBT data.
-     *  
-     * @param key The NBTTagCompound to get
-     * @param create Whether a new, empty compound should be created if none is present yet
      */
     public NBTTagCompound getSubCompound(String key, boolean create)
     {
@@ -633,7 +626,7 @@ public final class ItemStack
 
                     if (this.stackTagCompound.hasNoTags())
                     {
-                        this.setTagCompound((NBTTagCompound)null);
+                        this.setTagCompound(null);
                     }
                 }
             }
@@ -674,11 +667,11 @@ public final class ItemStack
 
             if (this.getHasSubtypes())
             {
-                s = s + String.format("#%04d/%d%s", new Object[] {Integer.valueOf(i), Integer.valueOf(this.itemDamage), s1});
+                s = s + String.format("#%04d/%d%s", new Object[] {i, this.itemDamage, s1});
             }
             else
             {
-                s = s + String.format("#%04d%s", new Object[] {Integer.valueOf(i), s1});
+                s = s + String.format("#%04d%s", i, s1);
             }
         }
         else if (!this.hasDisplayName() && this.item == Items.filled_map)
@@ -1013,7 +1006,7 @@ public final class ItemStack
 
         if (this.hasDisplayName())
         {
-            chatcomponenttext.getChatStyle().setItalic(Boolean.valueOf(true));
+            chatcomponenttext.getChatStyle().setItalic(true);
         }
 
         IChatComponent ichatcomponent = (new ChatComponentText("[")).appendSibling(chatcomponenttext).appendText("]");

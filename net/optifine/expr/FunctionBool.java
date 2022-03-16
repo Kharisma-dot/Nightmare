@@ -23,6 +23,6 @@ public class FunctionBool implements IExpressionBool
 
     public String toString()
     {
-        return "" + this.type + "()";
+        return this.type + "()";
     }
 }

@@ -25,7 +25,7 @@ public class BlockDirt extends Block
     protected BlockDirt()
     {
         super(Material.ground);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockDirt.DirtType.DIRT).withProperty(SNOWY, Boolean.valueOf(false)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockDirt.DirtType.DIRT).withProperty(SNOWY, false));
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
@@ -34,7 +34,7 @@ public class BlockDirt extends Block
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return ((BlockDirt.DirtType)state.getValue(VARIANT)).func_181066_d();
+        return state.getValue(VARIANT).getColor();
     }
 
     /**
@@ -43,10 +43,10 @@ public class BlockDirt extends Block
      */
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
-        if (state.getValue(VARIANT) == BlockDirt.DirtType.PODZOL)
+        if (state.getValue(VARIANT) == DirtType.PODZOL)
         {
             Block block = worldIn.getBlockState(pos.up()).getBlock();
-            state = state.withProperty(SNOWY, Boolean.valueOf(block == Blocks.snow || block == Blocks.snow_layer));
+            state = state.withProperty(SNOWY, block == Blocks.snow || block == Blocks.snow_layer);
         }
 
         return state;
@@ -57,15 +57,18 @@ public class BlockDirt extends Block
      */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        list.add(new ItemStack(this, 1, BlockDirt.DirtType.DIRT.getMetadata()));
-        list.add(new ItemStack(this, 1, BlockDirt.DirtType.COARSE_DIRT.getMetadata()));
-        list.add(new ItemStack(this, 1, BlockDirt.DirtType.PODZOL.getMetadata()));
+        list.add(new ItemStack(this, 1, DirtType.DIRT.getMetadata()));
+        list.add(new ItemStack(this, 1, DirtType.COARSE_DIRT.getMetadata()));
+        list.add(new ItemStack(this, 1, DirtType.PODZOL.getMetadata()));
     }
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
-        return iblockstate.getBlock() != this ? 0 : ((BlockDirt.DirtType)iblockstate.getValue(VARIANT)).getMetadata();
+        return iblockstate.getBlock() != this ? 0 : iblockstate.getValue(VARIANT).getMetadata();
     }
 
     /**
@@ -73,7 +76,7 @@ public class BlockDirt extends Block
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(VARIANT, BlockDirt.DirtType.byMetadata(meta));
+        return this.getDefaultState().withProperty(VARIANT, DirtType.byMetadata(meta));
     }
 
     /**
@@ -81,7 +84,7 @@ public class BlockDirt extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((BlockDirt.DirtType)state.getValue(VARIANT)).getMetadata();
+        return state.getValue(VARIANT).getMetadata();
     }
 
     protected BlockState createBlockState()
@@ -95,12 +98,10 @@ public class BlockDirt extends Block
      */
     public int damageDropped(IBlockState state)
     {
-        BlockDirt.DirtType blockdirt$dirttype = (BlockDirt.DirtType)state.getValue(VARIANT);
+        BlockDirt.DirtType blockdirt$dirttype = state.getValue(VARIANT);
 
-        if (blockdirt$dirttype == BlockDirt.DirtType.PODZOL)
-        {
-            blockdirt$dirttype = BlockDirt.DirtType.DIRT;
-        }
+        if (blockdirt$dirttype == DirtType.PODZOL)
+            blockdirt$dirttype = DirtType.DIRT;
 
         return blockdirt$dirttype.getMetadata();
     }
@@ -111,23 +112,23 @@ public class BlockDirt extends Block
         COARSE_DIRT(1, "coarse_dirt", "coarse", MapColor.dirtColor),
         PODZOL(2, "podzol", MapColor.obsidianColor);
 
-        private static final BlockDirt.DirtType[] METADATA_LOOKUP = new BlockDirt.DirtType[values().length];
+        private static final DirtType[] METADATA_LOOKUP = new DirtType[values().length];
         private final int metadata;
         private final String name;
         private final String unlocalizedName;
-        private final MapColor field_181067_h;
+        private final MapColor mapColor;
 
-        private DirtType(int p_i46396_3_, String p_i46396_4_, MapColor p_i46396_5_)
+        private DirtType(int meta, String name, MapColor mapColor)
         {
-            this(p_i46396_3_, p_i46396_4_, p_i46396_4_, p_i46396_5_);
+            this(meta, name, name, mapColor);
         }
 
-        private DirtType(int p_i46397_3_, String p_i46397_4_, String p_i46397_5_, MapColor p_i46397_6_)
+        private DirtType(int meta, String name, String unlocalizedName, MapColor mapColor)
         {
-            this.metadata = p_i46397_3_;
-            this.name = p_i46397_4_;
-            this.unlocalizedName = p_i46397_5_;
-            this.field_181067_h = p_i46397_6_;
+            this.metadata = meta;
+            this.name = name;
+            this.unlocalizedName = unlocalizedName;
+            this.mapColor = mapColor;
         }
 
         public int getMetadata()
@@ -140,9 +141,9 @@ public class BlockDirt extends Block
             return this.unlocalizedName;
         }
 
-        public MapColor func_181066_d()
+        public MapColor getColor()
         {
-            return this.field_181067_h;
+            return this.mapColor;
         }
 
         public String toString()
@@ -153,9 +154,7 @@ public class BlockDirt extends Block
         public static BlockDirt.DirtType byMetadata(int metadata)
         {
             if (metadata < 0 || metadata >= METADATA_LOOKUP.length)
-            {
                 metadata = 0;
-            }
 
             return METADATA_LOOKUP[metadata];
         }
@@ -166,10 +165,8 @@ public class BlockDirt extends Block
         }
 
         static {
-            for (BlockDirt.DirtType blockdirt$dirttype : values())
-            {
+            for (DirtType blockdirt$dirttype : values())
                 METADATA_LOOKUP[blockdirt$dirttype.getMetadata()] = blockdirt$dirttype;
-            }
         }
     }
 }

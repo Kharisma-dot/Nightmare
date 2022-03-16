@@ -28,9 +28,7 @@ public class ModelAdapterOcelot extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelOcelot))
-        {
             return null;
-        }
         else
         {
             ModelOcelot modelocelot = (ModelOcelot)model;
@@ -38,13 +36,11 @@ public class ModelAdapterOcelot extends ModelAdapter
 
             if (map.containsKey(modelPart))
             {
-                int i = ((Integer)map.get(modelPart)).intValue();
+                int i = map.get(modelPart);
                 return (ModelRenderer)Reflector.getFieldValue(modelocelot, Reflector.ModelOcelot_ModelRenderers, i);
             }
             else
-            {
                 return null;
-            }
         }
     }
 
@@ -56,20 +52,18 @@ public class ModelAdapterOcelot extends ModelAdapter
     private static Map<String, Integer> getMapPartFields()
     {
         if (mapPartFields != null)
-        {
             return mapPartFields;
-        }
         else
         {
             mapPartFields = new HashMap();
-            mapPartFields.put("back_left_leg", Integer.valueOf(0));
-            mapPartFields.put("back_right_leg", Integer.valueOf(1));
-            mapPartFields.put("front_left_leg", Integer.valueOf(2));
-            mapPartFields.put("front_right_leg", Integer.valueOf(3));
-            mapPartFields.put("tail", Integer.valueOf(4));
-            mapPartFields.put("tail2", Integer.valueOf(5));
-            mapPartFields.put("head", Integer.valueOf(6));
-            mapPartFields.put("body", Integer.valueOf(7));
+            mapPartFields.put("back_left_leg", 0);
+            mapPartFields.put("back_right_leg", 1);
+            mapPartFields.put("front_left_leg", 2);
+            mapPartFields.put("front_right_leg", 3);
+            mapPartFields.put("tail", 4);
+            mapPartFields.put("tail2", 5);
+            mapPartFields.put("head", 6);
+            mapPartFields.put("body", 7);
             return mapPartFields;
         }
     }

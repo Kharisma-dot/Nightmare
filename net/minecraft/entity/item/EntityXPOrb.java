@@ -263,8 +263,6 @@ public class EntityXPOrb extends Entity
 
     /**
      * Get a fragment of the maximum experience points value for the supplied value of experience points value.
-     *  
-     * @param expValue The experience value to fragment
      */
     public static int getXPSplit(int expValue)
     {

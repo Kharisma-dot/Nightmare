@@ -49,7 +49,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
             return p_apply_1_ instanceof EntityHorse && ((EntityHorse)p_apply_1_).isBreeding();
         }
     };
-    private static final IAttribute horseJumpStrength = (new RangedAttribute((IAttribute)null, "horse.jumpStrength", 0.7D, 0.0D, 2.0D)).setDescription("Jump Strength").setShouldWatch(true);
+    private static final IAttribute horseJumpStrength = (new RangedAttribute(null, "horse.jumpStrength", 0.7D, 0.0D, 2.0D)).setDescription("Jump Strength").setShouldWatch(true);
     private static final String[] horseArmorTextures = new String[] {null, "textures/entity/horse/armor/horse_armor_iron.png", "textures/entity/horse/armor/horse_armor_gold.png", "textures/entity/horse/armor/horse_armor_diamond.png"};
     private static final String[] HORSE_ARMOR_TEXTURES_ABBR = new String[] {"", "meo", "goo", "dio"};
     private static final int[] armorValues = new int[] {0, 5, 7, 11};
@@ -106,16 +106,16 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, Integer.valueOf(0));
-        this.dataWatcher.addObject(19, Byte.valueOf((byte)0));
-        this.dataWatcher.addObject(20, Integer.valueOf(0));
-        this.dataWatcher.addObject(21, String.valueOf((Object)""));
-        this.dataWatcher.addObject(22, Integer.valueOf(0));
+        this.dataWatcher.addObject(16, 0);
+        this.dataWatcher.addObject(19, (byte)0);
+        this.dataWatcher.addObject(20, 0);
+        this.dataWatcher.addObject(21, "");
+        this.dataWatcher.addObject(22, 0);
     }
 
     public void setHorseType(int type)
     {
-        this.dataWatcher.updateObject(19, Byte.valueOf((byte)type));
+        this.dataWatcher.updateObject(19, (byte)type);
         this.resetTexturePrefix();
     }
 
@@ -129,7 +129,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
 
     public void setHorseVariant(int variant)
     {
-        this.dataWatcher.updateObject(20, Integer.valueOf(variant));
+        this.dataWatcher.updateObject(20, variant);
         this.resetTexturePrefix();
     }
 
@@ -139,7 +139,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
     }
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Get the name of this object. For players this returns their username
      */
     public String getName()
     {
@@ -183,11 +183,11 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
 
         if (p_110208_2_)
         {
-            this.dataWatcher.updateObject(16, Integer.valueOf(i | p_110208_1_));
+            this.dataWatcher.updateObject(16, i | p_110208_1_);
         }
         else
         {
-            this.dataWatcher.updateObject(16, Integer.valueOf(i & ~p_110208_1_));
+            this.dataWatcher.updateObject(16, i & ~p_110208_1_);
         }
     }
 
@@ -321,7 +321,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
      */
     public void setHorseArmorStack(ItemStack itemStackIn)
     {
-        this.dataWatcher.updateObject(22, Integer.valueOf(this.getHorseArmorIndex(itemStackIn)));
+        this.dataWatcher.updateObject(22, this.getHorseArmorIndex(itemStackIn));
         this.resetTexturePrefix();
     }
 
@@ -459,7 +459,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
 
         if (animalchest != null)
         {
-            animalchest.func_110132_b(this);
+            animalchest.removeInventoryChangeListener(this);
             int i = Math.min(animalchest.getSizeInventory(), this.horseChest.getSizeInventory());
 
             for (int j = 0; j < i; ++j)
@@ -473,7 +473,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
             }
         }
 
-        this.horseChest.func_110134_a(this);
+        this.horseChest.addInventoryChangeListener(this);
         this.updateHorseSlots();
     }
 
@@ -957,7 +957,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
                 {
                     if (!player.capabilities.isCreativeMode && --itemstack.stackSize == 0)
                     {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                     }
 
                     return true;
@@ -1736,7 +1736,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
         }
     }
 
-    public void handleHealthUpdate(byte id)
+    public void handleStatusUpdate(byte id)
     {
         if (id == 7)
         {
@@ -1748,7 +1748,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
         }
         else
         {
-            super.handleHealthUpdate(id);
+            super.handleStatusUpdate(id);
         }
     }
 

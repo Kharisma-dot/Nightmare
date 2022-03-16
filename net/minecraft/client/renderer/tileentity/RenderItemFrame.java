@@ -51,12 +51,7 @@ public class RenderItemFrame extends Render<EntityItemFrame>
     }
 
     /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity>) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doe
-     *  
-     * @param entityYaw The yaw rotation of the passed entity
+     * Renders the desired {@code T} type Entity.
      */
     public void doRender(EntityItemFrame entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
@@ -106,9 +101,7 @@ public class RenderItemFrame extends Render<EntityItemFrame>
         if (itemstack != null)
         {
             if (!this.isRenderItem(itemFrame))
-            {
                 return;
-            }
 
             if (!Config.zoomMode)
             {
@@ -116,9 +109,7 @@ public class RenderItemFrame extends Render<EntityItemFrame>
                 double d0 = itemFrame.getDistanceSq(entity.posX, entity.posY, entity.posZ);
 
                 if (d0 > 4096.0D)
-                {
                     return;
-                }
             }
 
             EntityItem entityitem = new EntityItem(itemFrame.worldObj, 0.0D, 0.0D, 0.0D, itemstack);
@@ -130,73 +121,60 @@ public class RenderItemFrame extends Render<EntityItemFrame>
             int i = itemFrame.getRotation();
 
             if (item instanceof ItemMap)
-            {
                 i = i % 4 * 2;
-            }
 
             GlStateManager.rotate((float)i * 360.0F / 8.0F, 0.0F, 0.0F, 1.0F);
 
-            if (!Reflector.postForgeBusEvent(Reflector.RenderItemInFrameEvent_Constructor, new Object[] {itemFrame, this}))
+            if (item instanceof ItemMap)
             {
-                if (item instanceof ItemMap)
+                this.renderManager.renderEngine.bindTexture(mapBackgroundTextures);
+                GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+                float f = 0.0078125F;
+                GlStateManager.scale(f, f, f);
+                GlStateManager.translate(-64.0F, -64.0F, 0.0F);
+                MapData mapdata = Items.filled_map.getMapData(entityitem.getEntityItem(), itemFrame.worldObj);
+                GlStateManager.translate(0.0F, 0.0F, -1.0F);
+
+                if (mapdata != null)
+                    this.mc.entityRenderer.getMapItemRenderer().renderMap(mapdata, true);
+            }
+            else
+            {
+                TextureAtlasSprite textureatlassprite = null;
+
+                if (item == Items.compass)
                 {
-                    this.renderManager.renderEngine.bindTexture(mapBackgroundTextures);
-                    GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-                    float f = 0.0078125F;
-                    GlStateManager.scale(f, f, f);
-                    GlStateManager.translate(-64.0F, -64.0F, 0.0F);
-                    MapData mapdata = Items.filled_map.getMapData(entityitem.getEntityItem(), itemFrame.worldObj);
-                    GlStateManager.translate(0.0F, 0.0F, -1.0F);
+                    textureatlassprite = this.mc.getTextureMapBlocks().getAtlasSprite(TextureCompass.locationSprite);
+                    this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
-                    if (mapdata != null)
+                    if (textureatlassprite instanceof TextureCompass)
                     {
-                        this.mc.entityRenderer.getMapItemRenderer().renderMap(mapdata, true);
+                        TextureCompass texturecompass = (TextureCompass)textureatlassprite;
+                        double d1 = texturecompass.currentAngle;
+                        double d2 = texturecompass.angleDelta;
+                        texturecompass.currentAngle = 0.0D;
+                        texturecompass.angleDelta = 0.0D;
+                        texturecompass.updateCompass(itemFrame.worldObj, itemFrame.posX, itemFrame.posZ, (double)MathHelper.wrapAngleTo180_float((float)(180 + itemFrame.facingDirection.getHorizontalIndex() * 90)), false, true);
+                        texturecompass.currentAngle = d1;
+                        texturecompass.angleDelta = d2;
                     }
+                    else
+                        textureatlassprite = null;
                 }
-                else
-                {
-                    TextureAtlasSprite textureatlassprite = null;
 
-                    if (item == Items.compass)
-                    {
-                        textureatlassprite = this.mc.getTextureMapBlocks().getAtlasSprite(TextureCompass.field_176608_l);
-                        this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+                GlStateManager.scale(0.5F, 0.5F, 0.5F);
 
-                        if (textureatlassprite instanceof TextureCompass)
-                        {
-                            TextureCompass texturecompass = (TextureCompass)textureatlassprite;
-                            double d1 = texturecompass.currentAngle;
-                            double d2 = texturecompass.angleDelta;
-                            texturecompass.currentAngle = 0.0D;
-                            texturecompass.angleDelta = 0.0D;
-                            texturecompass.updateCompass(itemFrame.worldObj, itemFrame.posX, itemFrame.posZ, (double)MathHelper.wrapAngleTo180_float((float)(180 + itemFrame.facingDirection.getHorizontalIndex() * 90)), false, true);
-                            texturecompass.currentAngle = d1;
-                            texturecompass.angleDelta = d2;
-                        }
-                        else
-                        {
-                            textureatlassprite = null;
-                        }
-                    }
+                if (!this.itemRenderer.shouldRenderItemIn3D(entityitem.getEntityItem()) || item instanceof ItemSkull)
+                    GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 
-                    GlStateManager.scale(0.5F, 0.5F, 0.5F);
+                GlStateManager.pushAttrib();
+                RenderHelper.enableStandardItemLighting();
+                this.itemRenderer.renderItem(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
+                RenderHelper.disableStandardItemLighting();
+                GlStateManager.popAttrib();
 
-                    if (!this.itemRenderer.shouldRenderItemIn3D(entityitem.getEntityItem()) || item instanceof ItemSkull)
-                    {
-                        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-                    }
-
-                    GlStateManager.pushAttrib();
-                    RenderHelper.enableStandardItemLighting();
-                    this.itemRenderer.func_181564_a(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
-                    RenderHelper.disableStandardItemLighting();
-                    GlStateManager.popAttrib();
-
-                    if (textureatlassprite != null && textureatlassprite.getFrameCount() > 0)
-                    {
-                        textureatlassprite.updateAnimation();
-                    }
-                }
+                if (textureatlassprite != null && textureatlassprite.getFrameCount() > 0)
+                    textureatlassprite.updateAnimation();
             }
             GlStateManager.enableLighting();
             GlStateManager.popMatrix();
@@ -235,10 +213,10 @@ public class RenderItemFrame extends Render<EntityItemFrame>
                     int i = fontrenderer.getStringWidth(s) / 2;
                     GlStateManager.disableTexture2D();
                     worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                    worldrenderer.pos((double)(-i - 1), -1.0D, 0.0D).func_181666_a(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(-i - 1), 8.0D, 0.0D).func_181666_a(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(i + 1), 8.0D, 0.0D).func_181666_a(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(i + 1), -1.0D, 0.0D).func_181666_a(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos((double)(-i - 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos((double)(-i - 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos((double)(i + 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos((double)(i + 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
                     tessellator.draw();
                     GlStateManager.enableTexture2D();
                     GlStateManager.depthMask(true);

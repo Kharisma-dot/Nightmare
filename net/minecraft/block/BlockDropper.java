@@ -39,9 +39,7 @@ public class BlockDropper extends BlockDispenser
             int i = tileentitydispenser.getDispenseSlot();
 
             if (i < 0)
-            {
                 worldIn.playAuxSFX(1001, pos, 0);
-            }
             else
             {
                 ItemStack itemstack = tileentitydispenser.getStackInSlot(i);
@@ -58,9 +56,7 @@ public class BlockDropper extends BlockDispenser
                         itemstack1 = this.dropBehavior.dispense(blocksourceimpl, itemstack);
 
                         if (itemstack1 != null && itemstack1.stackSize <= 0)
-                        {
                             itemstack1 = null;
-                        }
                     }
                     else
                     {
@@ -71,14 +67,10 @@ public class BlockDropper extends BlockDispenser
                             itemstack1 = itemstack.copy();
 
                             if (--itemstack1.stackSize <= 0)
-                            {
                                 itemstack1 = null;
-                            }
                         }
                         else
-                        {
                             itemstack1 = itemstack.copy();
-                        }
                     }
 
                     tileentitydispenser.setInventorySlotContents(i, itemstack1);

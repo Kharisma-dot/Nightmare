@@ -183,7 +183,7 @@ public abstract class EntityAnimal extends EntityAgeable implements IAnimals
 
             if (stack.stackSize <= 0)
             {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
         }
     }
@@ -221,7 +221,7 @@ public abstract class EntityAnimal extends EntityAgeable implements IAnimals
         return otherAnimal == this ? false : (otherAnimal.getClass() != this.getClass() ? false : this.isInLove() && otherAnimal.isInLove());
     }
 
-    public void handleHealthUpdate(byte id)
+    public void handleStatusUpdate(byte id)
     {
         if (id == 18)
         {
@@ -235,7 +235,7 @@ public abstract class EntityAnimal extends EntityAgeable implements IAnimals
         }
         else
         {
-            super.handleHealthUpdate(id);
+            super.handleStatusUpdate(id);
         }
     }
 }

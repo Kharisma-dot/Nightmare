@@ -25,9 +25,7 @@ public class ModelAdapterLeadKnot extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelLeashKnot))
-        {
             return null;
-        }
         else
         {
             ModelLeashKnot modelleashknot = (ModelLeashKnot)model;

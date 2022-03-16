@@ -24,7 +24,7 @@ public class BlockCarpet extends Block
     {
         super(Material.carpet);
         this.setDefaultState(this.blockState.getBaseState().withProperty(COLOR, EnumDyeColor.WHITE));
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.0625F, 1f);
         this.setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setBlockBoundsFromMeta(0);
@@ -35,7 +35,7 @@ public class BlockCarpet extends Block
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return ((EnumDyeColor)state.getValue(COLOR)).getMapColor();
+        return state.getValue(COLOR).getMapColor();
     }
 
     /**
@@ -66,9 +66,7 @@ public class BlockCarpet extends Block
 
     protected void setBlockBoundsFromMeta(int meta)
     {
-        int i = 0;
-        float f = (float)(1 * (1 + i)) / 16.0F;
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.0625f, 1f);
     }
 
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
@@ -93,9 +91,7 @@ public class BlockCarpet extends Block
             return false;
         }
         else
-        {
             return true;
-        }
     }
 
     private boolean canBlockStay(World worldIn, BlockPos pos)
@@ -114,7 +110,7 @@ public class BlockCarpet extends Block
      */
     public int damageDropped(IBlockState state)
     {
-        return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
+        return state.getValue(COLOR).getMetadata();
     }
 
     /**
@@ -123,9 +119,7 @@ public class BlockCarpet extends Block
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         for (int i = 0; i < 16; ++i)
-        {
             list.add(new ItemStack(itemIn, 1, i));
-        }
     }
 
     /**
@@ -141,7 +135,7 @@ public class BlockCarpet extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
+        return state.getValue(COLOR).getMetadata();
     }
 
     protected BlockState createBlockState()

@@ -30,6 +30,8 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
     private final List<ITickable> listTickables = Lists.<ITickable>newArrayList();
     private final Map<String, Integer> mapTextureCounters = Maps.<String, Integer>newHashMap();
     private IResourceManager theResourceManager;
+    private ITextureObject boundTexture;
+    private ResourceLocation boundTextureLocation;
 
     public TextureManager(IResourceManager resourceManager)
     {
@@ -69,6 +71,9 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
         {
             TextureUtil.bindTexture(itextureobject.getGlTextureId());
         }
+
+        this.boundTexture = itextureobject;
+        this.boundTextureLocation = resource;
     }
 
     public boolean loadTickableTexture(ResourceLocation textureLocation, ITickableTextureObject textureObj)
@@ -131,16 +136,8 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
             texture = Config.getMojangLogoTexture(texture);
         }
 
-        Integer integer = (Integer)this.mapTextureCounters.get(name);
-
-        if (integer == null)
-        {
-            integer = Integer.valueOf(1);
-        }
-        else
-        {
-            integer = Integer.valueOf(integer.intValue() + 1);
-        }
+        Integer objInt = this.mapTextureCounters.get(name);
+        int integer = objInt == null ? 1 : objInt + 1;
 
         this.mapTextureCounters.put(name, integer);
         ResourceLocation resourcelocation = new ResourceLocation(String.format("dynamic/%s_%d", new Object[] {name, integer}));
@@ -194,18 +191,18 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
 
         EmissiveTextures.update();
 
-        for (Object e : new HashSet(this.mapTextureObjects.entrySet()))
+        for (Object entry0 : new HashSet(this.mapTextureObjects.entrySet()))
         {
-            Entry<ResourceLocation, ITextureObject> entry = (Entry<ResourceLocation, ITextureObject>) e;
+            Entry<ResourceLocation, ITextureObject> entry = (Entry<ResourceLocation, ITextureObject>) entry0;
             this.loadTexture((ResourceLocation)entry.getKey(), (ITextureObject)entry.getValue());
         }
     }
 
     public void reloadBannerTextures()
     {
-        for (Object e : new HashSet(this.mapTextureObjects.entrySet()))
+        for (Object entry0 : new HashSet(this.mapTextureObjects.entrySet()))
         {
-            Entry<ResourceLocation, ITextureObject> entry = (Entry<ResourceLocation, ITextureObject>) e;
+            Entry<ResourceLocation, ITextureObject> entry = (Entry<ResourceLocation, ITextureObject>) entry0;
             ResourceLocation resourcelocation = (ResourceLocation)entry.getKey();
             ITextureObject itextureobject = (ITextureObject)entry.getValue();
 
@@ -214,5 +211,15 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
                 this.loadTexture(resourcelocation, itextureobject);
             }
         }
+    }
+
+    public ITextureObject getBoundTexture()
+    {
+        return this.boundTexture;
+    }
+
+    public ResourceLocation getBoundTextureLocation()
+    {
+        return this.boundTextureLocation;
     }
 }

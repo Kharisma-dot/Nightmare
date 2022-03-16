@@ -42,7 +42,7 @@ public class PreYggdrasilConverter
         {
             for (String s : astring)
             {
-                UUID uuid = EntityPlayer.getUUID(new GameProfile((UUID)null, s));
+                UUID uuid = EntityPlayer.getUUID(new GameProfile(null, s));
                 GameProfile gameprofile = new GameProfile(uuid, s);
                 callback.onProfileLookupSucceeded(gameprofile);
             }
@@ -80,7 +80,7 @@ public class PreYggdrasilConverter
             }
             else
             {
-                return EntityPlayer.getUUID(new GameProfile((UUID)null, p_152719_0_)).toString();
+                return EntityPlayer.getUUID(new GameProfile(null, p_152719_0_)).toString();
             }
         }
         else

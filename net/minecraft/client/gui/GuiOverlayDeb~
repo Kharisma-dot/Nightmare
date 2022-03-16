@@ -31,6 +31,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.optifine.SmartAnimations;
 import net.optifine.TextureAnimations;
 import net.optifine.reflect.Reflector;
+import net.optifine.util.MemoryMonitor;
 import net.optifine.util.NativeMemory;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -39,6 +40,10 @@ public class GuiOverlayDebug extends Gui {
    private final Minecraft field_175242_a;
    private final FontRenderer field_175241_f;
    private String debugOF = null;
+   private List<String> debugInfoLeft = null;
+   private List<String> debugInfoRight = null;
+   private long updateInfoLeftTimeMs = 0L;
+   private long updateInfoRightTimeMs = 0L;
 
    public GuiOverlayDebug(Minecraft p_i45543_1_) {
       this.field_175242_a = p_i45543_1_;
@@ -51,7 +56,7 @@ public class GuiOverlayDebug extends Gui {
       this.func_180798_a();
       this.func_175239_b(p_175237_1_);
       GlStateManager.func_179121_F();
-      if(this.field_175242_a.field_71474_y.field_181657_aC) {
+      if(this.field_175242_a.field_71474_y.field_74332_R) {
          this.func_181554_e();
       }
 
@@ -63,7 +68,12 @@ public class GuiOverlayDebug extends Gui {
    }
 
    protected void func_180798_a() {
-      List<String> list = this.call();
+      List<String> list = this.debugInfoLeft;
+      if(list == null || System.currentTimeMillis() > this.updateInfoLeftTimeMs) {
+         list = this.call();
+         this.debugInfoLeft = list;
+         this.updateInfoLeftTimeMs = System.currentTimeMillis() + 100L;
+      }
 
       for(int i = 0; i < list.size(); ++i) {
          String s = (String)list.get(i);
@@ -80,7 +90,12 @@ public class GuiOverlayDebug extends Gui {
    }
 
    protected void func_175239_b(ScaledResolution p_175239_1_) {
-      List<String> list = this.func_175238_c();
+      List<String> list = this.debugInfoRight;
+      if(list == null || System.currentTimeMillis() > this.updateInfoRightTimeMs) {
+         list = this.func_175238_c();
+         this.debugInfoRight = list;
+         this.updateInfoRightTimeMs = System.currentTimeMillis() + 100L;
+      }
 
       for(int i = 0; i < list.size(); ++i) {
          String s = (String)list.get(i);
@@ -206,10 +221,11 @@ public class GuiOverlayDebug extends Gui {
       long j1 = NativeMemory.getBufferMaximum();
       String s = "Native: " + func_175240_a(i1) + "/" + func_175240_a(j1) + "MB";
       list.add(4, s);
+      list.set(5, "GC: " + MemoryMonitor.getAllocationRateMb() + "MB/s");
       if(Reflector.FMLCommonHandler_getBrandings.exists()) {
-         Object object = Reflector.call(Reflector.FMLCommonHandler_instance, new Object[0]);
+         Object object = Reflector.call(Reflector.FMLCommonHandler_instance);
          list.add("");
-         list.addAll((Collection)Reflector.call(object, Reflector.FMLCommonHandler_getBrandings, new Object[]{Boolean.valueOf(false)}));
+         list.addAll((Collection)Reflector.call(object, Reflector.FMLCommonHandler_getBrandings, new Object[]{false}));
       }
 
       if(this.func_175236_d()) {

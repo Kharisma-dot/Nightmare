@@ -117,14 +117,14 @@ public class GuiScreenBook extends GuiScreen
 
         if (this.bookIsUnsigned)
         {
-            this.buttonList.add(this.buttonSign = new GuiButton(3, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.signButton", new Object[0])));
-            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.done", new Object[0])));
-            this.buttonList.add(this.buttonFinalize = new GuiButton(5, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.finalizeButton", new Object[0])));
-            this.buttonList.add(this.buttonCancel = new GuiButton(4, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.cancel", new Object[0])));
+            this.buttonList.add(this.buttonSign = new GuiButton(3, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.signButton")));
+            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.done")));
+            this.buttonList.add(this.buttonFinalize = new GuiButton(5, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.finalizeButton")));
+            this.buttonList.add(this.buttonCancel = new GuiButton(4, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.cancel")));
         }
         else
         {
-            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 - 100, 4 + this.bookImageHeight, 200, 20, I18n.format("gui.done", new Object[0])));
+            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 - 100, 4 + this.bookImageHeight, 200, 20, I18n.format("gui.done")));
         }
 
         int i = (this.width - this.bookImageWidth) / 2;
@@ -220,7 +220,7 @@ public class GuiScreenBook extends GuiScreen
         {
             if (button.id == 0)
             {
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
                 this.sendBookToServer(false);
             }
             else if (button.id == 3 && this.bookIsUnsigned)
@@ -253,7 +253,7 @@ public class GuiScreenBook extends GuiScreen
             else if (button.id == 5 && this.bookGettingSigned)
             {
                 this.sendBookToServer(true);
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
             }
             else if (button.id == 4 && this.bookGettingSigned)
             {
@@ -297,9 +297,6 @@ public class GuiScreenBook extends GuiScreen
 
     /**
      * Processes keystrokes when editing the text of a book
-     *  
-     * @param typedChar The typed character
-     * @param keyCode The numerical key code
      */
     private void keyTypedInBook(char typedChar, int keyCode)
     {
@@ -356,7 +353,7 @@ public class GuiScreenBook extends GuiScreen
                 if (!this.bookTitle.isEmpty())
                 {
                     this.sendBookToServer(true);
-                    this.mc.displayGuiScreen((GuiScreen)null);
+                    this.mc.displayGuiScreen(null);
                 }
 
                 return;
@@ -433,7 +430,7 @@ public class GuiScreenBook extends GuiScreen
                 }
             }
 
-            String s1 = I18n.format("book.editTitle", new Object[0]);
+            String s1 = I18n.format("book.editTitle");
             int k = this.fontRendererObj.getStringWidth(s1);
             this.fontRendererObj.drawString(s1, i + 36 + (116 - k) / 2, j + 16 + 16, 0);
             int l = this.fontRendererObj.getStringWidth(s);
@@ -441,12 +438,12 @@ public class GuiScreenBook extends GuiScreen
             String s2 = I18n.format("book.byAuthor", new Object[] {this.editingPlayer.getName()});
             int i1 = this.fontRendererObj.getStringWidth(s2);
             this.fontRendererObj.drawString(EnumChatFormatting.DARK_GRAY + s2, i + 36 + (116 - i1) / 2, j + 48 + 10, 0);
-            String s3 = I18n.format("book.finalizeWarning", new Object[0]);
+            String s3 = I18n.format("book.finalizeWarning");
             this.fontRendererObj.drawSplitString(s3, i + 36, j + 80, 116, 0);
         }
         else
         {
-            String s4 = I18n.format("book.pageIndicator", new Object[] {Integer.valueOf(this.currPage + 1), Integer.valueOf(this.bookTotalPages)});
+            String s4 = I18n.format("book.pageIndicator", new Object[] {this.currPage + 1, this.bookTotalPages});
             String s5 = "";
 
             if (this.bookPages != null && this.currPage >= 0 && this.currPage < this.bookPages.tagCount())
@@ -476,7 +473,7 @@ public class GuiScreenBook extends GuiScreen
                     try
                     {
                         IChatComponent ichatcomponent = IChatComponent.Serializer.jsonToComponent(s5);
-                        this.field_175386_A = ichatcomponent != null ? GuiUtilRenderComponents.func_178908_a(ichatcomponent, 116, this.fontRendererObj, true, true) : null;
+                        this.field_175386_A = ichatcomponent != null ? GuiUtilRenderComponents.splitText(ichatcomponent, 116, this.fontRendererObj, true, true) : null;
                     }
                     catch (JsonParseException var13)
                     {
@@ -541,10 +538,12 @@ public class GuiScreenBook extends GuiScreen
 
     /**
      * Executes the click event specified by the given chat component
+     *  
+     * @param component The ChatComponent to check for click
      */
-    protected boolean handleComponentClick(IChatComponent p_175276_1_)
+    protected boolean handleComponentClick(IChatComponent component)
     {
-        ClickEvent clickevent = p_175276_1_ == null ? null : p_175276_1_.getChatStyle().getChatClickEvent();
+        ClickEvent clickevent = component == null ? null : component.getChatStyle().getChatClickEvent();
 
         if (clickevent == null)
         {
@@ -574,11 +573,11 @@ public class GuiScreenBook extends GuiScreen
         }
         else
         {
-            boolean flag = super.handleComponentClick(p_175276_1_);
+            boolean flag = super.handleComponentClick(component);
 
             if (flag && clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
             {
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
             }
 
             return flag;

@@ -23,9 +23,7 @@ public class BlockRedstoneOre extends Block
         super(Material.rock);
 
         if (isOn)
-        {
             this.setTickRandomly(true);
-        }
 
         this.isOn = isOn;
     }
@@ -64,23 +62,17 @@ public class BlockRedstoneOre extends Block
         this.spawnParticles(worldIn, pos);
 
         if (this == Blocks.redstone_ore)
-        {
             worldIn.setBlockState(pos, Blocks.lit_redstone_ore.getDefaultState());
-        }
     }
 
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (this == Blocks.lit_redstone_ore)
-        {
             worldIn.setBlockState(pos, Blocks.redstone_ore.getDefaultState());
-        }
     }
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -105,9 +97,6 @@ public class BlockRedstoneOre extends Block
 
     /**
      * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
      */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
@@ -123,9 +112,7 @@ public class BlockRedstoneOre extends Block
     public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (this.isOn)
-        {
             this.spawnParticles(worldIn, pos);
-        }
     }
 
     private void spawnParticles(World worldIn, BlockPos pos)
@@ -140,39 +127,27 @@ public class BlockRedstoneOre extends Block
             double d3 = (double)((float)pos.getZ() + random.nextFloat());
 
             if (i == 0 && !worldIn.getBlockState(pos.up()).getBlock().isOpaqueCube())
-            {
                 d2 = (double)pos.getY() + d0 + 1.0D;
-            }
 
-            if (i == 1 && !worldIn.getBlockState(pos.down()).getBlock().isOpaqueCube())
-            {
+            else if (i == 1 && !worldIn.getBlockState(pos.down()).getBlock().isOpaqueCube())
                 d2 = (double)pos.getY() - d0;
-            }
 
-            if (i == 2 && !worldIn.getBlockState(pos.south()).getBlock().isOpaqueCube())
-            {
+            else if (i == 2 && !worldIn.getBlockState(pos.south()).getBlock().isOpaqueCube())
                 d3 = (double)pos.getZ() + d0 + 1.0D;
-            }
 
-            if (i == 3 && !worldIn.getBlockState(pos.north()).getBlock().isOpaqueCube())
-            {
+            else if (i == 3 && !worldIn.getBlockState(pos.north()).getBlock().isOpaqueCube())
                 d3 = (double)pos.getZ() - d0;
-            }
 
-            if (i == 4 && !worldIn.getBlockState(pos.east()).getBlock().isOpaqueCube())
-            {
+            else if (i == 4 && !worldIn.getBlockState(pos.east()).getBlock().isOpaqueCube())
                 d1 = (double)pos.getX() + d0 + 1.0D;
-            }
 
-            if (i == 5 && !worldIn.getBlockState(pos.west()).getBlock().isOpaqueCube())
-            {
+            else if (i == 5 && !worldIn.getBlockState(pos.west()).getBlock().isOpaqueCube())
                 d1 = (double)pos.getX() - d0;
-            }
 
-            if (d1 < (double)pos.getX() || d1 > (double)(pos.getX() + 1) || d2 < 0.0D || d2 > (double)(pos.getY() + 1) || d3 < (double)pos.getZ() || d3 > (double)(pos.getZ() + 1))
-            {
-                worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d1, d2, d3, 0.0D, 0.0D, 0.0D, new int[0]);
-            }
+            if (d1 < (double)pos.getX() || d1 > (double)(pos.getX() + 1) 
+            		|| d2 < 0.0D || d2 > (double)(pos.getY() + 1) 
+            		|| d3 < (double)pos.getZ() || d3 > (double)(pos.getZ() + 1))
+                worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d1, d2, d3, 0, 0, 0);
         }
     }
 

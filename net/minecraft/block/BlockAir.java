@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 public class BlockAir extends Block
 {
-    private static Map mapOriginalOpacity = new IdentityHashMap();
+    private static Map<Block, Integer> mapOriginalOpacity = new IdentityHashMap<>();
 
     protected BlockAir()
     {
@@ -45,9 +45,6 @@ public class BlockAir extends Block
 
     /**
      * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
      */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
@@ -61,22 +58,17 @@ public class BlockAir extends Block
         return true;
     }
 
-    public static void setLightOpacity(Block p_setLightOpacity_0_, int p_setLightOpacity_1_)
+    public static void setLightOpacity(Block block, int lightOpacity)
     {
-        if (!mapOriginalOpacity.containsKey(p_setLightOpacity_0_))
-        {
-            mapOriginalOpacity.put(p_setLightOpacity_0_, Integer.valueOf(p_setLightOpacity_0_.lightOpacity));
-        }
+        if (!mapOriginalOpacity.containsKey(block))
+            mapOriginalOpacity.put(block, block.lightOpacity);
 
-        p_setLightOpacity_0_.lightOpacity = p_setLightOpacity_1_;
+        block.lightOpacity = lightOpacity;
     }
 
-    public static void restoreLightOpacity(Block p_restoreLightOpacity_0_)
+    public static void restoreLightOpacity(Block block)
     {
-        if (mapOriginalOpacity.containsKey(p_restoreLightOpacity_0_))
-        {
-            int i = ((Integer)mapOriginalOpacity.get(p_restoreLightOpacity_0_)).intValue();
-            setLightOpacity(p_restoreLightOpacity_0_, i);
-        }
+        if (mapOriginalOpacity.containsKey(block))
+        	block.lightOpacity = mapOriginalOpacity.get(block);
     }
 }

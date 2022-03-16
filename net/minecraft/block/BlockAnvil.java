@@ -33,7 +33,7 @@ public class BlockAnvil extends BlockFalling
     protected BlockAnvil()
     {
         super(Material.anvil);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(DAMAGE, Integer.valueOf(0)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(DAMAGE, 0));
         this.setLightOpacity(0);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
@@ -58,15 +58,13 @@ public class BlockAnvil extends BlockFalling
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         EnumFacing enumfacing = placer.getHorizontalFacing().rotateY();
-        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, enumfacing).withProperty(DAMAGE, Integer.valueOf(meta >> 2));
+        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, enumfacing).withProperty(DAMAGE, meta >> 2);
     }
 
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (!worldIn.isRemote)
-        {
             playerIn.displayGui(new BlockAnvil.Anvil(worldIn, pos));
-        }
 
         return true;
     }
@@ -77,7 +75,7 @@ public class BlockAnvil extends BlockFalling
      */
     public int damageDropped(IBlockState state)
     {
-        return ((Integer)state.getValue(DAMAGE)).intValue();
+        return state.getValue(DAMAGE);
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
@@ -85,13 +83,9 @@ public class BlockAnvil extends BlockFalling
         EnumFacing enumfacing = (EnumFacing)worldIn.getBlockState(pos).getValue(FACING);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.X)
-        {
-            this.setBlockBounds(0.0F, 0.0F, 0.125F, 1.0F, 1.0F, 0.875F);
-        }
+            this.setBlockBounds(0f, 0f, 0.125f, 1f, 1f, 0.875f);
         else
-        {
-            this.setBlockBounds(0.125F, 0.0F, 0.0F, 0.875F, 1.0F, 1.0F);
-        }
+            this.setBlockBounds(0.125f, 0f, 0f, 0.875f, 1f, 1f);
     }
 
     /**
@@ -132,7 +126,7 @@ public class BlockAnvil extends BlockFalling
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(DAMAGE, Integer.valueOf((meta & 15) >> 2));
+        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(DAMAGE, (meta & 15) >> 2);
     }
 
     /**
@@ -141,8 +135,8 @@ public class BlockAnvil extends BlockFalling
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
-        i = i | ((Integer)state.getValue(DAMAGE)).intValue() << 2;
+        i = i | state.getValue(FACING).getHorizontalIndex();
+        i = i | state.getValue(DAMAGE) << 2;
         return i;
     }
 
@@ -174,7 +168,7 @@ public class BlockAnvil extends BlockFalling
 
         public IChatComponent getDisplayName()
         {
-            return new ChatComponentTranslation(Blocks.anvil.getUnlocalizedName() + ".name", new Object[0]);
+            return new ChatComponentTranslation(Blocks.anvil.getUnlocalizedName() + ".name");
         }
 
         public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)

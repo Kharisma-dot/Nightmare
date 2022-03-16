@@ -13,9 +13,7 @@ public enum Weather
         float f = world.getThunderStrength(partialTicks);
 
         if (f > 0.5F)
-        {
             return THUNDER;
-        }
         else
         {
             float f1 = world.getRainStrength(partialTicks);

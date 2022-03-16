@@ -17,10 +17,10 @@ public class BlockBreakable extends Block
         this(materialIn, ignoreSimilarityIn, materialIn.getMaterialMapColor());
     }
 
-    protected BlockBreakable(Material p_i46393_1_, boolean p_i46393_2_, MapColor p_i46393_3_)
+    protected BlockBreakable(Material material, boolean ignoreSimilarity, MapColor mapColor)
     {
-        super(p_i46393_1_, p_i46393_3_);
-        this.ignoreSimilarity = p_i46393_2_;
+        super(material, mapColor);
+        this.ignoreSimilarity = ignoreSimilarity;
     }
 
     /**
@@ -39,14 +39,10 @@ public class BlockBreakable extends Block
         if (this == Blocks.glass || this == Blocks.stained_glass)
         {
             if (worldIn.getBlockState(pos.offset(side.getOpposite())) != iblockstate)
-            {
                 return true;
-            }
 
             if (block == this)
-            {
                 return false;
-            }
         }
 
         return !this.ignoreSimilarity && block == this ? false : super.shouldSideBeRendered(worldIn, pos, side);

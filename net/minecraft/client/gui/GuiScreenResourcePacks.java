@@ -41,8 +41,8 @@ public class GuiScreenResourcePacks extends GuiScreen
      */
     public void initGui()
     {
-        this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("resourcePack.openFolder", new Object[0])));
-        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
+        this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("resourcePack.openFolder")));
+        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done")));
 
         if (!this.changed)
         {
@@ -149,7 +149,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                 try
                 {
                     Class<?> oclass = Class.forName("java.awt.Desktop");
-                    Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
+                    Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null);
                     oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {file1.toURI()});
                 }
                 catch (Throwable throwable)
@@ -181,7 +181,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                     Collections.reverse(list);
                     this.mc.getResourcePackRepository().setRepositories(list);
                     this.mc.gameSettings.resourcePacks.clear();
-                    this.mc.gameSettings.field_183018_l.clear();
+                    this.mc.gameSettings.incompatibleResourcePacks.clear();
 
                     for (ResourcePackRepository.Entry resourcepackrepository$entry : list)
                     {
@@ -189,7 +189,7 @@ public class GuiScreenResourcePacks extends GuiScreen
 
                         if (resourcepackrepository$entry.func_183027_f() != 1)
                         {
-                            this.mc.gameSettings.field_183018_l.add(resourcepackrepository$entry.getResourcePackName());
+                            this.mc.gameSettings.incompatibleResourcePacks.add(resourcepackrepository$entry.getResourcePackName());
                         }
                     }
 
@@ -228,8 +228,8 @@ public class GuiScreenResourcePacks extends GuiScreen
         this.drawBackground(0);
         this.availableResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
         this.selectedResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title", new Object[0]), this.width / 2, 16, 16777215);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo", new Object[0]), this.width / 2 - 77, this.height - 26, 8421504);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title"), this.width / 2, 16, 16777215);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo"), this.width / 2 - 77, this.height - 26, 8421504);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

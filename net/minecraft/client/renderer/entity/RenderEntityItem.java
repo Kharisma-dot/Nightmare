@@ -1,8 +1,6 @@
 package net.minecraft.client.renderer.entity;
 
 import java.util.Random;
-
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -12,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import nightmare.Nightmare;
 
 public class RenderEntityItem extends Render<EntityItem>
 {
@@ -31,8 +28,7 @@ public class RenderEntityItem extends Render<EntityItem>
     {
         ItemStack itemstack = itemIn.getEntityItem();
         Item item = itemstack.getItem();
-        Block block = Block.getBlockFromItem(item);
-        
+
         if (item == null)
         {
             return 0;
@@ -42,27 +38,14 @@ public class RenderEntityItem extends Render<EntityItem>
             boolean flag = p_177077_9_.isGui3d();
             int i = this.func_177078_a(itemstack);
             float f = 0.25F;
-            
-            if(Nightmare.instance.moduleManager.getModuleByName("ItemPhysic").isToggled()) {
-            	if(block != null) {
-                    GlStateManager.translate((float)p_177077_2_, (float)p_177077_4_ + 0.15F, (float)p_177077_6_);
-            	}else {
-                    GlStateManager.translate((float)p_177077_2_, (float)p_177077_4_ + 0.02F, (float)p_177077_6_);
-                    GlStateManager.rotate(-90F, 1F, 0F, 0F);
-            	}
-            }else {
-            	float f1 = MathHelper.sin(((float)itemIn.getAge() + p_177077_8_) / 10.0F + itemIn.hoverStart) * 0.1F + 0.1F;
-                float f2 = p_177077_9_.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
-                
-                GlStateManager.translate((float)p_177077_2_, (float)p_177077_4_ + f1 + 0.25F * f2, (float)p_177077_6_);
-            }
+            float f1 = MathHelper.sin(((float)itemIn.getAge() + p_177077_8_) / 10.0F + itemIn.hoverStart) * 0.1F + 0.1F;
+            float f2 = p_177077_9_.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
+            GlStateManager.translate((float)p_177077_2_, (float)p_177077_4_ + f1 + 0.25F * f2, (float)p_177077_6_);
 
-            if(Nightmare.instance.moduleManager.getModuleByName("ItemPhysic").isDisabled()) {
-                if (flag || this.renderManager.options != null)
-                {
-                    float f3 = (((float)itemIn.getAge() + p_177077_8_) / 20.0F + itemIn.hoverStart) * (180F / (float)Math.PI);
-                    GlStateManager.rotate(f3, 0.0F, 1.0F, 0.0F);
-                }
+            if (flag || this.renderManager.options != null)
+            {
+                float f3 = (((float)itemIn.getAge() + p_177077_8_) / 20.0F + itemIn.hoverStart) * (180F / (float)Math.PI);
+                GlStateManager.rotate(f3, 0.0F, 1.0F, 0.0F);
             }
 
             if (!flag)
@@ -73,10 +56,6 @@ public class RenderEntityItem extends Render<EntityItem>
                 GlStateManager.translate(f6, f4, f5);
             }
 
-            if(Nightmare.instance.moduleManager.getModuleByName("ItemPhysic").isToggled() && !itemIn.onGround) {
-            	float angle = System.currentTimeMillis() % (360 * 20) / (float) (4.5 - Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ItemPhysic"), "Speed").getValDouble());
-            	GlStateManager.rotate(angle, 1F, 1F, 1F);
-            }
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             return i;
         }
@@ -105,7 +84,10 @@ public class RenderEntityItem extends Render<EntityItem>
 
         return i;
     }
-    
+
+    /**
+     * Renders the desired {@code T} type Entity.
+     */
     public void doRender(EntityItem entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         ItemStack itemstack = entity.getEntityItem();
@@ -141,19 +123,19 @@ public class RenderEntityItem extends Render<EntityItem>
                 }
 
                 GlStateManager.scale(0.5F, 0.5F, 0.5F);
-                ibakedmodel.getItemCameraTransforms().func_181689_a(ItemCameraTransforms.TransformType.GROUND);
+                ibakedmodel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GROUND);
                 this.itemRenderer.renderItem(itemstack, ibakedmodel);
                 GlStateManager.popMatrix();
             }
             else
             {
                 GlStateManager.pushMatrix();
-                ibakedmodel.getItemCameraTransforms().func_181689_a(ItemCameraTransforms.TransformType.GROUND);
+                ibakedmodel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GROUND);
                 this.itemRenderer.renderItem(itemstack, ibakedmodel);
                 GlStateManager.popMatrix();
-                float f3 = ibakedmodel.getItemCameraTransforms().field_181699_o.scale.x;
-                float f4 = ibakedmodel.getItemCameraTransforms().field_181699_o.scale.y;
-                float f5 = ibakedmodel.getItemCameraTransforms().field_181699_o.scale.z;
+                float f3 = ibakedmodel.getItemCameraTransforms().ground.scale.x;
+                float f4 = ibakedmodel.getItemCameraTransforms().ground.scale.y;
+                float f5 = ibakedmodel.getItemCameraTransforms().ground.scale.z;
                 GlStateManager.translate(0.0F * f3, 0.0F * f4, 0.046875F * f5);
             }
         }
@@ -170,7 +152,10 @@ public class RenderEntityItem extends Render<EntityItem>
 
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
-    
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
     protected ResourceLocation getEntityTexture(EntityItem entity)
     {
         return TextureMap.locationBlocksTexture;

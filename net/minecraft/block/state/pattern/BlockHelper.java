@@ -18,8 +18,8 @@ public class BlockHelper implements Predicate<IBlockState>
         return new BlockHelper(blockType);
     }
 
-    public boolean apply(IBlockState p_apply_1_)
+    public boolean apply(IBlockState state)
     {
-        return p_apply_1_ != null && p_apply_1_.getBlock() == this.block;
+        return state != null && state.getBlock() == this.block;
     }
 }

@@ -14,13 +14,14 @@ public abstract class ModelAdapterQuadruped extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelQuadruped))
-        {
             return null;
-        }
         else
         {
             ModelQuadruped modelquadruped = (ModelQuadruped)model;
-            return modelPart.equals("head") ? modelquadruped.head : (modelPart.equals("body") ? modelquadruped.body : (modelPart.equals("leg1") ? modelquadruped.leg1 : (modelPart.equals("leg2") ? modelquadruped.leg2 : (modelPart.equals("leg3") ? modelquadruped.leg3 : (modelPart.equals("leg4") ? modelquadruped.leg4 : null)))));
+            return modelPart.equals("head") ? modelquadruped.head : (modelPart.equals("body") ?
+            		modelquadruped.body : (modelPart.equals("leg1") ? modelquadruped.leg1 : (modelPart.equals("leg2") ?
+            		modelquadruped.leg2 : (modelPart.equals("leg3") ? modelquadruped.leg3 : (modelPart.equals("leg4") ?
+            		modelquadruped.leg4 : null)))));
         }
     }
 

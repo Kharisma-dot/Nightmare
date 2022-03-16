@@ -28,8 +28,6 @@ public class CommandEnchant extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -38,15 +36,12 @@ public class CommandEnchant extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException("commands.enchant.usage", new Object[0]);
+            throw new WrongUsageException("commands.enchant.usage");
         }
         else
         {
@@ -75,7 +70,7 @@ public class CommandEnchant extends CommandBase
 
             if (itemstack == null)
             {
-                throw new CommandException("commands.enchant.noItem", new Object[0]);
+                throw new CommandException("commands.enchant.noItem");
             }
             else
             {
@@ -83,11 +78,11 @@ public class CommandEnchant extends CommandBase
 
                 if (enchantment1 == null)
                 {
-                    throw new NumberInvalidException("commands.enchant.notFound", new Object[] {Integer.valueOf(i)});
+                    throw new NumberInvalidException("commands.enchant.notFound", i);
                 }
                 else if (!enchantment1.canApply(itemstack))
                 {
-                    throw new CommandException("commands.enchant.cantEnchant", new Object[0]);
+                    throw new CommandException("commands.enchant.cantEnchant");
                 }
                 else
                 {
@@ -120,7 +115,7 @@ public class CommandEnchant extends CommandBase
                     }
 
                     itemstack.addEnchantment(enchantment1, j);
-                    notifyOperators(sender, this, "commands.enchant.success", new Object[0]);
+                    notifyOperators(sender, this, "commands.enchant.success");
                     sender.setCommandStat(CommandResultStats.Type.AFFECTED_ITEMS, 1);
                 }
             }
@@ -139,9 +134,6 @@ public class CommandEnchant extends CommandBase
 
     /**
      * Return whether the specified command parameter index is a username parameter.
-     *  
-     * @param args The arguments that were given
-     * @param index The argument index that we are checking
      */
     public boolean isUsernameIndex(String[] args, int index)
     {

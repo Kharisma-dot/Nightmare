@@ -37,7 +37,7 @@ public class ContainerBeacon extends Container
     public void onCraftGuiOpened(ICrafting listener)
     {
         super.onCraftGuiOpened(listener);
-        listener.func_175173_a(this, this.tileBeacon);
+        listener.sendAllWindowProperties(this, this.tileBeacon);
     }
 
     public void updateProgressBar(int id, int data)
@@ -123,7 +123,7 @@ public class ContainerBeacon extends Container
 
             if (itemstack1.stackSize == 0)
             {
-                slot.putStack((ItemStack)null);
+                slot.putStack(null);
             }
             else
             {

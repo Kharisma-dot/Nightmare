@@ -19,9 +19,9 @@ public abstract class BlockBasePressurePlate extends Block
         this(materialIn, materialIn.getMaterialMapColor());
     }
 
-    protected BlockBasePressurePlate(Material p_i46401_1_, MapColor p_i46401_2_)
+    protected BlockBasePressurePlate(Material material, MapColor mapColor)
     {
-        super(p_i46401_1_, p_i46401_2_);
+        super(material, mapColor);
         this.setCreativeTab(CreativeTabs.tabRedstone);
         this.setTickRandomly(true);
     }
@@ -33,17 +33,10 @@ public abstract class BlockBasePressurePlate extends Block
 
     protected void setBlockBoundsBasedOnState0(IBlockState state)
     {
-        boolean flag = this.getRedstoneStrength(state) > 0;
-        float f = 0.0625F;
-
-        if (flag)
-        {
-            this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.03125F, 0.9375F);
-        }
+        if (this.getRedstoneStrength(state) > 0)
+            this.setBlockBounds(0.0625F, 0f, 0.0625F, 0.9375F, 0.03125F, 0.9375F);
         else
-        {
-            this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.0625F, 0.9375F);
-        }
+            this.setBlockBounds(0.0625F, 0f, 0.0625F, 0.9375F, 0.0625F, 0.9375F);
     }
 
     /**
@@ -77,7 +70,10 @@ public abstract class BlockBasePressurePlate extends Block
         return true;
     }
 
-    public boolean func_181623_g()
+    /**
+     * Return true if an entity can be spawned inside the block (used to get the player's bed spawn location)
+     */
+    public boolean canSpawnInBlock()
     {
         return true;
     }
@@ -118,9 +114,7 @@ public abstract class BlockBasePressurePlate extends Block
             int i = this.getRedstoneStrength(state);
 
             if (i > 0)
-            {
                 this.updateState(worldIn, pos, state, i);
-            }
         }
     }
 
@@ -134,9 +128,7 @@ public abstract class BlockBasePressurePlate extends Block
             int i = this.getRedstoneStrength(state);
 
             if (i == 0)
-            {
                 this.updateState(worldIn, pos, state, i);
-            }
         }
     }
 
@@ -158,18 +150,12 @@ public abstract class BlockBasePressurePlate extends Block
         }
 
         if (!flag1 && flag)
-        {
             worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.1D, (double)pos.getZ() + 0.5D, "random.click", 0.3F, 0.5F);
-        }
         else if (flag1 && !flag)
-        {
             worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.1D, (double)pos.getZ() + 0.5D, "random.click", 0.3F, 0.6F);
-        }
 
         if (flag1)
-        {
             worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
-        }
     }
 
     /**
@@ -184,9 +170,7 @@ public abstract class BlockBasePressurePlate extends Block
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
         if (this.getRedstoneStrength(state) > 0)
-        {
             this.updateNeighbors(worldIn, pos);
-        }
 
         super.breakBlock(worldIn, pos, state);
     }
@@ -200,12 +184,12 @@ public abstract class BlockBasePressurePlate extends Block
         worldIn.notifyNeighborsOfStateChange(pos.down(), this);
     }
 
-    public int isProvidingWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
+    public int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
     {
         return this.getRedstoneStrength(state);
     }
 
-    public int isProvidingStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
+    public int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
     {
         return side == EnumFacing.UP ? this.getRedstoneStrength(state) : 0;
     }
@@ -226,7 +210,7 @@ public abstract class BlockBasePressurePlate extends Block
         float f = 0.5F;
         float f1 = 0.125F;
         float f2 = 0.5F;
-        this.setBlockBounds(0.0F, 0.375F, 0.0F, 1.0F, 0.625F, 1.0F);
+        this.setBlockBounds(0f, 0.375F, 0f, 1f, 0.625F, 1f);
     }
 
     public int getMobilityFlag()

@@ -71,20 +71,20 @@ public class DefaultResourcePack implements IResourcePack
         return defaultResourceDomains;
     }
 
-    public <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer p_135058_1_, String p_135058_2_) throws IOException
+    public <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
     {
         try
         {
             InputStream inputstream = new FileInputStream((File)this.mapAssets.get("pack.mcmeta"));
-            return AbstractResourcePack.readMetadata(p_135058_1_, inputstream, p_135058_2_);
+            return AbstractResourcePack.readMetadata(metadataSerializer, inputstream, metadataSectionName);
         }
         catch (RuntimeException var4)
         {
-            return (T)((IMetadataSection)null);
+            return (T)(null);
         }
         catch (FileNotFoundException var5)
         {
-            return (T)((IMetadataSection)null);
+            return (T)(null);
         }
     }
 

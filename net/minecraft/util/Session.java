@@ -50,7 +50,7 @@ public class Session
         }
         catch (IllegalArgumentException var2)
         {
-            return new GameProfile((UUID)null, this.getUsername());
+            return new GameProfile(null, this.getUsername());
         }
     }
 

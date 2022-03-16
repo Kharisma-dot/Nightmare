@@ -122,7 +122,7 @@ public class ContainerMerchant extends Container
 
             if (itemstack1.stackSize == 0)
             {
-                slot.putStack((ItemStack)null);
+                slot.putStack(null);
             }
             else
             {
@@ -146,19 +146,19 @@ public class ContainerMerchant extends Container
     public void onContainerClosed(EntityPlayer playerIn)
     {
         super.onContainerClosed(playerIn);
-        this.theMerchant.setCustomer((EntityPlayer)null);
+        this.theMerchant.setCustomer(null);
         super.onContainerClosed(playerIn);
 
         if (!this.theWorld.isRemote)
         {
-            ItemStack itemstack = this.merchantInventory.getStackInSlotOnClosing(0);
+            ItemStack itemstack = this.merchantInventory.removeStackFromSlot(0);
 
             if (itemstack != null)
             {
                 playerIn.dropPlayerItemWithRandomChoice(itemstack, false);
             }
 
-            itemstack = this.merchantInventory.getStackInSlotOnClosing(1);
+            itemstack = this.merchantInventory.removeStackFromSlot(1);
 
             if (itemstack != null)
             {

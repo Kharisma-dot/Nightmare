@@ -102,14 +102,10 @@ public class GuiClickableScrolledSelectionListProxy extends GuiSlot
             int l = this.slotHeight - 4;
 
             if (k > this.bottom || k + l < this.top)
-            {
                 this.func_178040_a(j, p_148120_1_, k);
-            }
 
             if (this.showSelectionBox && this.isSelected(j))
-            {
                 this.func_178043_a(this.width, k, l, Tezzelator.instance);
-            }
 
             this.drawSlot(j, p_148120_1_, k, l, mouseXIn, mouseYIn);
         }

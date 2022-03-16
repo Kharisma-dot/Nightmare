@@ -18,9 +18,6 @@ public class ItemRedstone extends Item
 
     /**
      * Called when a Block is right-clicked with this Item
-     *  
-     * @param pos The block being right-clicked
-     * @param side The side being right-clicked
      */
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
@@ -35,7 +32,7 @@ public class ItemRedstone extends Item
         {
             Block block = worldIn.getBlockState(blockpos).getBlock();
 
-            if (!worldIn.canBlockBePlaced(block, blockpos, false, side, (Entity)null, stack))
+            if (!worldIn.canBlockBePlaced(block, blockpos, false, side, null, stack))
             {
                 return false;
             }

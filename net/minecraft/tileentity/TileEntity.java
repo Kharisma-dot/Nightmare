@@ -251,7 +251,8 @@ public abstract class TileEntity
 
                     try
                     {
-                        return String.format("ID #%d (%s // %s)", new Object[] {Integer.valueOf(i), Block.getBlockById(i).getUnlocalizedName(), Block.getBlockById(i).getClass().getCanonicalName()});
+                        return String.format("ID #%d (%s // %s)", 
+                        		new Object[] {i, Block.getBlockById(i).getUnlocalizedName(), Block.getBlockById(i).getClass().getCanonicalName()});
                     }
                     catch (Throwable var3)
                     {
@@ -273,7 +274,7 @@ public abstract class TileEntity
                     else
                     {
                         String s = String.format("%4s", new Object[] {Integer.toBinaryString(i)}).replace(" ", "0");
-                        return String.format("%1$d / 0x%1$X / 0b%2$s", new Object[] {Integer.valueOf(i), s});
+                        return String.format("%1$d / 0x%1$X / 0b%2$s", new Object[] {i, s});
                     }
                 }
             });

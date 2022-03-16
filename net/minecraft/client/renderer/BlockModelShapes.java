@@ -116,7 +116,7 @@ public class BlockModelShapes
             ibakedmodel = this.modelManager.getMissingModel();
         }
 
-        return ibakedmodel.getTexture();
+        return ibakedmodel.getParticleTexture();
     }
 
     public IBakedModel getModelForState(IBlockState state)
@@ -168,7 +168,7 @@ public class BlockModelShapes
         this.registerBlockWithStateMapper(Blocks.jukebox, (new StateMap.Builder()).ignore(new IProperty[] {BlockJukebox.HAS_RECORD}).build());
         this.registerBlockWithStateMapper(Blocks.command_block, (new StateMap.Builder()).ignore(new IProperty[] {BlockCommandBlock.TRIGGERED}).build());
         this.registerBlockWithStateMapper(Blocks.cobblestone_wall, (new StateMap.Builder()).withName(BlockWall.VARIANT).withSuffix("_wall").build());
-        this.registerBlockWithStateMapper(Blocks.double_plant, (new StateMap.Builder()).withName(BlockDoublePlant.VARIANT).ignore(new IProperty[] {BlockDoublePlant.field_181084_N}).build());
+        this.registerBlockWithStateMapper(Blocks.double_plant, (new StateMap.Builder()).withName(BlockDoublePlant.VARIANT).ignore(new IProperty[] {BlockDoublePlant.FACING}).build());
         this.registerBlockWithStateMapper(Blocks.oak_fence_gate, (new StateMap.Builder()).ignore(new IProperty[] {BlockFenceGate.POWERED}).build());
         this.registerBlockWithStateMapper(Blocks.spruce_fence_gate, (new StateMap.Builder()).ignore(new IProperty[] {BlockFenceGate.POWERED}).build());
         this.registerBlockWithStateMapper(Blocks.birch_fence_gate, (new StateMap.Builder()).ignore(new IProperty[] {BlockFenceGate.POWERED}).build());
@@ -295,7 +295,7 @@ public class BlockModelShapes
                 Map<IProperty, Comparable> map = Maps.<IProperty, Comparable>newLinkedHashMap(state.getProperties());
                 String s = BlockStoneSlab.VARIANT.getName((BlockStoneSlab.EnumType)map.remove(BlockStoneSlab.VARIANT));
                 map.remove(BlockStoneSlab.SEAMLESS);
-                String s1 = ((Boolean)state.getValue(BlockStoneSlab.SEAMLESS)).booleanValue() ? "all" : "normal";
+                String s1 = state.getValue(BlockStoneSlab.SEAMLESS) ? "all" : "normal";
                 return new ModelResourceLocation(s + "_double_slab", s1);
             }
         });
@@ -306,7 +306,7 @@ public class BlockModelShapes
                 Map<IProperty, Comparable> map = Maps.<IProperty, Comparable>newLinkedHashMap(state.getProperties());
                 String s = BlockStoneSlabNew.VARIANT.getName((BlockStoneSlabNew.EnumType)map.remove(BlockStoneSlabNew.VARIANT));
                 map.remove(BlockStoneSlab.SEAMLESS);
-                String s1 = ((Boolean)state.getValue(BlockStoneSlabNew.SEAMLESS)).booleanValue() ? "all" : "normal";
+                String s1 = state.getValue(BlockStoneSlabNew.SEAMLESS) ? "all" : "normal";
                 return new ModelResourceLocation(s + "_double_slab", s1);
             }
         });

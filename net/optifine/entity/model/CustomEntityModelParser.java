@@ -75,18 +75,14 @@ public class CustomEntityModelParser
             CustomModelRenderer custommodelrenderer = parseCustomModelRenderer(jsonobject, aint, s1);
 
             if (custommodelrenderer != null)
-            {
                 list.add(custommodelrenderer);
-            }
         }
 
-        CustomModelRenderer[] acustommodelrenderer = (CustomModelRenderer[])((CustomModelRenderer[])list.toArray(new CustomModelRenderer[list.size()]));
+        CustomModelRenderer[] acustommodelrenderer = (CustomModelRenderer[])list.toArray(new CustomModelRenderer[list.size()]);
         ResourceLocation resourcelocation = null;
 
         if (s2 != null)
-        {
             resourcelocation = getResourceLocation(s1, s2, ".png");
-        }
 
         CustomEntityRenderer customentityrenderer = new CustomEntityRenderer(s, s1, resourcelocation, acustommodelrenderer, f);
         return customentityrenderer;
@@ -101,13 +97,9 @@ public class CustomEntityModelParser
             JsonObject jsonobject = (JsonObject)mapModelJsons.get(s);
 
             if (jsonobject == null)
-            {
                 Config.warn("BaseID not found: " + s);
-            }
             else
-            {
                 copyJsonElements(jsonobject, elem);
-            }
         }
     }
 
@@ -149,33 +141,29 @@ public class CustomEntityModelParser
     private static void copyJsonElements(JsonObject objFrom, JsonObject objTo)
     {
         for (Entry<String, JsonElement> entry : objFrom.entrySet())
-        {
             if (!((String)entry.getKey()).equals("id") && !objTo.has((String)entry.getKey()))
-            {
                 objTo.add((String)entry.getKey(), (JsonElement)entry.getValue());
-            }
-        }
     }
 
     public static ResourceLocation getResourceLocation(String basePath, String path, String extension)
     {
         if (!path.endsWith(extension))
-        {
+        
             path = path + extension;
-        }
+        
 
         if (!path.contains("/"))
-        {
+        
             path = basePath + "/" + path;
-        }
+        
         else if (path.startsWith("./"))
-        {
+        
             path = basePath + "/" + path.substring(2);
-        }
+        
         else if (path.startsWith("~/"))
-        {
+        
             path = "optifine/" + path.substring(2);
-        }
+        
 
         return new ResourceLocation(path);
     }
@@ -187,17 +175,11 @@ public class CustomEntityModelParser
         if (s != null)
         {
             if (s.length() < 1)
-            {
                 Config.warn("Empty model ID: " + s);
-            }
             else if (mapModelJsons.containsKey(s))
-            {
                 Config.warn("Duplicate model ID: " + s);
-            }
             else
-            {
                 mapModelJsons.put(s, elem);
-            }
         }
     }
 
@@ -236,7 +218,7 @@ public class CustomEntityModelParser
 
             if (list.size() > 0)
             {
-                ModelVariableUpdater[] amodelvariableupdater = (ModelVariableUpdater[])((ModelVariableUpdater[])list.toArray(new ModelVariableUpdater[list.size()]));
+                ModelVariableUpdater[] amodelvariableupdater = (ModelVariableUpdater[])list.toArray(new ModelVariableUpdater[list.size()]);
                 modelupdater = new ModelUpdater(amodelvariableupdater);
             }
         }
@@ -249,9 +231,7 @@ public class CustomEntityModelParser
     private static void checkNull(Object obj, String msg)
     {
         if (obj == null)
-        {
             throw new JsonParseException(msg);
-        }
     }
 
     public static JsonObject loadJson(ResourceLocation location) throws IOException, JsonParseException
@@ -259,9 +239,7 @@ public class CustomEntityModelParser
         InputStream inputstream = Config.getResourceStream(location);
 
         if (inputstream == null)
-        {
             return null;
-        }
         else
         {
             String s = Config.readInputStream(inputstream, "ASCII");

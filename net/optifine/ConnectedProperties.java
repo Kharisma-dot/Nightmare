@@ -171,7 +171,7 @@ public class ConnectedProperties
 
                                 if (j >= 0 && j < this.tiles.length)
                                 {
-                                    map.put(Integer.valueOf(i), Integer.valueOf(j));
+                                    map.put(i, j);
                                 }
                                 else
                                 {
@@ -199,9 +199,9 @@ public class ConnectedProperties
                 {
                     aint[k] = -1;
 
-                    if (map.containsKey(Integer.valueOf(k)))
+                    if (map.containsKey(k))
                     {
-                        aint[k] = ((Integer)map.get(Integer.valueOf(k))).intValue();
+                        aint[k] = map.get(k);
                     }
                 }
 
@@ -473,9 +473,9 @@ public class ConnectedProperties
 
     public static IProperty getProperty(String key, Collection properties)
     {
-        for (Object e : properties)
+        for (Object iproperty0 : properties)
         {
-            IProperty iproperty = (IProperty) e;
+            IProperty iproperty = (IProperty) iproperty0;
             if (key.equals(iproperty.getName()))
             {
                 return iproperty;

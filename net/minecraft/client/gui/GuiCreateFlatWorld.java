@@ -23,27 +23,27 @@ public class GuiCreateFlatWorld extends GuiScreen
 
     /** The title given to the flat world currently in creation */
     private String flatWorldTitle;
-    private String field_146394_i;
-    private String field_146391_r;
+    private String flatWorldTile;
+    private String flatWorldHeight;
     private GuiCreateFlatWorld.Details createFlatWorldListSlotGui;
     private GuiButton field_146389_t;
     private GuiButton field_146388_u;
     private GuiButton field_146386_v;
 
-    public GuiCreateFlatWorld(GuiCreateWorld createWorldGuiIn, String p_i1029_2_)
+    public GuiCreateFlatWorld(GuiCreateWorld createWorldGuiIn, String info)
     {
         this.createWorldGui = createWorldGuiIn;
-        this.func_146383_a(p_i1029_2_);
+        this.setInfo(info);
     }
 
-    public String func_146384_e()
+    public String getInfo()
     {
         return this.theFlatGeneratorInfo.toString();
     }
 
-    public void func_146383_a(String p_146383_1_)
+    public void setInfo(String s)
     {
-        this.theFlatGeneratorInfo = FlatGeneratorInfo.createFlatGeneratorFromString(p_146383_1_);
+        this.theFlatGeneratorInfo = FlatGeneratorInfo.createFlatGeneratorFromString(s);
     }
 
     /**
@@ -53,16 +53,16 @@ public class GuiCreateFlatWorld extends GuiScreen
     public void initGui()
     {
         this.buttonList.clear();
-        this.flatWorldTitle = I18n.format("createWorld.customize.flat.title", new Object[0]);
-        this.field_146394_i = I18n.format("createWorld.customize.flat.tile", new Object[0]);
-        this.field_146391_r = I18n.format("createWorld.customize.flat.height", new Object[0]);
+        this.flatWorldTitle = I18n.format("createWorld.customize.flat.title");
+        this.flatWorldTile = I18n.format("createWorld.customize.flat.tile");
+        this.flatWorldHeight = I18n.format("createWorld.customize.flat.height");
         this.createFlatWorldListSlotGui = new GuiCreateFlatWorld.Details();
-        this.buttonList.add(this.field_146389_t = new GuiButton(2, this.width / 2 - 154, this.height - 52, 100, 20, I18n.format("createWorld.customize.flat.addLayer", new Object[0]) + " (NYI)"));
-        this.buttonList.add(this.field_146388_u = new GuiButton(3, this.width / 2 - 50, this.height - 52, 100, 20, I18n.format("createWorld.customize.flat.editLayer", new Object[0]) + " (NYI)"));
-        this.buttonList.add(this.field_146386_v = new GuiButton(4, this.width / 2 - 155, this.height - 52, 150, 20, I18n.format("createWorld.customize.flat.removeLayer", new Object[0])));
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("gui.done", new Object[0])));
-        this.buttonList.add(new GuiButton(5, this.width / 2 + 5, this.height - 52, 150, 20, I18n.format("createWorld.customize.presets", new Object[0])));
-        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel", new Object[0])));
+        this.buttonList.add(this.field_146389_t = new GuiButton(2, this.width / 2 - 154, this.height - 52, 100, 20, I18n.format("createWorld.customize.flat.addLayer") + " (NYI)"));
+        this.buttonList.add(this.field_146388_u = new GuiButton(3, this.width / 2 - 50, this.height - 52, 100, 20, I18n.format("createWorld.customize.flat.editLayer") + " (NYI)"));
+        this.buttonList.add(this.field_146386_v = new GuiButton(4, this.width / 2 - 155, this.height - 52, 150, 20, I18n.format("createWorld.customize.flat.removeLayer")));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("gui.done")));
+        this.buttonList.add(new GuiButton(5, this.width / 2 + 5, this.height - 52, 150, 20, I18n.format("createWorld.customize.presets")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel")));
         this.field_146389_t.visible = this.field_146388_u.visible = false;
         this.theFlatGeneratorInfo.func_82645_d();
         this.func_146375_g();
@@ -84,23 +84,25 @@ public class GuiCreateFlatWorld extends GuiScreen
     {
         int i = this.theFlatGeneratorInfo.getFlatLayers().size() - this.createFlatWorldListSlotGui.field_148228_k - 1;
 
-        if (button.id == 1)
-        {
+        switch(button.id) {
+        case 0:
+        	this.createWorldGui.chunkProviderSettingsJson = this.getInfo();
             this.mc.displayGuiScreen(this.createWorldGui);
-        }
-        else if (button.id == 0)
-        {
-            this.createWorldGui.chunkProviderSettingsJson = this.func_146384_e();
-            this.mc.displayGuiScreen(this.createWorldGui);
-        }
-        else if (button.id == 5)
-        {
-            this.mc.displayGuiScreen(new GuiFlatPresets(this));
-        }
-        else if (button.id == 4 && this.func_146382_i())
-        {
-            this.theFlatGeneratorInfo.getFlatLayers().remove(i);
-            this.createFlatWorldListSlotGui.field_148228_k = Math.min(this.createFlatWorldListSlotGui.field_148228_k, this.theFlatGeneratorInfo.getFlatLayers().size() - 1);
+        	break;
+        case 1:
+        	this.mc.displayGuiScreen(this.createWorldGui);
+        	break;
+        case 4:
+        	if (func_146382_i())
+        	{
+        		this.theFlatGeneratorInfo.getFlatLayers().remove(i);
+                this.createFlatWorldListSlotGui.field_148228_k = 
+                		Math.min(this.createFlatWorldListSlotGui.field_148228_k, this.theFlatGeneratorInfo.getFlatLayers().size() - 1);
+        	}
+        	break;
+        case 5:
+        	this.mc.displayGuiScreen(new GuiFlatPresets(this));
+        	break;        		
         }
 
         this.theFlatGeneratorInfo.func_82645_d();
@@ -128,10 +130,10 @@ public class GuiCreateFlatWorld extends GuiScreen
     {
         this.drawDefaultBackground();
         this.createFlatWorldListSlotGui.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawCenteredString(this.fontRendererObj, this.flatWorldTitle, this.width / 2, 8, 16777215);
-        int i = this.width / 2 - 92 - 16;
-        this.drawString(this.fontRendererObj, this.field_146394_i, i, 32, 16777215);
-        this.drawString(this.fontRendererObj, this.field_146391_r, i + 2 + 213 - this.fontRendererObj.getStringWidth(this.field_146391_r), 32, 16777215);
+        this.drawCenteredString(this.fontRendererObj, this.flatWorldTitle, this.width >> 1, 8, 16777215);
+        int i = (this.width >> 1) - 92 - 16;
+        this.drawString(this.fontRendererObj, this.flatWorldTile, i, 32, 16777215);
+        this.drawString(this.fontRendererObj, this.flatWorldHeight, i + 2 + 213 - this.fontRendererObj.getStringWidth(this.flatWorldHeight), 32, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
@@ -141,18 +143,19 @@ public class GuiCreateFlatWorld extends GuiScreen
 
         public Details()
         {
-            super(GuiCreateFlatWorld.this.mc, GuiCreateFlatWorld.this.width, GuiCreateFlatWorld.this.height, 43, GuiCreateFlatWorld.this.height - 60, 24);
+            super(GuiCreateFlatWorld.this.mc, GuiCreateFlatWorld.this.width, GuiCreateFlatWorld.this.height, 43, 
+            		GuiCreateFlatWorld.this.height - 60, 24);
         }
 
-        private void func_148225_a(int p_148225_1_, int p_148225_2_, ItemStack p_148225_3_)
+        private void func_148225_a(int p_148225_1_, int p_148225_2_, ItemStack stack)
         {
             this.func_148226_e(p_148225_1_ + 1, p_148225_2_ + 1);
             GlStateManager.enableRescaleNormal();
 
-            if (p_148225_3_ != null && p_148225_3_.getItem() != null)
+            if (stack != null && stack.getItem() != null)
             {
                 RenderHelper.enableGUIStandardItemLighting();
-                GuiCreateFlatWorld.this.itemRender.renderItemIntoGUI(p_148225_3_, p_148225_1_ + 2, p_148225_2_ + 2);
+                GuiCreateFlatWorld.this.itemRender.renderItemIntoGUI(stack, p_148225_1_ + 2, p_148225_2_ + 2);
                 RenderHelper.disableStandardItemLighting();
             }
 
@@ -205,7 +208,7 @@ public class GuiCreateFlatWorld extends GuiScreen
         protected void drawSlot(int entryID, int p_180791_2_, int p_180791_3_, int p_180791_4_, int mouseXIn, int mouseYIn)
         {
             FlatLayerInfo flatlayerinfo = (FlatLayerInfo)GuiCreateFlatWorld.this.theFlatGeneratorInfo.getFlatLayers().get(GuiCreateFlatWorld.this.theFlatGeneratorInfo.getFlatLayers().size() - entryID - 1);
-            IBlockState iblockstate = flatlayerinfo.func_175900_c();
+            IBlockState iblockstate = flatlayerinfo.getLayerMaterial();
             Block block = iblockstate.getBlock();
             Item item = Item.getItemFromBlock(block);
             ItemStack itemstack = block != Blocks.air && item != null ? new ItemStack(item, 1, block.getMetaFromState(iblockstate)) : null;
@@ -216,14 +219,10 @@ public class GuiCreateFlatWorld extends GuiScreen
                 if (block != Blocks.water && block != Blocks.flowing_water)
                 {
                     if (block == Blocks.lava || block == Blocks.flowing_lava)
-                    {
                         item = Items.lava_bucket;
-                    }
                 }
                 else
-                {
                     item = Items.water_bucket;
-                }
 
                 if (item != null)
                 {
@@ -237,19 +236,16 @@ public class GuiCreateFlatWorld extends GuiScreen
             String s1;
 
             if (entryID == 0)
-            {
-                s1 = I18n.format("createWorld.customize.flat.layer.top", new Object[] {Integer.valueOf(flatlayerinfo.getLayerCount())});
-            }
+                s1 = I18n.format("createWorld.customize.flat.layer.top", new Object[] {flatlayerinfo.getLayerCount()});
+            
             else if (entryID == GuiCreateFlatWorld.this.theFlatGeneratorInfo.getFlatLayers().size() - 1)
-            {
-                s1 = I18n.format("createWorld.customize.flat.layer.bottom", new Object[] {Integer.valueOf(flatlayerinfo.getLayerCount())});
-            }
+                s1 = I18n.format("createWorld.customize.flat.layer.bottom", new Object[] {flatlayerinfo.getLayerCount()});
+            
             else
-            {
-                s1 = I18n.format("createWorld.customize.flat.layer", new Object[] {Integer.valueOf(flatlayerinfo.getLayerCount())});
-            }
+                s1 = I18n.format("createWorld.customize.flat.layer", new Object[] {flatlayerinfo.getLayerCount()});
 
-            GuiCreateFlatWorld.this.fontRendererObj.drawString(s1, p_180791_2_ + 2 + 213 - GuiCreateFlatWorld.this.fontRendererObj.getStringWidth(s1), p_180791_3_ + 3, 16777215);
+            GuiCreateFlatWorld.this.fontRendererObj.drawString(s1,
+            		p_180791_2_ + 2 + 213 - GuiCreateFlatWorld.this.fontRendererObj.getStringWidth(s1), p_180791_3_ + 3, 16777215);
         }
 
         protected int getScrollBarX()

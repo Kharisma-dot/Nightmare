@@ -24,16 +24,13 @@ public class BlockCake extends Block
     protected BlockCake()
     {
         super(Material.cake);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BITES, Integer.valueOf(0)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(BITES, 0));
         this.setTickRandomly(true);
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        float f = 0.0625F;
-        float f1 = (float)(1 + ((Integer)worldIn.getBlockState(pos).getValue(BITES)).intValue() * 2) / 16.0F;
-        float f2 = 0.5F;
-        this.setBlockBounds(f1, 0.0F, f, 1.0F - f, f2, 1.0F - f);
+        this.setBlockBounds((float)(1 + worldIn.getBlockState(pos).getValue(BITES) * 2) / 16.0F, 0f, 0.0625f, 0.9375f, 0.5f, 0.9375f);
     }
 
     /**
@@ -41,15 +38,13 @@ public class BlockCake extends Block
      */
     public void setBlockBoundsForItemRender()
     {
-        float f = 0.0625F;
-        float f1 = 0.5F;
-        this.setBlockBounds(f, 0.0F, f, 1.0F - f, f1, 1.0F - f);
+        this.setBlockBounds(0.0625f, 0f, 0.0625f, 0.9375f, 0.5f, 0.9375f);
     }
 
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
     {
         float f = 0.0625F;
-        float f1 = (float)(1 + ((Integer)state.getValue(BITES)).intValue() * 2) / 16.0F;
+        float f1 = (float)(1 + state.getValue(BITES) * 2) / 16.0F;
         float f2 = 0.5F;
         return new AxisAlignedBB((double)((float)pos.getX() + f1), (double)pos.getY(), (double)((float)pos.getZ() + f), (double)((float)(pos.getX() + 1) - f), (double)((float)pos.getY() + f2), (double)((float)(pos.getZ() + 1) - f));
     }
@@ -89,16 +84,12 @@ public class BlockCake extends Block
         {
             player.triggerAchievement(StatList.field_181724_H);
             player.getFoodStats().addStats(2, 0.1F);
-            int i = ((Integer)state.getValue(BITES)).intValue();
+            int i = state.getValue(BITES);
 
             if (i < 6)
-            {
-                worldIn.setBlockState(pos, state.withProperty(BITES, Integer.valueOf(i + 1)), 3);
-            }
+                worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
             else
-            {
                 worldIn.setBlockToAir(pos);
-            }
         }
     }
 
@@ -113,9 +104,7 @@ public class BlockCake extends Block
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         if (!this.canBlockStay(worldIn, pos))
-        {
             worldIn.setBlockToAir(pos);
-        }
     }
 
     private boolean canBlockStay(World worldIn, BlockPos pos)
@@ -133,17 +122,12 @@ public class BlockCake extends Block
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return null;
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Items.cake;
@@ -159,7 +143,7 @@ public class BlockCake extends Block
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(BITES, Integer.valueOf(meta));
+        return this.getDefaultState().withProperty(BITES, meta);
     }
 
     /**
@@ -167,7 +151,7 @@ public class BlockCake extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((Integer)state.getValue(BITES)).intValue();
+        return state.getValue(BITES);
     }
 
     protected BlockState createBlockState()
@@ -177,7 +161,7 @@ public class BlockCake extends Block
 
     public int getComparatorInputOverride(World worldIn, BlockPos pos)
     {
-        return (7 - ((Integer)worldIn.getBlockState(pos).getValue(BITES)).intValue()) * 2;
+        return (7 - worldIn.getBlockState(pos).getValue(BITES)) << 1;
     }
 
     public boolean hasComparatorInputOverride()

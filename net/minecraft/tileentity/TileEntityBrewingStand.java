@@ -44,7 +44,7 @@ public class TileEntityBrewingStand extends TileEntityLockable implements ITicka
     private String customName;
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Get the name of this object. For players this returns their username
      */
     public String getName()
     {
@@ -119,7 +119,7 @@ public class TileEntityBrewingStand extends TileEntityLockable implements ITicka
 
                 for (int i = 0; i < BlockBrewingStand.HAS_BOTTLE.length; ++i)
                 {
-                    iblockstate = iblockstate.withProperty(BlockBrewingStand.HAS_BOTTLE[i], Boolean.valueOf(aboolean[i]));
+                    iblockstate = iblockstate.withProperty(BlockBrewingStand.HAS_BOTTLE[i], aboolean[i]);
                 }
 
                 this.worldObj.setBlockState(this.pos, iblockstate, 2);
@@ -279,8 +279,6 @@ public class TileEntityBrewingStand extends TileEntityLockable implements ITicka
 
     /**
      * Returns the stack in the given slot.
-     *  
-     * @param index The slot to retrieve from.
      */
     public ItemStack getStackInSlot(int index)
     {
@@ -289,9 +287,6 @@ public class TileEntityBrewingStand extends TileEntityLockable implements ITicka
 
     /**
      * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
-     *  
-     * @param index The slot to remove from.
-     * @param count The maximum amount of items to remove.
      */
     public ItemStack decrStackSize(int index, int count)
     {
@@ -309,10 +304,8 @@ public class TileEntityBrewingStand extends TileEntityLockable implements ITicka
 
     /**
      * Removes a stack from the given slot and returns it.
-     *  
-     * @param index The slot to remove a stack from.
      */
-    public ItemStack getStackInSlotOnClosing(int index)
+    public ItemStack removeStackFromSlot(int index)
     {
         if (index >= 0 && index < this.brewingItemStacks.length)
         {

@@ -118,6 +118,7 @@ public class BetterGrass
 
             Properties properties = new PropertiesOrdered();
             properties.load(inputstream);
+            inputstream.close();
             betterGrass = getBoolean(properties, "grass", true);
             betterMycelium = getBoolean(properties, "mycelium", true);
             betterPodzol = getBoolean(properties, "podzol", true);

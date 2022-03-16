@@ -25,13 +25,12 @@ public class ModelAdapterBanner extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelBanner))
-        {
             return null;
-        }
         else
         {
             ModelBanner modelbanner = (ModelBanner)model;
-            return modelPart.equals("slate") ? modelbanner.bannerSlate : (modelPart.equals("stand") ? modelbanner.bannerStand : (modelPart.equals("top") ? modelbanner.bannerTop : null));
+            return modelPart.equals("slate") ? modelbanner.bannerSlate : (modelPart.equals("stand") ?
+            		modelbanner.bannerStand : (modelPart.equals("top") ? modelbanner.bannerTop : null));
         }
     }
 
@@ -46,9 +45,7 @@ public class ModelAdapterBanner extends ModelAdapter
         TileEntitySpecialRenderer tileentityspecialrenderer = tileentityrendererdispatcher.getSpecialRendererByClass(TileEntityBanner.class);
 
         if (!(tileentityspecialrenderer instanceof TileEntityBannerRenderer))
-        {
             return null;
-        }
         else
         {
             if (tileentityspecialrenderer.getEntityClass() == null)

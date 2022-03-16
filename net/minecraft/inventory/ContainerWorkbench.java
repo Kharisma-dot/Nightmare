@@ -67,7 +67,7 @@ public class ContainerWorkbench extends Container
         {
             for (int i = 0; i < 9; ++i)
             {
-                ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
+                ItemStack itemstack = this.craftMatrix.removeStackFromSlot(i);
 
                 if (itemstack != null)
                 {
@@ -125,7 +125,7 @@ public class ContainerWorkbench extends Container
 
             if (itemstack1.stackSize == 0)
             {
-                slot.putStack((ItemStack)null);
+                slot.putStack(null);
             }
             else
             {
@@ -147,8 +147,8 @@ public class ContainerWorkbench extends Container
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
      * is null for the initial slot that was double-clicked.
      */
-    public boolean canMergeSlot(ItemStack stack, Slot p_94530_2_)
+    public boolean canMergeSlot(ItemStack stack, Slot slotIn)
     {
-        return p_94530_2_.inventory != this.craftResult && super.canMergeSlot(stack, p_94530_2_);
+        return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
     }
 }

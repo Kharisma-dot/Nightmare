@@ -27,8 +27,6 @@ public class CommandParticle extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -37,15 +35,12 @@ public class CommandParticle extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 8)
         {
-            throw new WrongUsageException("commands.particle.usage", new Object[0]);
+            throw new WrongUsageException("commands.particle.usage");
         }
         else
         {
@@ -125,7 +120,7 @@ public class CommandParticle extends CommandBase
                     }
 
                     worldserver.spawnParticle(enumparticletypes, flag1, d6, d0, d1, i, d2, d3, d4, d5, aint);
-                    notifyOperators(sender, this, "commands.particle.success", new Object[] {s, Integer.valueOf(Math.max(i, 1))});
+                    notifyOperators(sender, this, "commands.particle.success", Math.max(i, 1));
                 }
             }
         }

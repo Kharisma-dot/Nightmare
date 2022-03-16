@@ -251,12 +251,12 @@ public class CustomItemProperties
                 }
             }
 
-            Integer[] ainteger = (Integer[])((Integer[])set.toArray(new Integer[set.size()]));
+            Integer[] ainteger = (Integer[])set.toArray(new Integer[set.size()]);
             int[] aint = new int[ainteger.length];
 
             for (int l1 = 0; l1 < aint.length; ++l1)
             {
-                aint[l1] = ainteger[l1].intValue();
+                aint[l1] = ainteger[l1];
             }
 
             return aint;
@@ -511,7 +511,7 @@ public class CustomItemProperties
 
     private RangeListInt parseRangeListInt(String str)
     {
-        return this.parseRangeListInt(str, (IParserInt)null);
+        return this.parseRangeListInt(str, null);
     }
 
     private RangeListInt parseRangeListInt(String str, IParserInt parser)
@@ -644,7 +644,7 @@ public class CustomItemProperties
                 list.add(nbttagvalue);
             }
 
-            NbtTagValue[] anbttagvalue = (NbtTagValue[])((NbtTagValue[])list.toArray(new NbtTagValue[list.size()]));
+            NbtTagValue[] anbttagvalue = (NbtTagValue[])list.toArray(new NbtTagValue[list.size()]);
             return anbttagvalue;
         }
     }
@@ -863,8 +863,7 @@ public class CustomItemProperties
                             this.mapBakedModelsTexture = new HashMap();
                         }
 
-                        String s3 = "item/" + s2;
-                        this.mapBakedModelsTexture.put(s3, ibakedmodel);
+                        this.mapBakedModelsTexture.put(s2, ibakedmodel);
                     }
                 }
             }
@@ -1182,8 +1181,7 @@ public class CustomItemProperties
                             this.mapBakedModelsFull = new HashMap();
                         }
 
-                        String s3 = "item/" + s2;
-                        this.mapBakedModelsFull.put(s3, ibakedmodel1);
+                        this.mapBakedModelsFull.put(s2, ibakedmodel1);
                     }
                 }
             }
@@ -1195,32 +1193,7 @@ public class CustomItemProperties
         ResourceLocation resourcelocation = getModelLocation(model);
         ModelResourceLocation modelresourcelocation = new ModelResourceLocation(resourcelocation, "inventory");
 
-        if (Reflector.ModelLoader.exists())
-        {
-            try
-            {
-                Object object = Reflector.ModelLoader_VanillaLoader_INSTANCE.getValue();
-                checkNull(object, "vanillaLoader is null");
-                Object object1 = Reflector.call(object, Reflector.ModelLoader_VanillaLoader_loadModel, new Object[] {modelresourcelocation});
-                checkNull(object1, "iModel is null");
-                Map map = (Map)Reflector.getFieldValue(modelBakery, Reflector.ModelLoader_stateModels);
-                checkNull(map, "stateModels is null");
-                map.put(modelresourcelocation, object1);
-                Set set = (Set)Reflector.getFieldValue(modelBakery, Reflector.ModelLoader_textures);
-                checkNull(set, "registryTextures is null");
-                Collection collection = (Collection)Reflector.call(object1, Reflector.IModel_getTextures, new Object[0]);
-                checkNull(collection, "modelTextures is null");
-                set.addAll(collection);
-            }
-            catch (Exception exception)
-            {
-                Config.warn("Error registering model with ModelLoader: " + modelresourcelocation + ", " + exception.getClass().getName() + ": " + exception.getMessage());
-            }
-        }
-        else
-        {
-            modelBakery.loadItemModel(resourcelocation.toString(), modelresourcelocation, resourcelocation);
-        }
+        modelBakery.loadItemModel(resourcelocation.toString(), modelresourcelocation, resourcelocation);
     }
 
     private static void checkNull(Object obj, String msg) throws NullPointerException
@@ -1233,6 +1206,6 @@ public class CustomItemProperties
 
     private static ResourceLocation getModelLocation(String modelName)
     {
-        return Reflector.ModelLoader.exists() && !modelName.startsWith("mcpatcher/") && !modelName.startsWith("optifine/") ? new ResourceLocation("models/" + modelName) : new ResourceLocation(modelName);
+        return new ResourceLocation(modelName);
     }
 }

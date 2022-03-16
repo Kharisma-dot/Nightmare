@@ -67,7 +67,7 @@ public class EntityRainFX extends EntityFX
 
             if (iblockstate.getBlock() instanceof BlockLiquid)
             {
-                d0 = (double)(1.0F - BlockLiquid.getLiquidHeightPercent(((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue()));
+                d0 = (double)(1.0F - BlockLiquid.getLiquidHeightPercent(iblockstate.getValue(BlockLiquid.LEVEL)));
             }
             else
             {

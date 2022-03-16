@@ -23,7 +23,8 @@ import net.minecraft.world.World;
 
 public class BlockPortal extends BlockBreakable
 {
-    public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.<EnumFacing.Axis>create("axis", EnumFacing.Axis.class, new EnumFacing.Axis[] {EnumFacing.Axis.X, EnumFacing.Axis.Z});
+    public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.<EnumFacing.Axis>create("axis", EnumFacing.Axis.class,
+    		new EnumFacing.Axis[] {EnumFacing.Axis.X, EnumFacing.Axis.Z});
 
     public BlockPortal()
     {
@@ -36,24 +37,22 @@ public class BlockPortal extends BlockBreakable
     {
         super.updateTick(worldIn, pos, state, rand);
 
-        if (worldIn.provider.isSurfaceWorld() && worldIn.getGameRules().getGameRuleBooleanValue("doMobSpawning") && rand.nextInt(2000) < worldIn.getDifficulty().getDifficultyId())
+        if (worldIn.provider.isSurfaceWorld() && worldIn.getGameRules().getBoolean("doMobSpawning") 
+        		&& rand.nextInt(2000) < worldIn.getDifficulty().getDifficultyId())
         {
             int i = pos.getY();
             BlockPos blockpos;
 
             for (blockpos = pos; !World.doesBlockHaveSolidTopSurface(worldIn, blockpos) && blockpos.getY() > 0; blockpos = blockpos.down())
-            {
                 ;
-            }
 
             if (i > 0 && !worldIn.getBlockState(blockpos.up()).getBlock().isNormalCube())
             {
-                Entity entity = ItemMonsterPlacer.spawnCreature(worldIn, 57, (double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 1.1D, (double)blockpos.getZ() + 0.5D);
+                Entity entity = ItemMonsterPlacer.spawnCreature(worldIn, 57, 
+                		(double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 1.1D, (double)blockpos.getZ() + 0.5D);
 
                 if (entity != null)
-                {
                     entity.timeUntilPortal = entity.getPortalCooldown();
-                }
             }
         }
     }
@@ -65,21 +64,11 @@ public class BlockPortal extends BlockBreakable
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        EnumFacing.Axis enumfacing$axis = (EnumFacing.Axis)worldIn.getBlockState(pos).getValue(AXIS);
-        float f = 0.125F;
-        float f1 = 0.125F;
+        EnumFacing.Axis axis = worldIn.getBlockState(pos).getValue(AXIS);
+        float f = axis == EnumFacing.Axis.X ? 0.5f : 0.125f;
+        float f1 = axis == EnumFacing.Axis.Z ? 0.5f : 0.125f;
 
-        if (enumfacing$axis == EnumFacing.Axis.X)
-        {
-            f = 0.5F;
-        }
-
-        if (enumfacing$axis == EnumFacing.Axis.Z)
-        {
-            f1 = 0.5F;
-        }
-
-        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f1, 0.5F + f, 1.0F, 0.5F + f1);
+        this.setBlockBounds(0.5F - f, 0f, 0.5F - f1, 0.5F + f, 1f, 0.5F + f1);
     }
 
     public static int getMetaForAxis(EnumFacing.Axis axis)
@@ -92,28 +81,26 @@ public class BlockPortal extends BlockBreakable
         return false;
     }
 
-    public boolean func_176548_d(World worldIn, BlockPos p_176548_2_)
+    public boolean createPortal(World worldIn, BlockPos pos)
     {
-        BlockPortal.Size blockportal$size = new BlockPortal.Size(worldIn, p_176548_2_, EnumFacing.Axis.X);
+        BlockPortal.Size blockportal$size = new BlockPortal.Size(worldIn, pos, EnumFacing.Axis.X);
 
-        if (blockportal$size.func_150860_b() && blockportal$size.field_150864_e == 0)
+        if (blockportal$size.isValid() && blockportal$size.portalBlocksCount == 0)
         {
-            blockportal$size.func_150859_c();
+            blockportal$size.placePortalBlocks();
             return true;
         }
         else
         {
-            BlockPortal.Size blockportal$size1 = new BlockPortal.Size(worldIn, p_176548_2_, EnumFacing.Axis.Z);
+            BlockPortal.Size blockportal$size1 = new BlockPortal.Size(worldIn, pos, EnumFacing.Axis.Z);
 
-            if (blockportal$size1.func_150860_b() && blockportal$size1.field_150864_e == 0)
+            if (blockportal$size1.isValid() && blockportal$size1.portalBlocksCount == 0)
             {
-                blockportal$size1.func_150859_c();
+                blockportal$size1.placePortalBlocks();
                 return true;
             }
             else
-            {
                 return false;
-            }
         }
     }
 
@@ -122,59 +109,46 @@ public class BlockPortal extends BlockBreakable
      */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
-        EnumFacing.Axis enumfacing$axis = (EnumFacing.Axis)state.getValue(AXIS);
+        EnumFacing.Axis enumfacing$axis = state.getValue(AXIS);
 
         if (enumfacing$axis == EnumFacing.Axis.X)
         {
             BlockPortal.Size blockportal$size = new BlockPortal.Size(worldIn, pos, EnumFacing.Axis.X);
 
-            if (!blockportal$size.func_150860_b() || blockportal$size.field_150864_e < blockportal$size.field_150868_h * blockportal$size.field_150862_g)
-            {
+            if (!blockportal$size.isValid() || blockportal$size.portalBlocksCount < blockportal$size.width * blockportal$size.height)
                 worldIn.setBlockState(pos, Blocks.air.getDefaultState());
-            }
         }
         else if (enumfacing$axis == EnumFacing.Axis.Z)
         {
             BlockPortal.Size blockportal$size1 = new BlockPortal.Size(worldIn, pos, EnumFacing.Axis.Z);
 
-            if (!blockportal$size1.func_150860_b() || blockportal$size1.field_150864_e < blockportal$size1.field_150868_h * blockportal$size1.field_150862_g)
-            {
+            if (!blockportal$size1.isValid() || blockportal$size1.portalBlocksCount < blockportal$size1.width * blockportal$size1.height)
                 worldIn.setBlockState(pos, Blocks.air.getDefaultState());
-            }
         }
     }
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        EnumFacing.Axis enumfacing$axis = null;
+        EnumFacing.Axis axis;
         IBlockState iblockstate = worldIn.getBlockState(pos);
 
         if (worldIn.getBlockState(pos).getBlock() == this)
         {
-            enumfacing$axis = (EnumFacing.Axis)iblockstate.getValue(AXIS);
+            axis = iblockstate.getValue(AXIS);
 
-            if (enumfacing$axis == null)
-            {
+            if (axis == null
+            	|| (axis == EnumFacing.Axis.Z && side != EnumFacing.EAST && side != EnumFacing.WEST)
+            	|| (axis == EnumFacing.Axis.X && side != EnumFacing.SOUTH && side != EnumFacing.NORTH))
                 return false;
-            }
-
-            if (enumfacing$axis == EnumFacing.Axis.Z && side != EnumFacing.EAST && side != EnumFacing.WEST)
-            {
-                return false;
-            }
-
-            if (enumfacing$axis == EnumFacing.Axis.X && side != EnumFacing.SOUTH && side != EnumFacing.NORTH)
-            {
-                return false;
-            }
-        }
+        }else
+        	axis = null;
 
         boolean flag = worldIn.getBlockState(pos.west()).getBlock() == this && worldIn.getBlockState(pos.west(2)).getBlock() != this;
         boolean flag1 = worldIn.getBlockState(pos.east()).getBlock() == this && worldIn.getBlockState(pos.east(2)).getBlock() != this;
         boolean flag2 = worldIn.getBlockState(pos.north()).getBlock() == this && worldIn.getBlockState(pos.north(2)).getBlock() != this;
         boolean flag3 = worldIn.getBlockState(pos.south()).getBlock() == this && worldIn.getBlockState(pos.south(2)).getBlock() != this;
-        boolean flag4 = flag || flag1 || enumfacing$axis == EnumFacing.Axis.X;
-        boolean flag5 = flag2 || flag3 || enumfacing$axis == EnumFacing.Axis.Z;
+        boolean flag4 = flag || flag1 || axis == EnumFacing.Axis.X;
+        boolean flag5 = flag2 || flag3 || axis == EnumFacing.Axis.Z;
         return flag4 && side == EnumFacing.WEST ? true : (flag4 && side == EnumFacing.EAST ? true : (flag5 && side == EnumFacing.NORTH ? true : flag5 && side == EnumFacing.SOUTH));
     }
 
@@ -197,17 +171,14 @@ public class BlockPortal extends BlockBreakable
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
         if (entityIn.ridingEntity == null && entityIn.riddenByEntity == null)
-        {
-            entityIn.func_181015_d(pos);
-        }
+            entityIn.setPortal(pos);
     }
 
     public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (rand.nextInt(100) == 0)
-        {
-            worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "portal.portal", 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
-        }
+            worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 
+            		"portal.portal", 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
 
         for (int i = 0; i < 4; ++i)
         {
@@ -230,13 +201,10 @@ public class BlockPortal extends BlockBreakable
                 d5 = (double)(rand.nextFloat() * 2.0F * (float)j);
             }
 
-            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5, new int[0]);
+            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
         }
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return null;
@@ -255,7 +223,7 @@ public class BlockPortal extends BlockBreakable
      */
     public int getMetaFromState(IBlockState state)
     {
-        return getMetaForAxis((EnumFacing.Axis)state.getValue(AXIS));
+        return getMetaForAxis(state.getValue(AXIS));
     }
 
     protected BlockState createBlockState()
@@ -263,57 +231,52 @@ public class BlockPortal extends BlockBreakable
         return new BlockState(this, new IProperty[] {AXIS});
     }
 
-    public BlockPattern.PatternHelper func_181089_f(World p_181089_1_, BlockPos p_181089_2_)
+    public BlockPattern.PatternHelper func_181089_f(World world, BlockPos pos)
     {
         EnumFacing.Axis enumfacing$axis = EnumFacing.Axis.Z;
-        BlockPortal.Size blockportal$size = new BlockPortal.Size(p_181089_1_, p_181089_2_, EnumFacing.Axis.X);
-        LoadingCache<BlockPos, BlockWorldState> loadingcache = BlockPattern.func_181627_a(p_181089_1_, true);
+        BlockPortal.Size blockportal$size = new BlockPortal.Size(world, pos, EnumFacing.Axis.X);
+        LoadingCache<BlockPos, BlockWorldState> loadingcache = BlockPattern.load(world, true);
 
-        if (!blockportal$size.func_150860_b())
+        if (!blockportal$size.isValid())
         {
             enumfacing$axis = EnumFacing.Axis.X;
-            blockportal$size = new BlockPortal.Size(p_181089_1_, p_181089_2_, EnumFacing.Axis.Z);
+            blockportal$size = new BlockPortal.Size(world, pos, EnumFacing.Axis.Z);
         }
 
-        if (!blockportal$size.func_150860_b())
+        if (!blockportal$size.isValid())
         {
-            return new BlockPattern.PatternHelper(p_181089_2_, EnumFacing.NORTH, EnumFacing.UP, loadingcache, 1, 1, 1);
+            return new BlockPattern.PatternHelper(pos, EnumFacing.NORTH, EnumFacing.UP, loadingcache, 1, 1, 1);
         }
         else
         {
             int[] aint = new int[EnumFacing.AxisDirection.values().length];
-            EnumFacing enumfacing = blockportal$size.field_150866_c.rotateYCCW();
-            BlockPos blockpos = blockportal$size.field_150861_f.up(blockportal$size.func_181100_a() - 1);
+            EnumFacing enumfacing = blockportal$size.facingRight.rotateYCCW();
+            BlockPos blockpos = blockportal$size.posStartLeft.up(blockportal$size.getHeight() - 1);
 
             for (EnumFacing.AxisDirection enumfacing$axisdirection : EnumFacing.AxisDirection.values())
             {
-                BlockPattern.PatternHelper blockpattern$patternhelper = new BlockPattern.PatternHelper(enumfacing.getAxisDirection() == enumfacing$axisdirection ? blockpos : blockpos.offset(blockportal$size.field_150866_c, blockportal$size.func_181101_b() - 1), EnumFacing.func_181076_a(enumfacing$axisdirection, enumfacing$axis), EnumFacing.UP, loadingcache, blockportal$size.func_181101_b(), blockportal$size.func_181100_a(), 1);
+                BlockPattern.PatternHelper blockpattern$patternhelper = new BlockPattern.PatternHelper(enumfacing.getAxisDirection() == enumfacing$axisdirection ? blockpos : blockpos.offset(blockportal$size.facingRight, blockportal$size.getWidth() - 1), EnumFacing.getFacingFromAxis(enumfacing$axisdirection, enumfacing$axis), EnumFacing.UP, loadingcache, blockportal$size.getWidth(), blockportal$size.getHeight(), 1);
 
-                for (int i = 0; i < blockportal$size.func_181101_b(); ++i)
-                {
-                    for (int j = 0; j < blockportal$size.func_181100_a(); ++j)
+                for (int i = 0; i < blockportal$size.getWidth(); ++i)
+                    for (int j = 0; j < blockportal$size.getHeight(); ++j)
                     {
                         BlockWorldState blockworldstate = blockpattern$patternhelper.translateOffset(i, j, 1);
 
                         if (blockworldstate.getBlockState() != null && blockworldstate.getBlockState().getBlock().getMaterial() != Material.air)
-                        {
                             ++aint[enumfacing$axisdirection.ordinal()];
-                        }
                     }
-                }
             }
 
             EnumFacing.AxisDirection enumfacing$axisdirection1 = EnumFacing.AxisDirection.POSITIVE;
 
             for (EnumFacing.AxisDirection enumfacing$axisdirection2 : EnumFacing.AxisDirection.values())
-            {
                 if (aint[enumfacing$axisdirection2.ordinal()] < aint[enumfacing$axisdirection1.ordinal()])
-                {
                     enumfacing$axisdirection1 = enumfacing$axisdirection2;
-                }
-            }
 
-            return new BlockPattern.PatternHelper(enumfacing.getAxisDirection() == enumfacing$axisdirection1 ? blockpos : blockpos.offset(blockportal$size.field_150866_c, blockportal$size.func_181101_b() - 1), EnumFacing.func_181076_a(enumfacing$axisdirection1, enumfacing$axis), EnumFacing.UP, loadingcache, blockportal$size.func_181101_b(), blockportal$size.func_181100_a(), 1);
+            return new BlockPattern.PatternHelper(enumfacing.getAxisDirection() == enumfacing$axisdirection1 ?
+            		blockpos : blockpos.offset(blockportal$size.facingRight, blockportal$size.getWidth() - 1),
+            		EnumFacing.getFacingFromAxis(enumfacing$axisdirection1, enumfacing$axis), EnumFacing.UP, loadingcache,
+            		blockportal$size.getWidth(), blockportal$size.getHeight(), 1);
         }
     }
 
@@ -321,166 +284,148 @@ public class BlockPortal extends BlockBreakable
     {
         private final World world;
         private final EnumFacing.Axis axis;
-        private final EnumFacing field_150866_c;
-        private final EnumFacing field_150863_d;
-        private int field_150864_e = 0;
-        private BlockPos field_150861_f;
-        private int field_150862_g;
-        private int field_150868_h;
+        private final EnumFacing facingRight;
+        private final EnumFacing facingLeft;
+        private int portalBlocksCount = 0;
+        private BlockPos posStartLeft;
+        private int height;
+        private int width;
 
-        public Size(World worldIn, BlockPos p_i45694_2_, EnumFacing.Axis p_i45694_3_)
+        public Size(World worldIn, BlockPos pos, EnumFacing.Axis axis)
         {
             this.world = worldIn;
-            this.axis = p_i45694_3_;
+            this.axis = axis;
 
-            if (p_i45694_3_ == EnumFacing.Axis.X)
+            if (axis == EnumFacing.Axis.X)
             {
-                this.field_150863_d = EnumFacing.EAST;
-                this.field_150866_c = EnumFacing.WEST;
+                this.facingLeft = EnumFacing.EAST;
+                this.facingRight = EnumFacing.WEST;
             }
             else
             {
-                this.field_150863_d = EnumFacing.NORTH;
-                this.field_150866_c = EnumFacing.SOUTH;
+                this.facingLeft = EnumFacing.NORTH;
+                this.facingRight = EnumFacing.SOUTH;
             }
 
-            for (BlockPos blockpos = p_i45694_2_; p_i45694_2_.getY() > blockpos.getY() - 21 && p_i45694_2_.getY() > 0 && this.func_150857_a(worldIn.getBlockState(p_i45694_2_.down()).getBlock()); p_i45694_2_ = p_i45694_2_.down())
-            {
+            for (BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 
+            		&& this.isEmptyBlock(worldIn.getBlockState(pos.down()).getBlock()); pos = pos.down())
                 ;
-            }
 
-            int i = this.func_180120_a(p_i45694_2_, this.field_150863_d) - 1;
+            int i = this.getDistanceUntilEdge(pos, this.facingLeft) - 1;
 
             if (i >= 0)
             {
-                this.field_150861_f = p_i45694_2_.offset(this.field_150863_d, i);
-                this.field_150868_h = this.func_180120_a(this.field_150861_f, this.field_150866_c);
+                this.posStartLeft = pos.offset(this.facingLeft, i);
+                this.width = this.getDistanceUntilEdge(this.posStartLeft, this.facingRight);
 
-                if (this.field_150868_h < 2 || this.field_150868_h > 21)
+                if (this.width < 2 || this.width > 21)
                 {
-                    this.field_150861_f = null;
-                    this.field_150868_h = 0;
+                    this.posStartLeft = null;
+                    this.width = 0;
                 }
             }
 
-            if (this.field_150861_f != null)
-            {
-                this.field_150862_g = this.func_150858_a();
-            }
+            if (this.posStartLeft != null)
+                this.height = this.calculatePortalHeight();
         }
 
-        protected int func_180120_a(BlockPos p_180120_1_, EnumFacing p_180120_2_)
+        protected int getDistanceUntilEdge(BlockPos pos, EnumFacing facing)
         {
             int i;
 
             for (i = 0; i < 22; ++i)
             {
-                BlockPos blockpos = p_180120_1_.offset(p_180120_2_, i);
+                BlockPos blockpos = pos.offset(facing, i);
 
-                if (!this.func_150857_a(this.world.getBlockState(blockpos).getBlock()) || this.world.getBlockState(blockpos.down()).getBlock() != Blocks.obsidian)
-                {
+                if (!this.isEmptyBlock(this.world.getBlockState(blockpos).getBlock()) 
+                		|| this.world.getBlockState(blockpos.down()).getBlock() != Blocks.obsidian)
                     break;
-                }
             }
 
-            Block block = this.world.getBlockState(p_180120_1_.offset(p_180120_2_, i)).getBlock();
+            Block block = this.world.getBlockState(pos.offset(facing, i)).getBlock();
             return block == Blocks.obsidian ? i : 0;
         }
 
-        public int func_181100_a()
+        public int getHeight()
         {
-            return this.field_150862_g;
+            return this.height;
         }
 
-        public int func_181101_b()
+        public int getWidth()
         {
-            return this.field_150868_h;
+            return this.width;
         }
 
-        protected int func_150858_a()
+        protected int calculatePortalHeight()
         {
             label24:
 
-            for (this.field_150862_g = 0; this.field_150862_g < 21; ++this.field_150862_g)
+            for (this.height = 0; this.height < 21; ++this.height)
             {
-                for (int i = 0; i < this.field_150868_h; ++i)
+                for (int i = 0; i < this.width; ++i)
                 {
-                    BlockPos blockpos = this.field_150861_f.offset(this.field_150866_c, i).up(this.field_150862_g);
+                    BlockPos blockpos = this.posStartLeft.offset(this.facingRight, i).up(this.height);
                     Block block = this.world.getBlockState(blockpos).getBlock();
 
-                    if (!this.func_150857_a(block))
-                    {
+                    if (!this.isEmptyBlock(block))
                         break label24;
-                    }
 
                     if (block == Blocks.portal)
-                    {
-                        ++this.field_150864_e;
-                    }
+                        ++this.portalBlocksCount;
 
                     if (i == 0)
                     {
-                        block = this.world.getBlockState(blockpos.offset(this.field_150863_d)).getBlock();
+                        block = this.world.getBlockState(blockpos.offset(this.facingLeft)).getBlock();
 
                         if (block != Blocks.obsidian)
-                        {
                             break label24;
-                        }
                     }
-                    else if (i == this.field_150868_h - 1)
+                    else if (i == this.width - 1)
                     {
-                        block = this.world.getBlockState(blockpos.offset(this.field_150866_c)).getBlock();
+                        block = this.world.getBlockState(blockpos.offset(this.facingRight)).getBlock();
 
                         if (block != Blocks.obsidian)
-                        {
                             break label24;
-                        }
                     }
                 }
             }
 
-            for (int j = 0; j < this.field_150868_h; ++j)
-            {
-                if (this.world.getBlockState(this.field_150861_f.offset(this.field_150866_c, j).up(this.field_150862_g)).getBlock() != Blocks.obsidian)
+            for (int j = 0; j < this.width; ++j)
+                if (this.world.getBlockState(this.posStartLeft.offset(this.facingRight, j).up(this.height)).getBlock() != Blocks.obsidian)
                 {
-                    this.field_150862_g = 0;
+                    this.height = 0;
                     break;
                 }
-            }
 
-            if (this.field_150862_g <= 21 && this.field_150862_g >= 3)
-            {
-                return this.field_150862_g;
-            }
+            if (this.height <= 21 && this.height >= 3)
+                return this.height;
             else
             {
-                this.field_150861_f = null;
-                this.field_150868_h = 0;
-                this.field_150862_g = 0;
+                this.posStartLeft = null;
+                this.width = 0;
+                this.height = 0;
                 return 0;
             }
         }
 
-        protected boolean func_150857_a(Block p_150857_1_)
+        protected boolean isEmptyBlock(Block block)
         {
-            return p_150857_1_.blockMaterial == Material.air || p_150857_1_ == Blocks.fire || p_150857_1_ == Blocks.portal;
+            return block.blockMaterial == Material.air || block == Blocks.fire || block == Blocks.portal;
         }
 
-        public boolean func_150860_b()
+        public boolean isValid()
         {
-            return this.field_150861_f != null && this.field_150868_h >= 2 && this.field_150868_h <= 21 && this.field_150862_g >= 3 && this.field_150862_g <= 21;
+            return this.posStartLeft != null && this.width >= 2 && this.width <= 21 && this.height >= 3 && this.height <= 21;
         }
 
-        public void func_150859_c()
+        public void placePortalBlocks()
         {
-            for (int i = 0; i < this.field_150868_h; ++i)
+            for (int i = 0; i < this.width; ++i)
             {
-                BlockPos blockpos = this.field_150861_f.offset(this.field_150866_c, i);
+                BlockPos blockpos = this.posStartLeft.offset(this.facingRight, i);
 
-                for (int j = 0; j < this.field_150862_g; ++j)
-                {
+                for (int j = 0; j < this.height; ++j)
                     this.world.setBlockState(blockpos.up(j), Blocks.portal.getDefaultState().withProperty(BlockPortal.AXIS, this.axis), 2);
-                }
             }
         }
     }

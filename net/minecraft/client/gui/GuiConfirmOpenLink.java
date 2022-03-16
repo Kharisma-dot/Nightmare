@@ -15,11 +15,11 @@ public class GuiConfirmOpenLink extends GuiYesNo
 
     public GuiConfirmOpenLink(GuiYesNoCallback p_i1084_1_, String linkTextIn, int p_i1084_3_, boolean p_i1084_4_)
     {
-        super(p_i1084_1_, I18n.format(p_i1084_4_ ? "chat.link.confirmTrusted" : "chat.link.confirm", new Object[0]), linkTextIn, p_i1084_3_);
-        this.confirmButtonText = I18n.format(p_i1084_4_ ? "chat.link.open" : "gui.yes", new Object[0]);
-        this.cancelButtonText = I18n.format(p_i1084_4_ ? "gui.cancel" : "gui.no", new Object[0]);
-        this.copyLinkButtonText = I18n.format("chat.copy", new Object[0]);
-        this.openLinkWarning = I18n.format("chat.link.warning", new Object[0]);
+        super(p_i1084_1_, I18n.format(p_i1084_4_ ? "chat.link.confirmTrusted" : "chat.link.confirm"), linkTextIn, p_i1084_3_);
+        this.confirmButtonText = I18n.format(p_i1084_4_ ? "chat.link.open" : "gui.yes");
+        this.cancelButtonText = I18n.format(p_i1084_4_ ? "gui.cancel" : "gui.no");
+        this.copyLinkButtonText = I18n.format("chat.copy");
+        this.openLinkWarning = I18n.format("chat.link.warning");
         this.linkText = linkTextIn;
     }
 
@@ -31,9 +31,13 @@ public class GuiConfirmOpenLink extends GuiYesNo
     {
         super.initGui();
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 50 - 105, this.height / 6 + 96, 100, 20, this.confirmButtonText));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 50, this.height / 6 + 96, 100, 20, this.copyLinkButtonText));
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 50 + 105, this.height / 6 + 96, 100, 20, this.cancelButtonText));
+        
+        int x1 = (this.width >> 1) - 50;
+        int y1 = this.height / 6 + 96;
+        
+        this.buttonList.add(new GuiButton(0, x1 - 105, y1, 100, 20, this.confirmButtonText));
+        this.buttonList.add(new GuiButton(2, x1, y1, 100, 20, this.copyLinkButtonText));
+        this.buttonList.add(new GuiButton(1, x1 + 105, y1, 100, 20, this.cancelButtonText));
     }
 
     /**
@@ -42,9 +46,7 @@ public class GuiConfirmOpenLink extends GuiYesNo
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.id == 2)
-        {
             this.copyLinkToClipboard();
-        }
 
         this.parentScreen.confirmClicked(button.id == 0, this.parentButtonClickedId);
     }
@@ -65,9 +67,7 @@ public class GuiConfirmOpenLink extends GuiYesNo
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         if (this.showSecurityWarning)
-        {
-            this.drawCenteredString(this.fontRendererObj, this.openLinkWarning, this.width / 2, 110, 16764108);
-        }
+            this.drawCenteredString(this.fontRendererObj, this.openLinkWarning, this.width >> 1, 110, 16764108);
     }
 
     public void disableSecurityWarning()

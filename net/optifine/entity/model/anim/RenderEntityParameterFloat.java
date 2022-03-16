@@ -24,8 +24,8 @@ public enum RenderEntityParameterFloat implements IExpressionFloat
     MOVE_STRAFING("move_strafing"),
     PARTIAL_TICKS("partial_ticks"),
     POS_X("pos_x"),
-    POS_Y("pos_Y"),
-    POS_Z("pos_Z"),
+    POS_Y("pos_y"),
+    POS_Z("pos_z"),
     REVENGE_TIME("revenge_time"),
     SWING_PROGRESS("swing_progress");
 

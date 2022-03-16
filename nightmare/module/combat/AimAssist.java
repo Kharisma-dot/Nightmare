@@ -188,10 +188,6 @@ public class AimAssist extends Module{
 				if (var19 == null || !((var20 = var7.distanceTo(var19.hitVec)) < var13) && var13 != 0.0)
 					continue;
 				boolean canRiderInteract = false;
-				if (Reflector.ForgeEntity_canRiderInteract.exists()) {
-					canRiderInteract = Reflector.callBoolean(var16, Reflector.ForgeEntity_canRiderInteract,
-							new Object[0]);
-				}
 				if (var16 == entityView.ridingEntity && !canRiderInteract) {
 					if (var13 != 0.0)
 						continue;

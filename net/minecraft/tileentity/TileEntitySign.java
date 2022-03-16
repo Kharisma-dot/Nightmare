@@ -101,7 +101,7 @@ public class TileEntitySign extends TileEntity
 
                 try
                 {
-                    this.signText[i] = ChatComponentProcessor.processComponent(icommandsender, ichatcomponent, (Entity)null);
+                    this.signText[i] = ChatComponentProcessor.processComponent(icommandsender, ichatcomponent, null);
                 }
                 catch (CommandException var7)
                 {
@@ -202,7 +202,7 @@ public class TileEntitySign extends TileEntity
             }
             public void setCommandStat(CommandResultStats.Type type, int amount)
             {
-                TileEntitySign.this.stats.func_179672_a(this, type, amount);
+                TileEntitySign.this.stats.setCommandStatScore(this, type, amount);
             }
         };
 

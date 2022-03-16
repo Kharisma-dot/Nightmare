@@ -47,15 +47,15 @@ public class GuiFlatPresets extends GuiScreen
     {
         this.buttonList.clear();
         Keyboard.enableRepeatEvents(true);
-        this.presetsTitle = I18n.format("createWorld.customize.presets.title", new Object[0]);
-        this.presetsShare = I18n.format("createWorld.customize.presets.share", new Object[0]);
-        this.field_146436_r = I18n.format("createWorld.customize.presets.list", new Object[0]);
+        this.presetsTitle = I18n.format("createWorld.customize.presets.title");
+        this.presetsShare = I18n.format("createWorld.customize.presets.share");
+        this.field_146436_r = I18n.format("createWorld.customize.presets.list");
         this.field_146433_u = new GuiTextField(2, this.fontRendererObj, 50, 40, this.width - 100, 20);
         this.field_146435_s = new GuiFlatPresets.ListSlot();
         this.field_146433_u.setMaxStringLength(1230);
-        this.field_146433_u.setText(this.parentScreen.func_146384_e());
-        this.buttonList.add(this.field_146434_t = new GuiButton(0, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("createWorld.customize.presets.select", new Object[0])));
-        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel", new Object[0])));
+        this.field_146433_u.setText(this.parentScreen.getInfo());
+        this.buttonList.add(this.field_146434_t = new GuiButton(0, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("createWorld.customize.presets.select")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel")));
         this.func_146426_g();
     }
 
@@ -92,9 +92,7 @@ public class GuiFlatPresets extends GuiScreen
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         if (!this.field_146433_u.textboxKeyTyped(typedChar, keyCode))
-        {
             super.keyTyped(typedChar, keyCode);
-        }
     }
 
     /**
@@ -104,13 +102,11 @@ public class GuiFlatPresets extends GuiScreen
     {
         if (button.id == 0 && this.func_146430_p())
         {
-            this.parentScreen.func_146383_a(this.field_146433_u.getText());
+            this.parentScreen.setInfo(this.field_146433_u.getText());
             this.mc.displayGuiScreen(this.parentScreen);
         }
         else if (button.id == 1)
-        {
             this.mc.displayGuiScreen(this.parentScreen);
-        }
     }
 
     /**
@@ -149,7 +145,7 @@ public class GuiFlatPresets extends GuiScreen
 
     private static void func_146425_a(String p_146425_0_, Item p_146425_1_, BiomeGenBase p_146425_2_, FlatLayerInfo... p_146425_3_)
     {
-        func_175354_a(p_146425_0_, p_146425_1_, 0, p_146425_2_, (List<String>)null, p_146425_3_);
+        func_175354_a(p_146425_0_, p_146425_1_, 0, p_146425_2_, null, p_146425_3_);
     }
 
     private static void func_146421_a(String p_146421_0_, Item p_146421_1_, BiomeGenBase p_146421_2_, List<String> p_146421_3_, FlatLayerInfo... p_146421_4_)
@@ -162,20 +158,14 @@ public class GuiFlatPresets extends GuiScreen
         FlatGeneratorInfo flatgeneratorinfo = new FlatGeneratorInfo();
 
         for (int i = p_175354_5_.length - 1; i >= 0; --i)
-        {
             flatgeneratorinfo.getFlatLayers().add(p_175354_5_[i]);
-        }
 
         flatgeneratorinfo.setBiome(p_175354_3_.biomeID);
         flatgeneratorinfo.func_82645_d();
 
         if (p_175354_4_ != null)
-        {
             for (String s : p_175354_4_)
-            {
                 flatgeneratorinfo.getWorldFeatures().put(s, Maps.<String, String>newHashMap());
-            }
-        }
 
         FLAT_WORLD_PRESETS.add(new GuiFlatPresets.LayerItem(p_175354_1_, p_175354_2_, p_175354_0_, flatgeneratorinfo.toString()));
     }

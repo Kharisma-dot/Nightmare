@@ -19,8 +19,7 @@ public class BlockDeadBush extends BlockBush
     protected BlockDeadBush()
     {
         super(Material.vine);
-        float f = 0.4F;
-        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.8F, 0.5F + f);
+        this.setBlockBounds(0.1f, 0f, 0.1f, 0.9f, 0.8f, 0.9f);
     }
 
     /**
@@ -49,8 +48,6 @@ public class BlockDeadBush extends BlockBush
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -65,8 +62,6 @@ public class BlockDeadBush extends BlockBush
             spawnAsEntity(worldIn, pos, new ItemStack(Blocks.deadbush, 1, 0));
         }
         else
-        {
             super.harvestBlock(worldIn, player, pos, state, te);
-        }
     }
 }

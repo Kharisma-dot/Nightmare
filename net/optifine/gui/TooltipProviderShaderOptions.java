@@ -119,7 +119,7 @@ public class TooltipProviderShaderOptions extends TooltipProviderOptions
             }
         }
 
-        String[] astring = (String[])((String[])list.toArray(new String[list.size()]));
+        String[] astring = (String[])list.toArray(new String[list.size()]);
         return astring;
     }
 }

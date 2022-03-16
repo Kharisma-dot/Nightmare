@@ -37,8 +37,6 @@ public class CommandSetBlock extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -47,15 +45,12 @@ public class CommandSetBlock extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 4)
         {
-            throw new WrongUsageException("commands.setblock.usage", new Object[0]);
+            throw new WrongUsageException("commands.setblock.usage");
         }
         else
         {
@@ -73,7 +68,7 @@ public class CommandSetBlock extends CommandBase
 
             if (!world.isBlockLoaded(blockpos))
             {
-                throw new CommandException("commands.setblock.outOfWorld", new Object[0]);
+                throw new CommandException("commands.setblock.outOfWorld");
             }
             else
             {
@@ -103,13 +98,13 @@ public class CommandSetBlock extends CommandBase
 
                         if (block == Blocks.air)
                         {
-                            notifyOperators(sender, this, "commands.setblock.success", new Object[0]);
+                            notifyOperators(sender, this, "commands.setblock.success");
                             return;
                         }
                     }
                     else if (args[5].equals("keep") && !world.isAirBlock(blockpos))
                     {
-                        throw new CommandException("commands.setblock.noChange", new Object[0]);
+                        throw new CommandException("commands.setblock.noChange");
                     }
                 }
 
@@ -129,7 +124,7 @@ public class CommandSetBlock extends CommandBase
 
                 if (!world.setBlockState(blockpos, iblockstate, 2))
                 {
-                    throw new CommandException("commands.setblock.noChange", new Object[0]);
+                    throw new CommandException("commands.setblock.noChange");
                 }
                 else
                 {
@@ -148,7 +143,7 @@ public class CommandSetBlock extends CommandBase
 
                     world.notifyNeighborsRespectDebug(blockpos, iblockstate.getBlock());
                     sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, 1);
-                    notifyOperators(sender, this, "commands.setblock.success", new Object[0]);
+                    notifyOperators(sender, this, "commands.setblock.success");
                 }
             }
         }

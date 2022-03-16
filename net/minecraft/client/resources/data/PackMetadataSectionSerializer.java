@@ -28,11 +28,11 @@ public class PackMetadataSectionSerializer extends BaseMetadataSectionSerializer
         }
     }
 
-    public JsonElement serialize(PackMetadataSection p_serialize_1_, Type p_serialize_2_, JsonSerializationContext p_serialize_3_)
+    public JsonElement serialize(PackMetadataSection packMeta, Type type, JsonSerializationContext context)
     {
         JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("pack_format", (Number)Integer.valueOf(p_serialize_1_.getPackFormat()));
-        jsonobject.add("description", p_serialize_3_.serialize(p_serialize_1_.getPackDescription()));
+        jsonobject.addProperty("pack_format", packMeta.getPackFormat());
+        jsonobject.add("description", context.serialize(packMeta.getPackDescription()));
         return jsonobject;
     }
 

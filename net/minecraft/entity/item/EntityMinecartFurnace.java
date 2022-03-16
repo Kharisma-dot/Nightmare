@@ -25,9 +25,9 @@ public class EntityMinecartFurnace extends EntityMinecart
         super(worldIn);
     }
 
-    public EntityMinecartFurnace(World worldIn, double p_i1719_2_, double p_i1719_4_, double p_i1719_6_)
+    public EntityMinecartFurnace(World worldIn, double x, double y, double z)
     {
-        super(worldIn, p_i1719_2_, p_i1719_4_, p_i1719_6_);
+        super(worldIn, x, y, z);
     }
 
     public EntityMinecart.EnumMinecartType getMinecartType()
@@ -74,11 +74,11 @@ public class EntityMinecartFurnace extends EntityMinecart
         return 0.2D;
     }
 
-    public void killMinecart(DamageSource p_94095_1_)
+    public void killMinecart(DamageSource source)
     {
-        super.killMinecart(p_94095_1_);
+        super.killMinecart(source);
 
-        if (!p_94095_1_.isExplosion() && this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+        if (!source.isExplosion() && this.worldObj.getGameRules().getBoolean("doEntityDrops"))
         {
             this.entityDropItem(new ItemStack(Blocks.furnace, 1), 0.0F);
         }
@@ -146,7 +146,7 @@ public class EntityMinecartFurnace extends EntityMinecart
         {
             if (!playerIn.capabilities.isCreativeMode && --itemstack.stackSize == 0)
             {
-                playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, (ItemStack)null);
+                playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, null);
             }
 
             this.fuel += 3600;
@@ -188,11 +188,11 @@ public class EntityMinecartFurnace extends EntityMinecart
     {
         if (p_94107_1_)
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(this.dataWatcher.getWatchableObjectByte(16) | 1)));
+            this.dataWatcher.updateObject(16, (byte)(this.dataWatcher.getWatchableObjectByte(16) | 1));
         }
         else
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(this.dataWatcher.getWatchableObjectByte(16) & -2)));
+            this.dataWatcher.updateObject(16, (byte)(this.dataWatcher.getWatchableObjectByte(16) & -2));
         }
     }
 

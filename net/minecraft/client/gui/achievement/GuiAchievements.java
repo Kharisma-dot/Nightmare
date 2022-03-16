@@ -64,7 +64,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
     {
         this.mc.getNetHandler().addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.REQUEST_STATS));
         this.buttonList.clear();
-        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, I18n.format("gui.done", new Object[0])));
+        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, I18n.format("gui.done")));
     }
 
     /**
@@ -89,7 +89,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
     {
         if (keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode())
         {
-            this.mc.displayGuiScreen((GuiScreen)null);
+            this.mc.displayGuiScreen(null);
             this.mc.setIngameFocus();
         }
         else
@@ -106,7 +106,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
         if (this.loadingAchievements)
         {
             this.drawDefaultBackground();
-            this.drawCenteredString(this.fontRendererObj, I18n.format("multiplayer.downloadingStats", new Object[0]), this.width / 2, this.height / 2, 16777215);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("multiplayer.downloadingStats"), this.width / 2, this.height / 2, 16777215);
             this.drawCenteredString(this.fontRendererObj, lanSearchStates[(int)(Minecraft.getSystemTime() / 150L % (long)lanSearchStates.length)], this.width / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2, 16777215);
         }
         else
@@ -235,7 +235,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
     {
         int i = (this.width - this.field_146555_f) / 2;
         int j = (this.height - this.field_146557_g) / 2;
-        this.fontRendererObj.drawString(I18n.format("gui.achievements", new Object[0]), i + 15, j + 5, 4210752);
+        this.fontRendererObj.drawString(I18n.format("gui.achievements"), i + 15, j + 5, 4210752);
     }
 
     protected void drawAchievementScreen(int p_146552_1_, int p_146552_2_, float p_146552_3_)
@@ -459,7 +459,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
                 {
                     float f10 = 0.1F;
                     GlStateManager.color(f10, f10, f10, 1.0F);
-                    this.itemRender.func_175039_a(false);
+                    this.itemRender.isNotRenderingEffectsInGUI(false);
                 }
 
                 GlStateManager.enableLighting();
@@ -470,7 +470,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
 
                 if (!this.statFileWriter.canUnlockAchievement(achievement2))
                 {
-                    this.itemRender.func_175039_a(true);
+                    this.itemRender.isNotRenderingEffectsInGUI(true);
                 }
 
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -517,12 +517,12 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
 
                 if (this.statFileWriter.hasAchievementUnlocked(achievement))
                 {
-                    this.fontRendererObj.drawStringWithShadow(I18n.format("achievement.taken", new Object[0]), (float)i7, (float)(k7 + i9 + 4), -7302913);
+                    this.fontRendererObj.drawStringWithShadow(I18n.format("achievement.taken"), (float)i7, (float)(k7 + i9 + 4), -7302913);
                 }
             }
             else if (i8 == 3)
             {
-                s = I18n.format("achievement.unknown", new Object[0]);
+                s = I18n.format("achievement.unknown");
                 int k8 = Math.max(this.fontRendererObj.getStringWidth(s), 120);
                 String s2 = (new ChatComponentTranslation("achievement.requires", new Object[] {achievement.parentAchievement.getStatName()})).getUnformattedText();
                 int i5 = this.fontRendererObj.splitStringWidth(s2, k8);

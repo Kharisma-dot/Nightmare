@@ -57,14 +57,7 @@ public class GuiScreenWorking extends GuiScreen implements IProgressUpdate
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.doneWorking)
-        {
-            if (!this.mc.func_181540_al())
-            {
-                this.mc.displayGuiScreen((GuiScreen)null);
-            }
-        }
-        else
+        if (!this.doneWorking)
         {
             if (this.customLoadingScreen != null && this.mc.theWorld == null)
             {
@@ -80,8 +73,7 @@ public class GuiScreenWorking extends GuiScreen implements IProgressUpdate
                 this.drawCenteredString(this.fontRendererObj, this.field_146591_a, this.width / 2, 70, 16777215);
                 this.drawCenteredString(this.fontRendererObj, this.field_146589_f + " " + this.progress + "%", this.width / 2, 90, 16777215);
             }
-
-            super.drawScreen(mouseX, mouseY, partialTicks);
         }
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

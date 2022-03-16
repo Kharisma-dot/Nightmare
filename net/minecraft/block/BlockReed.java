@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Plane;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -23,39 +24,32 @@ public class BlockReed extends Block
     protected BlockReed()
     {
         super(Material.plants);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)));
-        float f = 0.375F;
-        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 1.0F, 0.5F + f);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, 0));
+        this.setBlockBounds(0.125f, 0f, 0.125f, 0.875f, 1f, 0.875f);
         this.setTickRandomly(true);
     }
 
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
-        if (worldIn.getBlockState(pos.down()).getBlock() == Blocks.reeds || this.checkForDrop(worldIn, pos, state))
+    	if ((worldIn.getBlockState(pos.down()).getBlock() == Blocks.reeds || this.checkForDrop(worldIn, pos, state)) 
+    			&& worldIn.isAirBlock(pos.up()))
         {
-            if (worldIn.isAirBlock(pos.up()))
+            int i;
+
+            for (i = 1; worldIn.getBlockState(pos.down(i)).getBlock() == this; ++i)
+                ;
+
+            if (i < 3)
             {
-                int i;
+                int j = state.getValue(AGE);
 
-                for (i = 1; worldIn.getBlockState(pos.down(i)).getBlock() == this; ++i)
+                if (j == 15)
                 {
-                    ;
+                    worldIn.setBlockState(pos.up(), this.getDefaultState());
+                    worldIn.setBlockState(pos, state.withProperty(AGE, 0), 4);
                 }
-
-                if (i < 3)
-                {
-                    int j = ((Integer)state.getValue(AGE)).intValue();
-
-                    if (j == 15)
-                    {
-                        worldIn.setBlockState(pos.up(), this.getDefaultState());
-                        worldIn.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(0)), 4);
-                    }
-                    else
-                    {
-                        worldIn.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(j + 1)), 4);
-                    }
-                }
+                else
+                    worldIn.setBlockState(pos, state.withProperty(AGE, j + 1), 4);
             }
         }
     }
@@ -65,22 +59,14 @@ public class BlockReed extends Block
         Block block = worldIn.getBlockState(pos.down()).getBlock();
 
         if (block == this)
-        {
             return true;
-        }
         else if (block != Blocks.grass && block != Blocks.dirt && block != Blocks.sand)
-        {
             return false;
-        }
         else
         {
-            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
-            {
+            for (EnumFacing enumfacing : Plane.HORIZONTAL)
                 if (worldIn.getBlockState(pos.offset(enumfacing).down()).getBlock().getMaterial() == Material.water)
-                {
                     return true;
-                }
-            }
 
             return false;
         }
@@ -97,9 +83,7 @@ public class BlockReed extends Block
     protected final boolean checkForDrop(World worldIn, BlockPos pos, IBlockState state)
     {
         if (this.canBlockStay(worldIn, pos))
-        {
             return true;
-        }
         else
         {
             this.dropBlockAsItem(worldIn, pos, state, 0);
@@ -120,8 +104,6 @@ public class BlockReed extends Block
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -141,9 +123,6 @@ public class BlockReed extends Block
         return false;
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Items.reeds;
@@ -164,7 +143,7 @@ public class BlockReed extends Block
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(AGE, Integer.valueOf(meta));
+        return this.getDefaultState().withProperty(AGE, meta);
     }
 
     /**
@@ -172,7 +151,7 @@ public class BlockReed extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((Integer)state.getValue(AGE)).intValue();
+        return state.getValue(AGE);
     }
 
     protected BlockState createBlockState()

@@ -144,7 +144,7 @@ public class ChunkCacheOF implements IBlockAccess
             this.blockStates = (IBlockState[])((IBlockState[])cacheBlockStates.allocate(this.arraySize));
         }
 
-        Arrays.fill(this.blockStates, (Object)null);
+        Arrays.fill(this.blockStates, null);
     }
 
     public void renderFinish()
@@ -186,8 +186,6 @@ public class ChunkCacheOF implements IBlockAccess
     /**
      * Checks to see if an air block exists at the provided location. Note that this only checks to see if the blocks
      * material is set to air, meaning it is possible for non-vanilla blocks to still pass this check.
-     *  
-     * @param pos The position of the block being checked.
      */
     public boolean isAirBlock(BlockPos pos)
     {
@@ -196,6 +194,6 @@ public class ChunkCacheOF implements IBlockAccess
 
     public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default)
     {
-        return Reflector.callBoolean(this.chunkCache, Reflector.ForgeChunkCache_isSideSolid, new Object[] {pos, side, Boolean.valueOf(_default)});
+        return false;
     }
 }

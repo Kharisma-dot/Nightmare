@@ -14,7 +14,7 @@ public class ObjectIntIdentityMap<T> implements IObjectIntIterable<T>
 
     public void put(T key, int value)
     {
-        this.identityMap.put(key, Integer.valueOf(value));
+        this.identityMap.put(key, value);
 
         while (this.objectList.size() <= value)
         {
@@ -26,8 +26,8 @@ public class ObjectIntIdentityMap<T> implements IObjectIntIterable<T>
 
     public int get(T key)
     {
-        Integer integer = (Integer)this.identityMap.get(key);
-        return integer == null ? -1 : integer.intValue();
+        Integer integer = this.identityMap.get(key);
+        return integer == null ? -1 : integer;
     }
 
     public final T getByValue(int value)

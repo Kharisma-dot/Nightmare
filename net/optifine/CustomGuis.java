@@ -37,7 +37,7 @@ public class CustomGuis
 {
     private static Minecraft mc = Config.getMinecraft();
     private static PlayerControllerOF playerControllerOF = null;
-    private static CustomGuiProperties[][] guiProperties = (CustomGuiProperties[][])null;
+    private static CustomGuiProperties[][] guiProperties = null;
     public static boolean isChristmas = isChristmas();
 
     public static ResourceLocation getTextureLocation(ResourceLocation loc)
@@ -204,7 +204,7 @@ public class CustomGuis
 
     public static void update()
     {
-        guiProperties = (CustomGuiProperties[][])null;
+        guiProperties = null;
 
         if (Config.isCustomGuis())
         {
@@ -225,7 +225,7 @@ public class CustomGuis
     {
         if (listProps.isEmpty())
         {
-            return (CustomGuiProperties[][])null;
+            return null;
         }
         else
         {
@@ -251,7 +251,7 @@ public class CustomGuis
 
     private static void update(IResourcePack rp, List<List<CustomGuiProperties>> listProps)
     {
-        String[] astring = ResUtils.collectFiles(rp, (String)"optifine/gui/container/", (String)".properties", (String[])null);
+        String[] astring = ResUtils.collectFiles(rp, (String)"optifine/gui/container/", (String)".properties", null);
         Arrays.sort((Object[])astring);
 
         for (int i = 0; i < astring.length; ++i)

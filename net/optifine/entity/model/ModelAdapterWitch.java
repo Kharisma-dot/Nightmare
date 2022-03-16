@@ -24,13 +24,15 @@ public class ModelAdapterWitch extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelWitch))
-        {
             return null;
-        }
         else
         {
             ModelWitch modelwitch = (ModelWitch)model;
-            return modelPart.equals("mole") ? (ModelRenderer)Reflector.getFieldValue(modelwitch, Reflector.ModelWitch_mole) : (modelPart.equals("hat") ? (ModelRenderer)Reflector.getFieldValue(modelwitch, Reflector.ModelWitch_hat) : (modelPart.equals("head") ? modelwitch.villagerHead : (modelPart.equals("body") ? modelwitch.villagerBody : (modelPart.equals("arms") ? modelwitch.villagerArms : (modelPart.equals("left_leg") ? modelwitch.leftVillagerLeg : (modelPart.equals("right_leg") ? modelwitch.rightVillagerLeg : (modelPart.equals("nose") ? modelwitch.villagerNose : null)))))));
+            return modelPart.equals("mole") ? (ModelRenderer)Reflector.getFieldValue(modelwitch, Reflector.ModelWitch_mole) :
+            (modelPart.equals("hat") ? (ModelRenderer)Reflector.getFieldValue(modelwitch, Reflector.ModelWitch_hat) : 
+            (modelPart.equals("head") ? modelwitch.villagerHead : (modelPart.equals("body") ? modelwitch.villagerBody :
+            (modelPart.equals("arms") ? modelwitch.villagerArms : (modelPart.equals("left_leg") ? modelwitch.leftVillagerLeg :
+            (modelPart.equals("right_leg") ? modelwitch.rightVillagerLeg : (modelPart.equals("nose") ? modelwitch.villagerNose : null)))))));
         }
     }
 

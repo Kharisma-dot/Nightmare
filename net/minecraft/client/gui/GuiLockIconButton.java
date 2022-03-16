@@ -37,30 +37,18 @@ public class GuiLockIconButton extends GuiButton
             if (this.field_175231_o)
             {
                 if (!this.enabled)
-                {
                     guilockiconbutton$icon = GuiLockIconButton.Icon.LOCKED_DISABLED;
-                }
                 else if (flag)
-                {
                     guilockiconbutton$icon = GuiLockIconButton.Icon.LOCKED_HOVER;
-                }
                 else
-                {
                     guilockiconbutton$icon = GuiLockIconButton.Icon.LOCKED;
-                }
             }
             else if (!this.enabled)
-            {
                 guilockiconbutton$icon = GuiLockIconButton.Icon.UNLOCKED_DISABLED;
-            }
             else if (flag)
-            {
                 guilockiconbutton$icon = GuiLockIconButton.Icon.UNLOCKED_HOVER;
-            }
             else
-            {
                 guilockiconbutton$icon = GuiLockIconButton.Icon.UNLOCKED;
-            }
 
             this.drawTexturedModalRect(this.xPosition, this.yPosition, guilockiconbutton$icon.func_178910_a(), guilockiconbutton$icon.func_178912_b(), this.width, this.height);
         }

@@ -122,15 +122,15 @@ public class EntityWolf extends EntityTameable
 
     protected void updateAITasks()
     {
-        this.dataWatcher.updateObject(18, Float.valueOf(this.getHealth()));
+        this.dataWatcher.updateObject(18, this.getHealth());
     }
 
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(18, new Float(this.getHealth()));
-        this.dataWatcher.addObject(19, new Byte((byte)0));
-        this.dataWatcher.addObject(20, new Byte((byte)EnumDyeColor.RED.getMetadata()));
+        this.dataWatcher.addObject(18, this.getHealth());
+        this.dataWatcher.addObject(19, (byte)0);
+        this.dataWatcher.addObject(20, (byte)EnumDyeColor.RED.getMetadata());
     }
 
     protected void playStepSound(BlockPos pos, Block blockIn)
@@ -406,7 +406,7 @@ public class EntityWolf extends EntityTameable
 
                         if (itemstack.stackSize <= 0)
                         {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                         }
 
                         return true;
@@ -422,7 +422,7 @@ public class EntityWolf extends EntityTameable
 
                         if (!player.capabilities.isCreativeMode && --itemstack.stackSize <= 0)
                         {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                         }
 
                         return true;
@@ -435,7 +435,7 @@ public class EntityWolf extends EntityTameable
                 this.aiSit.setSitting(!this.isSitting());
                 this.isJumping = false;
                 this.navigator.clearPathEntity();
-                this.setAttackTarget((EntityLivingBase)null);
+                this.setAttackTarget(null);
             }
         }
         else if (itemstack != null && itemstack.getItem() == Items.bone && !this.isAngry())
@@ -447,7 +447,7 @@ public class EntityWolf extends EntityTameable
 
             if (itemstack.stackSize <= 0)
             {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
 
             if (!this.worldObj.isRemote)
@@ -456,7 +456,7 @@ public class EntityWolf extends EntityTameable
                 {
                     this.setTamed(true);
                     this.navigator.clearPathEntity();
-                    this.setAttackTarget((EntityLivingBase)null);
+                    this.setAttackTarget(null);
                     this.aiSit.setSitting(true);
                     this.setHealth(20.0F);
                     this.setOwnerId(player.getUniqueID().toString());
@@ -476,7 +476,7 @@ public class EntityWolf extends EntityTameable
         return super.interact(player);
     }
 
-    public void handleHealthUpdate(byte id)
+    public void handleStatusUpdate(byte id)
     {
         if (id == 8)
         {
@@ -486,7 +486,7 @@ public class EntityWolf extends EntityTameable
         }
         else
         {
-            super.handleHealthUpdate(id);
+            super.handleStatusUpdate(id);
         }
     }
 
@@ -529,11 +529,11 @@ public class EntityWolf extends EntityTameable
 
         if (angry)
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 | 2)));
+            this.dataWatcher.updateObject(16, (byte)(b0 | 2));
         }
         else
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 & -3)));
+            this.dataWatcher.updateObject(16, (byte)(b0 & -3));
         }
     }
 
@@ -544,7 +544,7 @@ public class EntityWolf extends EntityTameable
 
     public void setCollarColor(EnumDyeColor collarcolor)
     {
-        this.dataWatcher.updateObject(20, Byte.valueOf((byte)(collarcolor.getDyeDamage() & 15)));
+        this.dataWatcher.updateObject(20, (byte)(collarcolor.getDyeDamage() & 15));
     }
 
     public EntityWolf createChild(EntityAgeable ageable)
@@ -565,11 +565,11 @@ public class EntityWolf extends EntityTameable
     {
         if (beg)
         {
-            this.dataWatcher.updateObject(19, Byte.valueOf((byte)1));
+            this.dataWatcher.updateObject(19, (byte)1);
         }
         else
         {
-            this.dataWatcher.updateObject(19, Byte.valueOf((byte)0));
+            this.dataWatcher.updateObject(19, (byte)0);
         }
     }
 

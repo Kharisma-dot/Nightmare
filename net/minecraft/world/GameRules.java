@@ -49,19 +49,19 @@ public class GameRules
     /**
      * Gets the string Game Rule value.
      */
-    public String getGameRuleStringValue(String name)
+    public String getString(String name)
     {
         GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
-        return gamerules$value != null ? gamerules$value.getGameRuleStringValue() : "";
+        return gamerules$value != null ? gamerules$value.getString() : "";
     }
 
     /**
      * Gets the boolean Game Rule value.
      */
-    public boolean getGameRuleBooleanValue(String name)
+    public boolean getBoolean(String name)
     {
         GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
-        return gamerules$value != null ? gamerules$value.getGameRuleBooleanValue() : false;
+        return gamerules$value != null ? gamerules$value.getBoolean() : false;
     }
 
     public int getInt(String name)
@@ -80,7 +80,7 @@ public class GameRules
         for (String s : this.theGameRules.keySet())
         {
             GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(s);
-            nbttagcompound.setString(s, gamerules$value.getGameRuleStringValue());
+            nbttagcompound.setString(s, gamerules$value.getString());
         }
 
         return nbttagcompound;
@@ -176,12 +176,12 @@ public class GameRules
             }
         }
 
-        public String getGameRuleStringValue()
+        public String getString()
         {
             return this.valueString;
         }
 
-        public boolean getGameRuleBooleanValue()
+        public boolean getBoolean()
         {
             return this.valueBoolean;
         }

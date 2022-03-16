@@ -129,7 +129,7 @@ public interface IChatComponent extends Iterable<IChatComponent>
                     }
                     else
                     {
-                        ichatcomponent = new ChatComponentTranslation(s, new Object[0]);
+                        ichatcomponent = new ChatComponentTranslation(s);
                     }
                 }
                 else if (jsonobject.has("score"))

@@ -16,28 +16,23 @@ public class BlockLilyPad extends BlockBush
 {
     protected BlockLilyPad()
     {
-        float f = 0.5F;
-        float f1 = 0.015625F;
-        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.015625f, 1f);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
 
     /**
      * Add all collision boxes of this Block to the list that intersect with the given mask.
-     *  
-     * @param collidingEntity the Entity colliding with this Block
      */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
         if (collidingEntity == null || !(collidingEntity instanceof EntityBoat))
-        {
             super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-        }
     }
 
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
     {
-        return new AxisAlignedBB((double)pos.getX() + this.minX, (double)pos.getY() + this.minY, (double)pos.getZ() + this.minZ, (double)pos.getX() + this.maxX, (double)pos.getY() + this.maxY, (double)pos.getZ() + this.maxZ);
+        return new AxisAlignedBB((double)pos.getX() + this.minX, (double)pos.getY() + this.minY, (double)pos.getZ() + this.minZ,
+        		(double)pos.getX() + this.maxX, (double)pos.getY() + this.maxY, (double)pos.getZ() + this.maxZ);
     }
 
     public int getBlockColor()
@@ -68,12 +63,10 @@ public class BlockLilyPad extends BlockBush
         if (pos.getY() >= 0 && pos.getY() < 256)
         {
             IBlockState iblockstate = worldIn.getBlockState(pos.down());
-            return iblockstate.getBlock().getMaterial() == Material.water && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0;
+            return iblockstate.getBlock().getMaterial() == Material.water && iblockstate.getValue(BlockLiquid.LEVEL) == 0;
         }
         else
-        {
             return false;
-        }
     }
 
     /**

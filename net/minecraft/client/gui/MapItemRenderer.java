@@ -98,7 +98,7 @@ public class MapItemRenderer
                 }
                 else
                 {
-                    this.mapTextureData[i] = MapColor.mapColorArray[j / 4].func_151643_b(j & 3);
+                    this.mapTextureData[i] = MapColor.mapColorArray[j / 4].getMapColor(j & 3);
                 }
             }
 
@@ -127,7 +127,7 @@ public class MapItemRenderer
             MapItemRenderer.this.textureManager.bindTexture(MapItemRenderer.mapIcons);
             int k = 0;
 
-            for (Vec4b vec4b : this.mapData.playersVisibleOnMap.values())
+            for (Vec4b vec4b : this.mapData.mapDecorations.values())
             {
                 if (!noOverlayRendering || vec4b.func_176110_a() == 1)
                 {

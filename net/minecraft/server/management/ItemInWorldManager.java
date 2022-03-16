@@ -147,15 +147,12 @@ public class ItemInWorldManager
     /**
      * If not creative, it calls sendBlockBreakProgress until the block is broken first. tryHarvestBlock can also be the
      * result of this call.
-     *  
-     * @param pos The block's coordinates
-     * @param side The specific side that is being hit
      */
     public void onBlockClicked(BlockPos pos, EnumFacing side)
     {
         if (this.isCreative())
         {
-            if (!this.theWorld.extinguishFire((EntityPlayer)null, pos, side))
+            if (!this.theWorld.extinguishFire(null, pos, side))
             {
                 this.tryHarvestBlock(pos);
             }
@@ -187,7 +184,7 @@ public class ItemInWorldManager
                 }
             }
 
-            this.theWorld.extinguishFire((EntityPlayer)null, pos, side);
+            this.theWorld.extinguishFire(null, pos, side);
             this.initialDamage = this.curblockDamage;
             float f = 1.0F;
 
@@ -251,8 +248,6 @@ public class ItemInWorldManager
 
     /**
      * Removes a block and triggers the appropriate events
-     *  
-     * @param pos The coordinates for the block to remove
      */
     private boolean removeBlock(BlockPos pos)
     {
@@ -270,8 +265,6 @@ public class ItemInWorldManager
 
     /**
      * Attempts to harvest a block
-     *  
-     * @param pos The coordinates of the block
      */
     public boolean tryHarvestBlock(BlockPos pos)
     {
@@ -389,9 +382,6 @@ public class ItemInWorldManager
 
     /**
      * Activate the clicked on block, otherwise use the held item.
-     *  
-     * @param pos The block's coordinates
-     * @param side The side of the block that was clicked on
      */
     public boolean activateBlockOrUseItem(EntityPlayer player, World worldIn, ItemStack stack, BlockPos pos, EnumFacing side, float offsetX, float offsetY, float offsetZ)
     {

@@ -36,7 +36,7 @@ public abstract class Container
     {
         slotIn.slotNumber = this.inventorySlots.size();
         this.inventorySlots.add(slotIn);
-        this.inventoryItemStacks.add((ItemStack)null);
+        this.inventoryItemStacks.add(null);
         return slotIn;
     }
 
@@ -136,8 +136,6 @@ public abstract class Container
 
     /**
      * Handles slot click.
-     *  
-     * @param mode 0 = basic click, 1 = shift click, 2 = hotbar, 3 = pick block, 4 = drop, 5 = ?, 6 = double click
      */
     public ItemStack slotClick(int slotId, int clickedButton, int mode, EntityPlayer playerIn)
     {
@@ -240,7 +238,7 @@ public abstract class Container
                     if (clickedButton == 0)
                     {
                         playerIn.dropPlayerItemWithRandomChoice(inventoryplayer.getItemStack(), true);
-                        inventoryplayer.setItemStack((ItemStack)null);
+                        inventoryplayer.setItemStack(null);
                     }
 
                     if (clickedButton == 1)
@@ -249,7 +247,7 @@ public abstract class Container
 
                         if (inventoryplayer.getItemStack().stackSize == 0)
                         {
-                            inventoryplayer.setItemStack((ItemStack)null);
+                            inventoryplayer.setItemStack(null);
                         }
                     }
                 }
@@ -316,7 +314,7 @@ public abstract class Container
 
                             if (itemstack10.stackSize == 0)
                             {
-                                inventoryplayer.setItemStack((ItemStack)null);
+                                inventoryplayer.setItemStack(null);
                             }
                         }
                     }
@@ -330,7 +328,7 @@ public abstract class Container
 
                             if (itemstack9.stackSize == 0)
                             {
-                                slot7.putStack((ItemStack)null);
+                                slot7.putStack(null);
                             }
 
                             slot7.onPickupFromSlot(playerIn, inventoryplayer.getItemStack());
@@ -355,7 +353,7 @@ public abstract class Container
 
                                 if (itemstack10.stackSize == 0)
                                 {
-                                    inventoryplayer.setItemStack((ItemStack)null);
+                                    inventoryplayer.setItemStack(null);
                                 }
 
                                 itemstack9.stackSize += i2;
@@ -377,7 +375,7 @@ public abstract class Container
 
                                 if (itemstack9.stackSize == 0)
                                 {
-                                    slot7.putStack((ItemStack)null);
+                                    slot7.putStack(null);
                                 }
 
                                 slot7.onPickupFromSlot(playerIn, inventoryplayer.getItemStack());
@@ -416,7 +414,7 @@ public abstract class Container
                         {
                             inventoryplayer.addItemStackToInventory(itemstack7);
                             slot5.decrStackSize(itemstack11.stackSize);
-                            slot5.putStack((ItemStack)null);
+                            slot5.putStack(null);
                             slot5.onPickupFromSlot(playerIn, itemstack11);
                         }
                     }
@@ -429,7 +427,7 @@ public abstract class Container
                 }
                 else if (!slot5.getHasStack() && itemstack7 != null && slot5.isItemValid(itemstack7))
                 {
-                    inventoryplayer.setInventorySlotContents(clickedButton, (ItemStack)null);
+                    inventoryplayer.setInventorySlotContents(clickedButton, null);
                     slot5.putStack(itemstack7);
                 }
             }
@@ -480,7 +478,7 @@ public abstract class Container
 
                             if (itemstack2.stackSize <= 0)
                             {
-                                slot8.putStack((ItemStack)null);
+                                slot8.putStack(null);
                             }
 
                             slot8.onPickupFromSlot(playerIn, itemstack2);
@@ -499,17 +497,13 @@ public abstract class Container
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
      * is null for the initial slot that was double-clicked.
      */
-    public boolean canMergeSlot(ItemStack stack, Slot p_94530_2_)
+    public boolean canMergeSlot(ItemStack stack, Slot slotIn)
     {
         return true;
     }
 
     /**
      * Retries slotClick() in case of failure
-     *  
-     * @param slotId The clicked Slot
-     * @param clickedButton The mouse button that was clicked on the slot
-     * @param playerIn The player interacting with the slot
      */
     protected void retrySlotClick(int slotId, int clickedButton, boolean mode, EntityPlayer playerIn)
     {
@@ -526,7 +520,7 @@ public abstract class Container
         if (inventoryplayer.getItemStack() != null)
         {
             playerIn.dropPlayerItemWithRandomChoice(inventoryplayer.getItemStack(), false);
-            inventoryplayer.setItemStack((ItemStack)null);
+            inventoryplayer.setItemStack(null);
         }
     }
 
@@ -540,9 +534,6 @@ public abstract class Container
 
     /**
      * args: slotID, itemStack to put in slot
-     *  
-     * @param slotID The slot to put the ItemStack in
-     * @param stack The ItemStack to put in the slot
      */
     public void putStackInSlot(int slotID, ItemStack stack)
     {

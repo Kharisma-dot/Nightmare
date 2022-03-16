@@ -14,8 +14,8 @@ public abstract class BlockDirectional extends Block
         super(materialIn);
     }
 
-    protected BlockDirectional(Material p_i46398_1_, MapColor p_i46398_2_)
+    protected BlockDirectional(Material material, MapColor mapColor)
     {
-        super(p_i46398_1_, p_i46398_2_);
+        super(material, mapColor);
     }
 }

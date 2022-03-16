@@ -605,7 +605,8 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
         }
         else
         {
-            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("build.tooHigh", new Object[] {Integer.valueOf(this.serverController.getBuildLimit())});
+            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("build.tooHigh",
+            		new Object[] {this.serverController.getBuildLimit()});
             chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
             this.playerEntity.playerNetServerHandler.sendPacket(new S02PacketChat(chatcomponenttranslation));
             flag = true;
@@ -664,7 +665,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
             if (entity != null)
             {
                 this.playerEntity.setSpectatingEntity(this.playerEntity);
-                this.playerEntity.mountEntity((Entity)null);
+                this.playerEntity.mountEntity(null);
 
                 if (entity.worldObj != this.playerEntity.worldObj)
                 {
@@ -786,7 +787,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
 
         if (this.playerEntity.getChatVisibility() == EntityPlayer.EnumChatVisibility.HIDDEN)
         {
-            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("chat.cannotSend", new Object[0]);
+            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("chat.cannotSend");
             chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
             this.sendPacket(new S02PacketChat(chatcomponenttranslation));
         }
@@ -964,7 +965,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
                     }
                     else
                     {
-                        UserListBansEntry userlistbansentry = new UserListBansEntry(this.playerEntity.getGameProfile(), (Date)null, "(You just lost the game)", (Date)null, "Death in Hardcore");
+                        UserListBansEntry userlistbansentry = new UserListBansEntry(this.playerEntity.getGameProfile(), null, "(You just lost the game)", null, "Death in Hardcore");
                         this.serverController.getConfigurationManager().getBannedPlayers().addEntry(userlistbansentry);
                         this.playerEntity.playerNetServerHandler.kickPlayerFromServer("You have died. Game over, man, it\'s game over!");
                     }
@@ -1036,7 +1037,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
                 }
                 else
                 {
-                    this.field_147372_n.addKey(this.playerEntity.openContainer.windowId, Short.valueOf(packetIn.getActionNumber()));
+                    this.field_147372_n.addKey(this.playerEntity.openContainer.windowId, packetIn.getActionNumber());
                     this.playerEntity.playerNetServerHandler.sendPacket(new S32PacketConfirmTransaction(packetIn.getWindowId(), packetIn.getActionNumber(), false));
                     this.playerEntity.openContainer.setCanCraft(this.playerEntity, false);
                     List<ItemStack> list1 = Lists.<ItemStack>newArrayList();
@@ -1109,7 +1110,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
             {
                 if (itemstack == null)
                 {
-                    this.playerEntity.inventoryContainer.putStackInSlot(packetIn.getSlotId(), (ItemStack)null);
+                    this.playerEntity.inventoryContainer.putStackInSlot(packetIn.getSlotId(), null);
                 }
                 else
                 {
@@ -1141,7 +1142,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.playerEntity.getServerForPlayer());
         Short oshort = (Short)this.field_147372_n.lookup(this.playerEntity.openContainer.windowId);
 
-        if (oshort != null && packetIn.getUid() == oshort.shortValue() && this.playerEntity.openContainer.windowId == packetIn.getWindowId() && !this.playerEntity.openContainer.getCanCraft(this.playerEntity) && !this.playerEntity.isSpectator())
+        if (oshort != null && packetIn.getUid() == oshort && this.playerEntity.openContainer.windowId == packetIn.getWindowId() && !this.playerEntity.openContainer.getCanCraft(this.playerEntity) && !this.playerEntity.isSpectator())
         {
             this.playerEntity.openContainer.setCanCraft(this.playerEntity, true);
         }
@@ -1350,7 +1351,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
         {
             if (!this.serverController.isCommandBlockEnabled())
             {
-                this.playerEntity.addChatMessage(new ChatComponentTranslation("advMode.notEnabled", new Object[0]));
+                this.playerEntity.addChatMessage(new ChatComponentTranslation("advMode.notEnabled"));
             }
             else if (this.playerEntity.canCommandSenderUseCommand(2, "") && this.playerEntity.capabilities.isCreativeMode)
             {
@@ -1390,7 +1391,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
 
                         if (!flag)
                         {
-                            commandblocklogic.setLastOutput((IChatComponent)null);
+                            commandblocklogic.setLastOutput(null);
                         }
 
                         commandblocklogic.updateCommand();
@@ -1408,7 +1409,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable
             }
             else
             {
-                this.playerEntity.addChatMessage(new ChatComponentTranslation("advMode.notAllowed", new Object[0]));
+                this.playerEntity.addChatMessage(new ChatComponentTranslation("advMode.notAllowed"));
             }
         }
         else if ("MC|Beacon".equals(packetIn.getChannelName()))

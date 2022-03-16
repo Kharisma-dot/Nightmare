@@ -52,51 +52,25 @@ public class ItemAliases
 
         if (shaderPack != null)
         {
-            if (Reflector.Loader_getActiveModList.exists() && Config.getResourceManager() == null)
+        	List<Integer> list = new ArrayList();
+            String s = "/shaders/item.properties";
+            InputStream inputstream = shaderPack.getResourceAsStream(s);
+
+            if (inputstream != null)
             {
-                Config.dbg("[Shaders] Delayed loading of item mappings after resources are loaded");
-                updateOnResourcesReloaded = true;
+                loadItemAliases(inputstream, s, list);
             }
-            else
+
+
+            if (((List)list).size() > 0)
             {
-                List<Integer> list = new ArrayList();
-                String s = "/shaders/item.properties";
-                InputStream inputstream = shaderPack.getResourceAsStream(s);
-
-                if (inputstream != null)
-                {
-                    loadItemAliases(inputstream, s, list);
-                }
-
-                loadModItemAliases(list);
-
-                if (((List)list).size() > 0)
-                {
-                    itemAliases = toArray(list);
-                }
+                itemAliases = toArray(list);
             }
         }
     }
 
     private static void loadModItemAliases(List<Integer> listItemAliases)
     {
-        String[] astring = ReflectorForge.getForgeModIds();
-
-        for (int i = 0; i < astring.length; ++i)
-        {
-            String s = astring[i];
-
-            try
-            {
-                ResourceLocation resourcelocation = new ResourceLocation(s, "shaders/item.properties");
-                InputStream inputstream = Config.getResourceStream(resourcelocation);
-                loadItemAliases(inputstream, resourcelocation.toString(), listItemAliases);
-            }
-            catch (IOException var6)
-            {
-                ;
-            }
-        }
     }
 
     private static void loadItemAliases(InputStream in, String path, List<Integer> listItemAliases)
@@ -112,9 +86,9 @@ public class ItemAliases
                 Config.dbg("[Shaders] Parsing item mappings: " + path);
                 ConnectedParser connectedparser = new ConnectedParser("Shaders");
 
-                for (Object e : properties.keySet())
+                for (Object s0 : properties.keySet())
                 {
-                    String s = (String) e;
+                    String s = (String) s0;
                     String s1 = properties.getProperty(s);
                     String s2 = "item.";
 
@@ -162,10 +136,10 @@ public class ItemAliases
     {
         while (list.size() <= index)
         {
-            list.add(Integer.valueOf(Integer.MIN_VALUE));
+            list.add(Integer.MIN_VALUE);
         }
 
-        list.set(index, Integer.valueOf(val));
+        list.set(index, val);
     }
 
     private static int[] toArray(List<Integer> list)
@@ -174,7 +148,7 @@ public class ItemAliases
 
         for (int i = 0; i < aint.length; ++i)
         {
-            aint[i] = ((Integer)list.get(i)).intValue();
+            aint[i] = list.get(i);
         }
 
         return aint;

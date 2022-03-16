@@ -217,7 +217,7 @@ public abstract class MobSpawnerBaseLogic
         {
             if (entityIn instanceof EntityLiving)
             {
-                ((EntityLiving)entityIn).onInitialSpawn(entityIn.worldObj.getDifficultyForLocation(new BlockPos(entityIn)), (IEntityLivingData)null);
+                ((EntityLiving)entityIn).onInitialSpawn(entityIn.worldObj.getDifficultyForLocation(new BlockPos(entityIn)), null);
             }
 
             entityIn.worldObj.spawnEntityInWorld(entityIn);
@@ -268,7 +268,7 @@ public abstract class MobSpawnerBaseLogic
         }
         else
         {
-            this.setRandomEntity((MobSpawnerBaseLogic.WeightedRandomMinecart)null);
+            this.setRandomEntity(null);
         }
 
         if (nbt.hasKey("MinSpawnDelay", 99))

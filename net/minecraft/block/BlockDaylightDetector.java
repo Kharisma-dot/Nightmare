@@ -30,22 +30,22 @@ public class BlockDaylightDetector extends BlockContainer
     {
         super(Material.wood);
         this.inverted = inverted;
-        this.setDefaultState(this.blockState.getBaseState().withProperty(POWER, Integer.valueOf(0)));
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.375F, 1.0F);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(POWER, 0));
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.375f, 1f);
         this.setCreativeTab(CreativeTabs.tabRedstone);
-        this.setHardness(0.2F);
+        this.setHardness(0.2f);
         this.setStepSound(soundTypeWood);
         this.setUnlocalizedName("daylightDetector");
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.375F, 1.0F);
+        this.setBlockBounds(0f, 0f, 0f, 1f, 0.375f, 1f);
     }
 
-    public int isProvidingWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
+    public int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
     {
-        return ((Integer)state.getValue(POWER)).intValue();
+        return state.getValue(POWER);
     }
 
     public void updatePower(World worldIn, BlockPos pos)
@@ -61,14 +61,10 @@ public class BlockDaylightDetector extends BlockContainer
             i = MathHelper.clamp_int(i, 0, 15);
 
             if (this.inverted)
-            {
                 i = 15 - i;
-            }
 
-            if (((Integer)iblockstate.getValue(POWER)).intValue() != i)
-            {
-                worldIn.setBlockState(pos, iblockstate.withProperty(POWER, Integer.valueOf(i)), 3);
-            }
+            if (iblockstate.getValue(POWER) != i)
+                worldIn.setBlockState(pos, iblockstate.withProperty(POWER, i), 3);
         }
     }
 
@@ -77,9 +73,7 @@ public class BlockDaylightDetector extends BlockContainer
         if (playerIn.isAllowEdit())
         {
             if (worldIn.isRemote)
-            {
                 return true;
-            }
             else
             {
                 if (this.inverted)
@@ -104,17 +98,12 @@ public class BlockDaylightDetector extends BlockContainer
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(Blocks.daylight_detector);
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Item.getItemFromBlock(Blocks.daylight_detector);
@@ -162,7 +151,7 @@ public class BlockDaylightDetector extends BlockContainer
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(POWER, Integer.valueOf(meta));
+        return this.getDefaultState().withProperty(POWER, meta);
     }
 
     /**
@@ -170,7 +159,7 @@ public class BlockDaylightDetector extends BlockContainer
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((Integer)state.getValue(POWER)).intValue();
+        return state.getValue(POWER);
     }
 
     protected BlockState createBlockState()
@@ -184,8 +173,6 @@ public class BlockDaylightDetector extends BlockContainer
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         if (!this.inverted)
-        {
             super.getSubBlocks(itemIn, tab, list);
-        }
     }
 }

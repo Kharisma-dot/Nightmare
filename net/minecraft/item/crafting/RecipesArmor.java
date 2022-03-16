@@ -11,8 +11,6 @@ public class RecipesArmor
 
     /**
      * Adds the armor recipes to the CraftingManager.
-     *  
-     * @param craftManager An instance of a CraftingManager.
      */
     public void addRecipes(CraftingManager craftManager)
     {

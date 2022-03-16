@@ -209,7 +209,7 @@ public class PlayerItemParser
             ModelBase modelbase = new ModelPlayerItem();
             modelbase.textureWidth = textureDim.width;
             modelbase.textureHeight = textureDim.height;
-            ModelRenderer modelrenderer = parseModelRenderer(elem, modelbase, (int[])null, (String)null);
+            ModelRenderer modelrenderer = parseModelRenderer(elem, modelbase, null, null);
             PlayerItemRenderer playeritemrenderer = new PlayerItemRenderer(i, modelrenderer);
             return playeritemrenderer;
         }
@@ -467,7 +467,7 @@ public class PlayerItemParser
 
         if (!flag)
         {
-            return (int[][])null;
+            return null;
         }
         else
         {

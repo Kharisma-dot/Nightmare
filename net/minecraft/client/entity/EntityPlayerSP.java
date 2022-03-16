@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiEnchantment;
 import net.minecraft.client.gui.GuiHopper;
 import net.minecraft.client.gui.GuiMerchant;
 import net.minecraft.client.gui.GuiRepair;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.gui.inventory.GuiBeacon;
 import net.minecraft.client.gui.inventory.GuiBrewingStand;
@@ -306,8 +305,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
     /**
      * Sends a chat message from the player. Args: chatMessage
-     *  
-     * @param message used on EntityPlayerSP.sendChatMessage - as inbound message
      */
     public void sendChatMessage(String message)
     {
@@ -330,11 +327,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
         super.swingItem();
         this.sendQueue.addToSendQueue(new C0APacketAnimation());
-    }
-    
-    public void fakeSwingItem()
-    {
-        super.swingItem();
     }
 
     public void respawnPlayer()
@@ -365,9 +357,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
     public void closeScreenAndDropStack()
     {
-        this.inventory.setItemStack((ItemStack)null);
+        this.inventory.setItemStack(null);
         super.closeScreen();
-        this.mc.displayGuiScreen((GuiScreen)null);
+        this.mc.displayGuiScreen(null);
     }
 
     /**
@@ -561,8 +553,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
     /**
      * Send a chat message to the CommandSender
-     *  
-     * @param component The ChatComponent to send
      */
     public void addChatMessage(IChatComponent component)
     {
@@ -571,9 +561,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
     /**
      * Returns {@code true} if the CommandSender is allowed to execute the command, {@code false} if not
-     *  
-     * @param permLevel The permission level required to execute the command
-     * @param commandName The name of the command
      */
     public boolean canCommandSenderUseCommand(int permLevel, String commandName)
     {
@@ -770,7 +757,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         {
             if (this.mc.currentScreen != null && !this.mc.currentScreen.doesGuiPauseGame())
             {
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
             }
 
             if (this.timeInPortal == 0.0F)

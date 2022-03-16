@@ -37,25 +37,17 @@ public class FactoryBlockPattern
             }
 
             if (aisle.length != this.aisleHeight)
-            {
                 throw new IllegalArgumentException("Expected aisle with height of " + this.aisleHeight + ", but was given one with a height of " + aisle.length + ")");
-            }
             else
             {
                 for (String s : aisle)
                 {
                     if (s.length() != this.rowWidth)
-                    {
                         throw new IllegalArgumentException("Not all rows in the given aisle are the correct width (expected " + this.rowWidth + ", found one with " + s.length() + ")");
-                    }
 
                     for (char c0 : s.toCharArray())
-                    {
-                        if (!this.symbolMap.containsKey(Character.valueOf(c0)))
-                        {
-                            this.symbolMap.put(Character.valueOf(c0), (Predicate<BlockWorldState>)null);
-                        }
-                    }
+                        if (!this.symbolMap.containsKey(c0))
+                            this.symbolMap.put(c0, null);
                 }
 
                 this.depth.add(aisle);
@@ -63,9 +55,7 @@ public class FactoryBlockPattern
             }
         }
         else
-        {
             throw new IllegalArgumentException("Empty pattern for aisle");
-        }
     }
 
     public static FactoryBlockPattern start()
@@ -75,7 +65,7 @@ public class FactoryBlockPattern
 
     public FactoryBlockPattern where(char symbol, Predicate<BlockWorldState> blockMatcher)
     {
-        this.symbolMap.put(Character.valueOf(symbol), blockMatcher);
+        this.symbolMap.put(symbol, blockMatcher);
         return this;
     }
 
@@ -87,18 +77,12 @@ public class FactoryBlockPattern
     private Predicate<BlockWorldState>[][][] makePredicateArray()
     {
         this.checkMissingPredicates();
-        Predicate<BlockWorldState>[][][] predicate = (Predicate[][][])((Predicate[][][])Array.newInstance(Predicate.class, new int[] {this.depth.size(), this.aisleHeight, this.rowWidth}));
+        Predicate<BlockWorldState>[][][] predicate = (Predicate[][][])Array.newInstance(Predicate.class, new int[] {this.depth.size(), this.aisleHeight, this.rowWidth});
 
         for (int i = 0; i < this.depth.size(); ++i)
-        {
             for (int j = 0; j < this.aisleHeight; ++j)
-            {
                 for (int k = 0; k < this.rowWidth; ++k)
-                {
-                    predicate[i][j][k] = (Predicate)this.symbolMap.get(Character.valueOf(((String[])this.depth.get(i))[j].charAt(k)));
-                }
-            }
-        }
+                    predicate[i][j][k] = this.symbolMap.get(this.depth.get(i)[j].charAt(k));
 
         return predicate;
     }
@@ -108,16 +92,10 @@ public class FactoryBlockPattern
         List<Character> list = Lists.<Character>newArrayList();
 
         for (Entry<Character, Predicate<BlockWorldState>> entry : this.symbolMap.entrySet())
-        {
             if (entry.getValue() == null)
-            {
                 list.add(entry.getKey());
-            }
-        }
 
         if (!list.isEmpty())
-        {
             throw new IllegalStateException("Predicates for character(s) " + COMMA_JOIN.join(list) + " are missing");
-        }
     }
 }

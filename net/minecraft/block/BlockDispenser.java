@@ -38,7 +38,7 @@ public class BlockDispenser extends BlockContainer
     protected BlockDispenser()
     {
         super(Material.rock);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TRIGGERED, Boolean.valueOf(false)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TRIGGERED, false));
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
 
@@ -60,43 +60,33 @@ public class BlockDispenser extends BlockContainer
     {
         if (!worldIn.isRemote)
         {
-            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+            EnumFacing enumfacing = state.getValue(FACING);
             boolean flag = worldIn.getBlockState(pos.north()).getBlock().isFullBlock();
             boolean flag1 = worldIn.getBlockState(pos.south()).getBlock().isFullBlock();
 
             if (enumfacing == EnumFacing.NORTH && flag && !flag1)
-            {
                 enumfacing = EnumFacing.SOUTH;
-            }
             else if (enumfacing == EnumFacing.SOUTH && flag1 && !flag)
-            {
                 enumfacing = EnumFacing.NORTH;
-            }
             else
             {
                 boolean flag2 = worldIn.getBlockState(pos.west()).getBlock().isFullBlock();
                 boolean flag3 = worldIn.getBlockState(pos.east()).getBlock().isFullBlock();
 
                 if (enumfacing == EnumFacing.WEST && flag2 && !flag3)
-                {
                     enumfacing = EnumFacing.EAST;
-                }
                 else if (enumfacing == EnumFacing.EAST && flag3 && !flag2)
-                {
                     enumfacing = EnumFacing.WEST;
-                }
             }
 
-            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing).withProperty(TRIGGERED, Boolean.valueOf(false)), 2);
+            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing).withProperty(TRIGGERED, false), 2);
         }
     }
 
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
-        {
             return true;
-        }
         else
         {
             TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -106,13 +96,9 @@ public class BlockDispenser extends BlockContainer
                 playerIn.displayGUIChest((TileEntityDispenser)tileentity);
 
                 if (tileentity instanceof TileEntityDropper)
-                {
                     playerIn.triggerAchievement(StatList.field_181731_O);
-                }
                 else
-                {
                     playerIn.triggerAchievement(StatList.field_181733_Q);
-                }
             }
 
             return true;
@@ -129,9 +115,7 @@ public class BlockDispenser extends BlockContainer
             int i = tileentitydispenser.getDispenseSlot();
 
             if (i < 0)
-            {
                 worldIn.playAuxSFX(1001, pos, 0);
-            }
             else
             {
                 ItemStack itemstack = tileentitydispenser.getStackInSlot(i);
@@ -157,25 +141,21 @@ public class BlockDispenser extends BlockContainer
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         boolean flag = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.up());
-        boolean flag1 = ((Boolean)state.getValue(TRIGGERED)).booleanValue();
+        boolean flag1 = state.getValue(TRIGGERED);
 
         if (flag && !flag1)
         {
             worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
-            worldIn.setBlockState(pos, state.withProperty(TRIGGERED, Boolean.valueOf(true)), 4);
+            worldIn.setBlockState(pos, state.withProperty(TRIGGERED, true), 4);
         }
         else if (!flag && flag1)
-        {
-            worldIn.setBlockState(pos, state.withProperty(TRIGGERED, Boolean.valueOf(false)), 4);
-        }
+            worldIn.setBlockState(pos, state.withProperty(TRIGGERED, false), 4);
     }
 
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (!worldIn.isRemote)
-        {
             this.dispense(worldIn, pos);
-        }
     }
 
     /**
@@ -192,7 +172,7 @@ public class BlockDispenser extends BlockContainer
      */
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
-        return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(TRIGGERED, Boolean.valueOf(false));
+        return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(TRIGGERED, false);
     }
 
     /**
@@ -207,9 +187,7 @@ public class BlockDispenser extends BlockContainer
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
             if (tileentity instanceof TileEntityDispenser)
-            {
                 ((TileEntityDispenser)tileentity).setCustomName(stack.getDisplayName());
-            }
         }
     }
 
@@ -277,7 +255,7 @@ public class BlockDispenser extends BlockContainer
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(TRIGGERED, Boolean.valueOf((meta & 8) > 0));
+        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(TRIGGERED, (meta & 8) > 0);
     }
 
     /**
@@ -286,12 +264,10 @@ public class BlockDispenser extends BlockContainer
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | ((EnumFacing)state.getValue(FACING)).getIndex();
+        i = i | state.getValue(FACING).getIndex();
 
-        if (((Boolean)state.getValue(TRIGGERED)).booleanValue())
-        {
+        if (state.getValue(TRIGGERED))
             i |= 8;
-        }
 
         return i;
     }

@@ -101,7 +101,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
          this.field_77045_g.field_78095_p = this.func_77040_d(p_76986_1_, p_76986_9_);
          this.field_77045_g.field_78093_q = p_76986_1_.func_70115_ae();
          if(Reflector.ForgeEntity_shouldRiderSit.exists()) {
-            this.field_77045_g.field_78093_q = p_76986_1_.func_70115_ae() && p_76986_1_.field_70154_o != null && Reflector.callBoolean(p_76986_1_.field_70154_o, Reflector.ForgeEntity_shouldRiderSit, new Object[0]);
+            this.field_77045_g.field_78093_q = p_76986_1_.func_70115_ae() && p_76986_1_.field_70154_o != null && Reflector.callBoolean(p_76986_1_.field_70154_o, Reflector.ForgeEntity_shouldRiderSit);
          }
 
          this.field_77045_g.field_78091_s = p_76986_1_.func_70631_g_();

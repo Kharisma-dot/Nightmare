@@ -71,8 +71,6 @@ public class StatFileWriter
 
     /**
      * Reads the given stat and returns its value as an int.
-     *  
-     * @param stat The StatBase object to lookup
      */
     public int readStat(StatBase stat)
     {

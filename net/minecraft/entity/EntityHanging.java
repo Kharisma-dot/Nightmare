@@ -37,8 +37,6 @@ public abstract class EntityHanging extends Entity
 
     /**
      * Updates facing and bounding box based on it
-     *  
-     * @param facingDirectionIn The direction this hanging entity faces
      */
     protected void updateFacingWithBoundingBox(EnumFacing facingDirectionIn)
     {
@@ -112,7 +110,7 @@ public abstract class EntityHanging extends Entity
             if (!this.isDead && !this.onValidSurface())
             {
                 this.setDead();
-                this.onBroken((Entity)null);
+                this.onBroken(null);
             }
         }
     }
@@ -210,7 +208,7 @@ public abstract class EntityHanging extends Entity
         if (!this.worldObj.isRemote && !this.isDead && x * x + y * y + z * z > 0.0D)
         {
             this.setDead();
-            this.onBroken((Entity)null);
+            this.onBroken(null);
         }
     }
 
@@ -222,7 +220,7 @@ public abstract class EntityHanging extends Entity
         if (!this.worldObj.isRemote && !this.isDead && x * x + y * y + z * z > 0.0D)
         {
             this.setDead();
-            this.onBroken((Entity)null);
+            this.onBroken(null);
         }
     }
 

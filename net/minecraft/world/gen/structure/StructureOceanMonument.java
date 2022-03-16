@@ -78,7 +78,7 @@ public class StructureOceanMonument extends MapGenStructure
 
         if (i == k && j == l)
         {
-            if (this.worldObj.getWorldChunkManager().getBiomeGenerator(new BlockPos(i * 16 + 8, 64, j * 16 + 8), (BiomeGenBase)null) != BiomeGenBase.deepOcean)
+            if (this.worldObj.getWorldChunkManager().getBiomeGenerator(new BlockPos(i * 16 + 8, 64, j * 16 + 8), null) != BiomeGenBase.deepOcean)
             {
                 return false;
             }
@@ -99,7 +99,7 @@ public class StructureOceanMonument extends MapGenStructure
         return new StructureOceanMonument.StartMonument(this.worldObj, this.rand, chunkX, chunkZ);
     }
 
-    public List<BiomeGenBase.SpawnListEntry> func_175799_b()
+    public List<BiomeGenBase.SpawnListEntry> getScatteredFeatureSpawnList()
     {
         return field_175803_h;
     }

@@ -2,6 +2,7 @@ package net.minecraft.block;
 
 import java.util.List;
 import java.util.Random;
+
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -138,7 +139,9 @@ public class Block
     public Block.SoundType stepSound;
     public float blockParticleGravity;
     protected final Material blockMaterial;
-    protected final MapColor field_181083_K;
+
+    /** The Block's MapColor */
+    protected final MapColor blockMapColor;
 
     /**
      * Determines how much velocity is maintained while moving on top of this block
@@ -187,9 +190,7 @@ public class Block
         ResourceLocation resourcelocation = new ResourceLocation(name);
 
         if (blockRegistry.containsKey(resourcelocation))
-        {
             return (Block)blockRegistry.getObject(resourcelocation);
-        }
         else
         {
             try
@@ -247,7 +248,7 @@ public class Block
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return this.field_181083_K;
+        return this.blockMapColor;
     }
 
     /**
@@ -264,13 +265,9 @@ public class Block
     public int getMetaFromState(IBlockState state)
     {
         if (state != null && !state.getPropertyNames().isEmpty())
-        {
             throw new IllegalArgumentException("Don\'t know how to convert " + state + " back into data...");
-        }
         else
-        {
             return 0;
-        }
     }
 
     /**
@@ -282,18 +279,18 @@ public class Block
         return state;
     }
 
-    public Block(Material p_i46399_1_, MapColor p_i46399_2_)
+    public Block(Material blockMaterialIn, MapColor blockMapColorIn)
     {
         this.enableStats = true;
         this.stepSound = soundTypeStone;
         this.blockParticleGravity = 1.0F;
         this.slipperiness = 0.6F;
-        this.blockMaterial = p_i46399_1_;
-        this.field_181083_K = p_i46399_2_;
+        this.blockMaterial = blockMaterialIn;
+        this.blockMapColor = blockMapColorIn;
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         this.fullBlock = this.isOpaqueCube();
         this.lightOpacity = this.isOpaqueCube() ? 255 : 0;
-        this.translucent = !p_i46399_1_.blocksLight();
+        this.translucent = !blockMaterialIn.blocksLight();
         this.blockState = this.createBlockState();
         this.setDefaultState(this.blockState.getBaseState());
     }
@@ -394,11 +391,9 @@ public class Block
     protected Block setHardness(float hardness)
     {
         this.blockHardness = hardness;
-
-        if (this.blockResistance < hardness * 5.0F)
-        {
-            this.blockResistance = hardness * 5.0F;
-        }
+        float newResistance = hardness * 5f;
+        if (this.blockResistance < newResistance)
+            this.blockResistance = newResistance;
 
         return this;
     }
@@ -459,9 +454,7 @@ public class Block
             return worldIn.getCombinedLight(pos, block.getLightValue());
         }
         else
-        {
             return i;
-        }
     }
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
@@ -484,8 +477,6 @@ public class Block
 
     /**
      * Add all collision boxes of this Block to the list that intersect with the given mask.
-     *  
-     * @param collidingEntity the Entity colliding with this Block
      */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
@@ -495,8 +486,7 @@ public class Block
         	axisalignedbb = null;
         }
         
-        if (axisalignedbb != null && mask.intersectsWith(axisalignedbb))
-        {
+        if (axisalignedbb != null && mask.intersectsWith(axisalignedbb)) {
             list.add(axisalignedbb);
         }
     }
@@ -583,8 +573,6 @@ public class Block
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
@@ -597,24 +585,19 @@ public class Block
     public float getPlayerRelativeBlockHardness(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
         float f = this.getBlockHardness(worldIn, pos);
-        return f < 0.0F ? 0.0F : (!playerIn.canHarvestBlock(this) ? playerIn.getToolDigEfficiency(this) / f / 100.0F : playerIn.getToolDigEfficiency(this) / f / 30.0F);
+        return f < 0f ? 0f : (!playerIn.canHarvestBlock(this) ? playerIn.getToolDigEfficiency(this) / f / 100f : playerIn.getToolDigEfficiency(this) / f / 30f);
     }
 
     /**
      * Spawn this Block's drops into the World as EntityItems
-     *  
-     * @param forture the level of the Fortune enchantment on the player's tool
      */
     public final void dropBlockAsItem(World worldIn, BlockPos pos, IBlockState state, int forture)
     {
-        this.dropBlockAsItemWithChance(worldIn, pos, state, 1.0F, forture);
+        this.dropBlockAsItemWithChance(worldIn, pos, state, 1f, forture);
     }
 
     /**
      * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
      */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
@@ -623,17 +606,13 @@ public class Block
             int i = this.quantityDroppedWithBonus(fortune, worldIn.rand);
 
             for (int j = 0; j < i; ++j)
-            {
                 if (worldIn.rand.nextFloat() <= chance)
                 {
                     Item item = this.getItemDropped(state, worldIn.rand, fortune);
 
                     if (item != null)
-                    {
                         spawnAsEntity(worldIn, pos, new ItemStack(item, 1, this.damageDropped(state)));
-                    }
                 }
-            }
         }
     }
 
@@ -642,9 +621,9 @@ public class Block
      */
     public static void spawnAsEntity(World worldIn, BlockPos pos, ItemStack stack)
     {
-        if (!worldIn.isRemote && worldIn.getGameRules().getGameRuleBooleanValue("doTileDrops"))
+        if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops"))
         {
-            float f = 0.5F;
+            float f = 0.5f;
             double d0 = (double)(worldIn.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             double d1 = (double)(worldIn.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             double d2 = (double)(worldIn.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
@@ -656,20 +635,16 @@ public class Block
 
     /**
      * Spawns the given amount of experience into the World as XP orb entities
-     *  
-     * @param amount The amount of XP to spawn
      */
     protected void dropXpOnBlockBreak(World worldIn, BlockPos pos, int amount)
     {
         if (!worldIn.isRemote)
-        {
             while (amount > 0)
             {
                 int i = EntityXPOrb.getXPSplit(amount);
                 amount -= i;
                 worldIn.spawnEntityInWorld(new EntityXPOrb(worldIn, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, i));
             }
-        }
     }
 
     /**
@@ -686,14 +661,11 @@ public class Block
      */
     public float getExplosionResistance(Entity exploder)
     {
-        return this.blockResistance / 5.0F;
+        return this.blockResistance / 5f;
     }
 
     /**
      * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit.
-     *  
-     * @param start The start vector
-     * @param end The end vector
      */
     public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
     {
@@ -708,104 +680,69 @@ public class Block
         Vec3 vec35 = start.getIntermediateWithZValue(end, this.maxZ);
 
         if (!this.isVecInsideYZBounds(vec3))
-        {
             vec3 = null;
-        }
 
         if (!this.isVecInsideYZBounds(vec31))
-        {
             vec31 = null;
-        }
 
         if (!this.isVecInsideXZBounds(vec32))
-        {
             vec32 = null;
-        }
 
         if (!this.isVecInsideXZBounds(vec33))
-        {
             vec33 = null;
-        }
 
         if (!this.isVecInsideXYBounds(vec34))
-        {
             vec34 = null;
-        }
 
         if (!this.isVecInsideXYBounds(vec35))
-        {
             vec35 = null;
-        }
 
         Vec3 vec36 = null;
 
         if (vec3 != null && (vec36 == null || start.squareDistanceTo(vec3) < start.squareDistanceTo(vec36)))
-        {
             vec36 = vec3;
-        }
 
         if (vec31 != null && (vec36 == null || start.squareDistanceTo(vec31) < start.squareDistanceTo(vec36)))
-        {
             vec36 = vec31;
-        }
 
         if (vec32 != null && (vec36 == null || start.squareDistanceTo(vec32) < start.squareDistanceTo(vec36)))
-        {
             vec36 = vec32;
-        }
 
         if (vec33 != null && (vec36 == null || start.squareDistanceTo(vec33) < start.squareDistanceTo(vec36)))
-        {
             vec36 = vec33;
-        }
 
         if (vec34 != null && (vec36 == null || start.squareDistanceTo(vec34) < start.squareDistanceTo(vec36)))
-        {
             vec36 = vec34;
-        }
 
         if (vec35 != null && (vec36 == null || start.squareDistanceTo(vec35) < start.squareDistanceTo(vec36)))
-        {
-            vec36 = vec35;
-        }
+            vec36 = vec35; 
 
         if (vec36 == null)
-        {
             return null;
-        }
         else
         {
-            EnumFacing enumfacing = null;
-
+            EnumFacing enumfacing;
+            
             if (vec36 == vec3)
-            {
                 enumfacing = EnumFacing.WEST;
-            }
 
-            if (vec36 == vec31)
-            {
+            else if (vec36 == vec31)
                 enumfacing = EnumFacing.EAST;
-            }
 
-            if (vec36 == vec32)
-            {
+            else if (vec36 == vec32)
                 enumfacing = EnumFacing.DOWN;
-            }
 
-            if (vec36 == vec33)
-            {
+            else if (vec36 == vec33)
                 enumfacing = EnumFacing.UP;
-            }
 
-            if (vec36 == vec34)
-            {
+            else if (vec36 == vec34)
                 enumfacing = EnumFacing.NORTH;
-            }
-
-            if (vec36 == vec35)
-            {
+            
+            else if (vec36 == vec35)
                 enumfacing = EnumFacing.SOUTH;
-            }
+            
+            else
+            	enumfacing = null;
 
             return new MovingObjectPosition(vec36.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), enumfacing, pos);
         }
@@ -967,7 +904,7 @@ public class Block
         return this.colorMultiplier(worldIn, pos, 0);
     }
 
-    public int isProvidingWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
+    public int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
     {
         return 0;
     }
@@ -987,7 +924,7 @@ public class Block
     {
     }
 
-    public int isProvidingStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
+    public int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
     {
         return 0;
     }
@@ -1009,9 +946,7 @@ public class Block
             ItemStack itemstack = this.createStackedBlock(state);
 
             if (itemstack != null)
-            {
                 spawnAsEntity(worldIn, pos, itemstack);
-            }
         }
         else
         {
@@ -1027,15 +962,9 @@ public class Block
 
     protected ItemStack createStackedBlock(IBlockState state)
     {
-        int i = 0;
-        Item item = Item.getItemFromBlock(this);
+    	Item item = Item.getItemFromBlock(this);
 
-        if (item != null && item.getHasSubtypes())
-        {
-            i = this.getMetaFromState(state);
-        }
-
-        return new ItemStack(item, 1, i);
+        return new ItemStack(item, 1, (item != null && item.getHasSubtypes()) ? this.getMetaFromState(state) : 0);
     }
 
     /**
@@ -1053,7 +982,10 @@ public class Block
     {
     }
 
-    public boolean func_181623_g()
+    /**
+     * Return true if an entity can be spawned inside the block (used to get the player's bed spawn location)
+     */
+    public boolean canSpawnInBlock()
     {
         return !this.blockMaterial.isSolid() && !this.blockMaterial.isLiquid();
     }
@@ -1112,17 +1044,15 @@ public class Block
      */
     public float getAmbientOcclusionLightValue()
     {
-        return this.isBlockNormalCube() ? 0.2F : 1.0F;
+        return this.isBlockNormalCube() ? 0.2f : 1f;
     }
 
     /**
      * Block's chance to react to a living entity falling on it.
-     *  
-     * @param fallDistance The distance the entity has fallen before landing
      */
     public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
     {
-        entityIn.fall(fallDistance, 1.0F);
+        entityIn.fall(fallDistance, 1f);
     }
 
     /**
@@ -1131,17 +1061,17 @@ public class Block
      */
     public void onLanded(World worldIn, Entity entityIn)
     {
-        entityIn.motionY = 0.0D;
+        entityIn.motionY = 0d;
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Item.getItemFromBlock(this);
     }
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         return this.damageDropped(worldIn.getBlockState(pos));
@@ -1356,7 +1286,7 @@ public class Block
         registerBlock(82, "clay", (new BlockClay()).setHardness(0.6F).setStepSound(soundTypeGravel).setUnlocalizedName("clay"));
         registerBlock(83, "reeds", (new BlockReed()).setHardness(0.0F).setStepSound(soundTypeGrass).setUnlocalizedName("reeds").disableStats());
         registerBlock(84, "jukebox", (new BlockJukebox()).setHardness(2.0F).setResistance(10.0F).setStepSound(soundTypePiston).setUnlocalizedName("jukebox"));
-        registerBlock(85, "fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.OAK.func_181070_c())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("fence"));
+        registerBlock(85, "fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.OAK.getMapColor())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("fence"));
         Block block7 = (new BlockPumpkin()).setHardness(1.0F).setStepSound(soundTypeWood).setUnlocalizedName("pumpkin");
         registerBlock(86, "pumpkin", block7);
         registerBlock(87, "netherrack", (new BlockNetherrack()).setHardness(0.4F).setStepSound(soundTypePiston).setUnlocalizedName("hellrock"));
@@ -1465,11 +1395,11 @@ public class Block
         registerBlock(185, "jungle_fence_gate", (new BlockFenceGate(BlockPlanks.EnumType.JUNGLE)).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("jungleFenceGate"));
         registerBlock(186, "dark_oak_fence_gate", (new BlockFenceGate(BlockPlanks.EnumType.DARK_OAK)).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("darkOakFenceGate"));
         registerBlock(187, "acacia_fence_gate", (new BlockFenceGate(BlockPlanks.EnumType.ACACIA)).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("acaciaFenceGate"));
-        registerBlock(188, "spruce_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.SPRUCE.func_181070_c())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("spruceFence"));
-        registerBlock(189, "birch_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.BIRCH.func_181070_c())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("birchFence"));
-        registerBlock(190, "jungle_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.JUNGLE.func_181070_c())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("jungleFence"));
-        registerBlock(191, "dark_oak_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.DARK_OAK.func_181070_c())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("darkOakFence"));
-        registerBlock(192, "acacia_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.ACACIA.func_181070_c())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("acaciaFence"));
+        registerBlock(188, "spruce_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.SPRUCE.getMapColor())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("spruceFence"));
+        registerBlock(189, "birch_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.BIRCH.getMapColor())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("birchFence"));
+        registerBlock(190, "jungle_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.JUNGLE.getMapColor())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("jungleFence"));
+        registerBlock(191, "dark_oak_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.DARK_OAK.getMapColor())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("darkOakFence"));
+        registerBlock(192, "acacia_fence", (new BlockFence(Material.wood, BlockPlanks.EnumType.ACACIA.getMapColor())).setHardness(2.0F).setResistance(5.0F).setStepSound(soundTypeWood).setUnlocalizedName("acaciaFence"));
         registerBlock(193, "spruce_door", (new BlockDoor(Material.wood)).setHardness(3.0F).setStepSound(soundTypeWood).setUnlocalizedName("doorSpruce").disableStats());
         registerBlock(194, "birch_door", (new BlockDoor(Material.wood)).setHardness(3.0F).setStepSound(soundTypeWood).setUnlocalizedName("doorBirch").disableStats());
         registerBlock(195, "jungle_door", (new BlockDoor(Material.wood)).setHardness(3.0F).setStepSound(soundTypeWood).setUnlocalizedName("doorJungle").disableStats());
@@ -1480,9 +1410,7 @@ public class Block
         for (Block block13 : blockRegistry)
         {
             if (block13.blockMaterial == Material.air)
-            {
                 block13.useNeighborBrightness = false;
-            }
             else
             {
                 boolean flag = false;
@@ -1493,22 +1421,18 @@ public class Block
                 boolean flag5 = block13.lightOpacity == 0;
 
                 if (flag1 || flag2 || flag3 || flag4 || flag5)
-                {
                     flag = true;
-                }
 
                 block13.useNeighborBrightness = flag;
             }
         }
 
         for (Block block14 : blockRegistry)
-        {
             for (IBlockState iblockstate : block14.getBlockState().getValidStates())
             {
                 int i = blockRegistry.getIDForObject(block14) << 4 | block14.getMetaFromState(iblockstate);
                 BLOCK_STATE_IDS.put(iblockstate, i);
             }
-        }
     }
 
     private static void registerBlock(int id, ResourceLocation textualID, Block block_)

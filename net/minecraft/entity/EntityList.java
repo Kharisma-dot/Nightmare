@@ -93,7 +93,7 @@ public class EntityList
         {
             throw new IllegalArgumentException("ID is already registered: " + entityName);
         }
-        else if (idToClassMapping.containsKey(Integer.valueOf(id)))
+        else if (idToClassMapping.containsKey(id))
         {
             throw new IllegalArgumentException("ID is already registered: " + id);
         }
@@ -109,9 +109,9 @@ public class EntityList
         {
             stringToClassMapping.put(entityName, entityClass);
             classToStringMapping.put(entityClass, entityName);
-            idToClassMapping.put(Integer.valueOf(id), entityClass);
-            classToIDMapping.put(entityClass, Integer.valueOf(id));
-            stringToIDMapping.put(entityName, Integer.valueOf(id));
+            idToClassMapping.put(id, entityClass);
+            classToIDMapping.put(entityClass, id);
+            stringToIDMapping.put(entityName, id);
         }
     }
 
@@ -121,7 +121,7 @@ public class EntityList
     private static void addMapping(Class <? extends Entity > entityClass, String entityName, int entityID, int baseColor, int spotColor)
     {
         addMapping(entityClass, entityName, entityID);
-        entityEggs.put(Integer.valueOf(entityID), new EntityList.EntityEggInfo(entityID, baseColor, spotColor));
+        entityEggs.put(entityID, new EntityList.EntityEggInfo(entityID, baseColor, spotColor));
     }
 
     /**
@@ -150,8 +150,6 @@ public class EntityList
 
     /**
      * create a new instance of an entity from NBT store
-     *  
-     * @param nbt The NBT compound
      */
     public static Entity createEntityFromNBT(NBTTagCompound nbt, World worldIn)
     {
@@ -223,13 +221,13 @@ public class EntityList
      */
     public static int getEntityID(Entity entityIn)
     {
-        Integer integer = (Integer)classToIDMapping.get(entityIn.getClass());
-        return integer == null ? 0 : integer.intValue();
+        Integer integer = classToIDMapping.get(entityIn.getClass());
+        return integer == null ? 0 : integer;
     }
 
     public static Class <? extends Entity > getClassFromID(int entityID)
     {
-        return (Class)idToClassMapping.get(Integer.valueOf(entityID));
+        return (Class)idToClassMapping.get(entityID);
     }
 
     /**
@@ -245,8 +243,8 @@ public class EntityList
      */
     public static int getIDFromString(String entityName)
     {
-        Integer integer = (Integer)stringToIDMapping.get(entityName);
-        return integer == null ? 90 : integer.intValue();
+        Integer integer = stringToIDMapping.get(entityName);
+        return integer == null ? 90 : integer;
     }
 
     /**
@@ -254,7 +252,7 @@ public class EntityList
      */
     public static String getStringFromID(int entityID)
     {
-        return (String)classToStringMapping.get(getClassFromID(entityID));
+        return classToStringMapping.get(getClassFromID(entityID));
     }
 
     public static void func_151514_a()
@@ -268,7 +266,7 @@ public class EntityList
 
         for (String s : set)
         {
-            Class <? extends Entity > oclass = (Class)stringToClassMapping.get(s);
+            Class <? extends Entity > oclass = stringToClassMapping.get(s);
 
             if ((oclass.getModifiers() & 1024) != 1024)
             {

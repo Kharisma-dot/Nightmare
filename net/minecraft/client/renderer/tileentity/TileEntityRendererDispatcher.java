@@ -33,7 +33,7 @@ import net.optifine.reflect.Reflector;
 
 public class TileEntityRendererDispatcher
 {
-    public Map<Class, TileEntitySpecialRenderer> mapSpecialRenderers = Maps.newHashMap();
+    public Map<Class, TileEntitySpecialRenderer>  mapSpecialRenderers = Maps.newHashMap();
     public static TileEntityRendererDispatcher instance = new TileEntityRendererDispatcher();
     public FontRenderer fontRenderer;
 
@@ -115,34 +115,20 @@ public class TileEntityRendererDispatcher
     {
         if (tileentityIn.getDistanceSq(this.entityX, this.entityY, this.entityZ) < tileentityIn.getMaxRenderDistanceSquared())
         {
-            boolean flag = true;
-
-            if (Reflector.ForgeTileEntity_hasFastRenderer.exists())
-            {
-                flag = !this.drawingBatch || !Reflector.callBoolean(tileentityIn, Reflector.ForgeTileEntity_hasFastRenderer, new Object[0]);
-            }
-
-            if (flag)
-            {
-                RenderHelper.enableStandardItemLighting();
-                int i = this.worldObj.getCombinedLight(tileentityIn.getPos(), 0);
-                int j = i % 65536;
-                int k = i / 65536;
-                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            }
+            RenderHelper.enableStandardItemLighting();
+            int i = this.worldObj.getCombinedLight(tileentityIn.getPos(), 0);
+            int j = i % 65536;
+            int k = i / 65536;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             BlockPos blockpos = tileentityIn.getPos();
 
             if (!this.worldObj.isBlockLoaded(blockpos, false))
-            {
                 return;
-            }
 
             if (EmissiveTextures.isActive())
-            {
                 EmissiveTextures.beginRender();
-            }
 
             this.renderTileEntityAt(tileentityIn, (double)blockpos.getX() - staticPlayerX, (double)blockpos.getY() - staticPlayerY, (double)blockpos.getZ() - staticPlayerZ, partialTicks, destroyStage);
 
@@ -178,14 +164,7 @@ public class TileEntityRendererDispatcher
             {
                 this.tileEntityRendered = tileEntityIn;
 
-                if (this.drawingBatch && Reflector.callBoolean(tileEntityIn, Reflector.ForgeTileEntity_hasFastRenderer, new Object[0]))
-                {
-                    tileentityspecialrenderer.renderTileEntityFast(tileEntityIn, x, y, z, partialTicks, destroyStage, this.batchBuffer.getWorldRenderer());
-                }
-                else
-                {
-                    tileentityspecialrenderer.renderTileEntityAt(tileEntityIn, x, y, z, partialTicks, destroyStage);
-                }
+                tileentityspecialrenderer.renderTileEntityAt(tileEntityIn, x, y, z, partialTicks, destroyStage);
 
                 this.tileEntityRendered = null;
             }
@@ -234,7 +213,7 @@ public class TileEntityRendererDispatcher
 
         if (p_drawBatch_1_ > 0)
         {
-            this.batchBuffer.getWorldRenderer().func_181674_a((float)staticPlayerX, (float)staticPlayerY, (float)staticPlayerZ);
+            this.batchBuffer.getWorldRenderer().sortVertexData((float)staticPlayerX, (float)staticPlayerY, (float)staticPlayerZ);
         }
 
         this.batchBuffer.draw();

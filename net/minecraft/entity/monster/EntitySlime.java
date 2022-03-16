@@ -47,12 +47,12 @@ public class EntitySlime extends EntityLiving implements IMob
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, Byte.valueOf((byte)1));
+        this.dataWatcher.addObject(16, (byte)1);
     }
 
     protected void setSlimeSize(int size)
     {
-        this.dataWatcher.updateObject(16, Byte.valueOf((byte)size));
+        this.dataWatcher.updateObject(16, (byte)size);
         this.setSize(0.51000005F * (float)size, 0.51000005F * (float)size);
         this.setPosition(this.posX, this.posY, this.posZ);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)(size * size));
@@ -403,9 +403,9 @@ public class EntitySlime extends EntityLiving implements IMob
         private EntitySlime slime;
         private int field_179465_b;
 
-        public AISlimeAttack(EntitySlime p_i45824_1_)
+        public AISlimeAttack(EntitySlime slimeIn)
         {
-            this.slime = p_i45824_1_;
+            this.slime = slimeIn;
             this.setMutexBits(2);
         }
 
@@ -440,9 +440,9 @@ public class EntitySlime extends EntityLiving implements IMob
         private float field_179459_b;
         private int field_179460_c;
 
-        public AISlimeFaceRandom(EntitySlime p_i45820_1_)
+        public AISlimeFaceRandom(EntitySlime slimeIn)
         {
-            this.slime = p_i45820_1_;
+            this.slime = slimeIn;
             this.setMutexBits(2);
         }
 
@@ -467,11 +467,11 @@ public class EntitySlime extends EntityLiving implements IMob
     {
         private EntitySlime slime;
 
-        public AISlimeFloat(EntitySlime p_i45823_1_)
+        public AISlimeFloat(EntitySlime slimeIn)
         {
-            this.slime = p_i45823_1_;
+            this.slime = slimeIn;
             this.setMutexBits(5);
-            ((PathNavigateGround)p_i45823_1_.getNavigator()).setCanSwim(true);
+            ((PathNavigateGround)slimeIn.getNavigator()).setCanSwim(true);
         }
 
         public boolean shouldExecute()
@@ -494,9 +494,9 @@ public class EntitySlime extends EntityLiving implements IMob
     {
         private EntitySlime slime;
 
-        public AISlimeHop(EntitySlime p_i45822_1_)
+        public AISlimeHop(EntitySlime slimeIn)
         {
-            this.slime = p_i45822_1_;
+            this.slime = slimeIn;
             this.setMutexBits(5);
         }
 
@@ -518,10 +518,10 @@ public class EntitySlime extends EntityLiving implements IMob
         private EntitySlime slime;
         private boolean field_179923_j;
 
-        public SlimeMoveHelper(EntitySlime p_i45821_1_)
+        public SlimeMoveHelper(EntitySlime slimeIn)
         {
-            super(p_i45821_1_);
-            this.slime = p_i45821_1_;
+            super(slimeIn);
+            this.slime = slimeIn;
         }
 
         public void func_179920_a(float p_179920_1_, boolean p_179920_2_)

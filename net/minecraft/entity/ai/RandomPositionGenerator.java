@@ -19,7 +19,7 @@ public class RandomPositionGenerator
      */
     public static Vec3 findRandomTarget(EntityCreature entitycreatureIn, int xz, int y)
     {
-        return findRandomTargetBlock(entitycreatureIn, xz, y, (Vec3)null);
+        return findRandomTargetBlock(entitycreatureIn, xz, y, null);
     }
 
     /**

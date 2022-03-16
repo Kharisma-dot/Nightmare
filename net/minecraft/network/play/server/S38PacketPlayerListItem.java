@@ -90,17 +90,17 @@ public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
                     break;
 
                 case UPDATE_GAME_MODE:
-                    gameprofile = new GameProfile(buf.readUuid(), (String)null);
+                    gameprofile = new GameProfile(buf.readUuid(), null);
                     worldsettings$gametype = WorldSettings.GameType.getByID(buf.readVarIntFromBuffer());
                     break;
 
                 case UPDATE_LATENCY:
-                    gameprofile = new GameProfile(buf.readUuid(), (String)null);
+                    gameprofile = new GameProfile(buf.readUuid(), null);
                     k = buf.readVarIntFromBuffer();
                     break;
 
                 case UPDATE_DISPLAY_NAME:
-                    gameprofile = new GameProfile(buf.readUuid(), (String)null);
+                    gameprofile = new GameProfile(buf.readUuid(), null);
 
                     if (buf.readBoolean())
                     {
@@ -110,7 +110,7 @@ public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
                     break;
 
                 case REMOVE_PLAYER:
-                    gameprofile = new GameProfile(buf.readUuid(), (String)null);
+                    gameprofile = new GameProfile(buf.readUuid(), null);
             }
 
             this.players.add(new S38PacketPlayerListItem.AddPlayerData(gameprofile, k, worldsettings$gametype, ichatcomponent));
@@ -204,12 +204,12 @@ public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
         handler.handlePlayerListItem(this);
     }
 
-    public List<S38PacketPlayerListItem.AddPlayerData> func_179767_a()
+    public List<S38PacketPlayerListItem.AddPlayerData> getEntries()
     {
         return this.players;
     }
 
-    public S38PacketPlayerListItem.Action func_179768_b()
+    public S38PacketPlayerListItem.Action getAction()
     {
         return this.action;
     }

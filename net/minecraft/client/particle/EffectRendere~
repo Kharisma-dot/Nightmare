@@ -227,6 +227,8 @@ public class EffectRenderer {
       GlStateManager.func_179147_l();
       GlStateManager.func_179112_b(770, 771);
       GlStateManager.func_179092_a(516, 0.003921569F);
+      Block block = ActiveRenderInfo.func_180786_a(this.field_78878_a, p_78874_1_, p_78874_2_);
+      boolean flag = block.func_149688_o() == Material.field_151586_h;
 
       for(final int i = 0; i < 3; ++i) {
          for(int j = 0; j < 2; ++j) {
@@ -257,7 +259,9 @@ public class EffectRenderer {
                   final EntityFX entityfx = (EntityFX)this.field_78876_b[i][j].get(k);
 
                   try {
-                     entityfx.func_180434_a(worldrenderer, p_78874_1_, p_78874_2_, f, f4, f1, f2, f3);
+                     if(flag || !(entityfx instanceof EntitySuspendFX)) {
+                        entityfx.func_180434_a(worldrenderer, p_78874_1_, p_78874_2_, f, f4, f1, f2, f3);
+                     }
                   } catch (Throwable throwable) {
                      CrashReport crashreport = CrashReport.func_85055_a(throwable, "Rendering Particle");
                      CrashReportCategory crashreportcategory = crashreport.func_85058_a("Particle being rendered");

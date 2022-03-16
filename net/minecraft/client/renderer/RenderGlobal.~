@@ -29,6 +29,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.BlockModelRenderer;
@@ -118,6 +119,7 @@ import net.optifine.render.RenderEnv;
 import net.optifine.shaders.Shaders;
 import net.optifine.shaders.ShadersRender;
 import net.optifine.shaders.ShadowUtils;
+import net.optifine.shaders.gui.GuiShaderOptions;
 import net.optifine.util.ChunkUtils;
 import net.optifine.util.RenderChunkUtils;
 import org.apache.logging.log4j.LogManager;
@@ -287,7 +289,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
    }
 
    protected boolean func_174985_d() {
-      return !Config.isFastRender() && !Config.isShaders() && !Config.isAntialiasing()?this.field_175015_z != null && this.field_174991_A != null && this.field_72777_q.field_71439_g != null && this.field_72777_q.field_71439_g.func_175149_v() && this.field_72777_q.field_71474_y.field_178883_an.func_151470_d():false;
+      return !Config.isFastRender() && !Config.isShaders() && !Config.isAntialiasing()?this.field_175015_z != null && this.field_174991_A != null && this.field_72777_q.field_71439_g != null && this.field_72777_q.field_71439_g.func_175149_v() && this.field_72777_q.field_71474_y.field_152396_an.func_151470_d():false;
    }
 
    private void func_174964_o() {
@@ -466,7 +468,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
       ChunkVisibility.reset();
       this.worldChunkProvider = null;
       this.worldChunkProviderMap = null;
-      this.renderEnv.reset((IBlockState)null, (BlockPos)null);
+      this.renderEnv.reset(null, null);
       Shaders.checkWorldChanged(this.field_72769_h);
       if(p_72732_1_ != null) {
          p_72732_1_.func_72954_a(this);
@@ -551,7 +553,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
    public void func_180446_a(Entity p_180446_1_, ICamera p_180446_2_, float p_180446_3_) {
       int i = 0;
       if(Reflector.MinecraftForgeClient_getRenderPass.exists()) {
-         i = Reflector.callInt(Reflector.MinecraftForgeClient_getRenderPass, new Object[0]);
+         i = Reflector.callInt(Reflector.MinecraftForgeClient_getRenderPass);
       }
 
       if(this.field_72740_G > 0) {
@@ -620,7 +622,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                Entity entity3 = (Entity)list.get(k);
                boolean flag2 = this.field_72777_q.func_175606_aa() instanceof EntityLivingBase && ((EntityLivingBase)this.field_72777_q.func_175606_aa()).func_70608_bn();
                boolean flag3 = entity3.func_145770_h(d0, d1, d2) && (entity3.field_70158_ak || p_180446_2_.func_78546_a(entity3.func_174813_aQ()) || entity3.field_70153_n == this.field_72777_q.field_71439_g) && entity3 instanceof EntityPlayer;
-               if((entity3 != this.field_72777_q.func_175606_aa() || this.field_72777_q.field_71474_y.field_74320_O != 0 || flag2) && flag3) {
+               if((entity3 != this.field_72777_q.func_175606_aa() || this.field_72777_q.field_71474_y.field_74330_P != 0 || flag2) && flag3) {
                   this.field_175010_j.func_147937_a(entity3, p_180446_3_);
                }
             }
@@ -649,8 +651,9 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
          RenderItemFrame.updateItemRenderDistance();
          boolean flag7 = this.field_72777_q.field_71474_y.field_74347_j;
          this.field_72777_q.field_71474_y.field_74347_j = Config.isDroppedItemsFancy();
+         boolean flag8 = Shaders.isShadowPass && !this.field_72777_q.field_71439_g.func_175149_v();
 
-         label900:
+         label926:
          for(RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfosEntities) {
             Chunk chunk = renderglobal$containerlocalrenderinformation.field_178036_a.getChunk();
             ClassInheritanceMultiMap<Entity> classinheritancemultimap = chunk.func_177429_s()[renderglobal$containerlocalrenderinformation.field_178036_a.func_178568_j().func_177956_o() / 16];
@@ -662,7 +665,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                   boolean flag4;
                   while(true) {
                      if(!iterator.hasNext()) {
-                        continue label900;
+                        continue label926;
                      }
 
                      entity2 = (Entity)iterator.next();
@@ -673,7 +676,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                         }
 
                         boolean flag5 = this.field_72777_q.func_175606_aa() instanceof EntityLivingBase?((EntityLivingBase)this.field_72777_q.func_175606_aa()).func_70608_bn():false;
-                        if((entity2 != this.field_72777_q.func_175606_aa() || this.field_72777_q.field_71474_y.field_74320_O != 0 || flag5) && (entity2.field_70163_u < 0.0D || entity2.field_70163_u >= 256.0D || this.field_72769_h.func_175667_e(new BlockPos(entity2)))) {
+                        if((entity2 != this.field_72777_q.func_175606_aa() || flag8 || this.field_72777_q.field_71474_y.field_74330_P != 0 || flag5) && (entity2.field_70163_u < 0.0D || entity2.field_70163_u >= 256.0D || this.field_72769_h.func_175667_e(new BlockPos(entity2)))) {
                            ++this.field_72749_I;
                            this.renderedEntity = entity2;
                            if(flag6) {
@@ -714,7 +717,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
          TileEntitySignRenderer.updateTextRenderDistance();
 
-         label1377:
+         label1408:
          for(RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 : this.renderInfosTileEntities) {
             List<TileEntity> list1 = renderglobal$containerlocalrenderinformation1.field_178036_a.func_178571_g().func_178485_b();
             if(!list1.isEmpty()) {
@@ -724,7 +727,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                   TileEntity tileentity1;
                   while(true) {
                      if(!iterator1.hasNext()) {
-                        continue label1377;
+                        continue label1408;
                      }
 
                      tileentity1 = (TileEntity)iterator1.next();
@@ -733,7 +736,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                      }
 
                      if(Reflector.callBoolean(tileentity1, Reflector.ForgeTileEntity_shouldRenderInPass, new Object[]{Integer.valueOf(i)})) {
-                        AxisAlignedBB axisalignedbb1 = (AxisAlignedBB)Reflector.call(tileentity1, Reflector.ForgeTileEntity_getRenderBoundingBox, new Object[0]);
+                        AxisAlignedBB axisalignedbb1 = (AxisAlignedBB)Reflector.call(tileentity1, Reflector.ForgeTileEntity_getRenderBoundingBox);
                         if(axisalignedbb1 == null || p_180446_2_.func_78546_a(axisalignedbb1)) {
                            break;
                         }
@@ -784,20 +787,20 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             }
 
             Block block = this.field_72769_h.func_180495_p(blockpos).func_177230_c();
-            boolean flag8;
+            boolean flag9;
             if(flag1) {
-               flag8 = false;
-               if(tileentity2 != null && Reflector.callBoolean(tileentity2, Reflector.ForgeTileEntity_shouldRenderInPass, new Object[]{Integer.valueOf(i)}) && Reflector.callBoolean(tileentity2, Reflector.ForgeTileEntity_canRenderBreaking, new Object[0])) {
-                  AxisAlignedBB axisalignedbb = (AxisAlignedBB)Reflector.call(tileentity2, Reflector.ForgeTileEntity_getRenderBoundingBox, new Object[0]);
+               flag9 = false;
+               if(tileentity2 != null && Reflector.callBoolean(tileentity2, Reflector.ForgeTileEntity_shouldRenderInPass, new Object[]{Integer.valueOf(i)}) && Reflector.callBoolean(tileentity2, Reflector.ForgeTileEntity_canRenderBreaking)) {
+                  AxisAlignedBB axisalignedbb = (AxisAlignedBB)Reflector.call(tileentity2, Reflector.ForgeTileEntity_getRenderBoundingBox);
                   if(axisalignedbb != null) {
-                     flag8 = p_180446_2_.func_78546_a(axisalignedbb);
+                     flag9 = p_180446_2_.func_78546_a(axisalignedbb);
                   }
                }
             } else {
-               flag8 = tileentity2 != null && (block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockSign || block instanceof BlockSkull);
+               flag9 = tileentity2 != null && (block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockSign || block instanceof BlockSkull);
             }
 
-            if(flag8) {
+            if(flag9) {
                if(flag6) {
                   Shaders.nextBlockEntity(tileentity2);
                }
@@ -945,7 +948,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
          boolean flag1 = this.field_72777_q.field_175612_E;
          if(renderchunk != null && renderchunk.func_178568_j().func_177956_o() <= j) {
             boolean flag2 = false;
-            RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation4 = new RenderGlobal.ContainerLocalRenderInformation(renderchunk, (EnumFacing)null, 0);
+            RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation4 = new RenderGlobal.ContainerLocalRenderInformation(renderchunk, null, 0);
             Set set1 = SET_ALL_FACINGS;
             if(set1.size() == 1) {
                Vector3f vector3f = this.func_174962_a(p_174970_1_, p_174970_2_);
@@ -979,7 +982,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                   if(renderchunk3 != null && renderchunk3.isBoundingBoxInFrustum((ICamera)p_174970_4_, p_174970_5_)) {
                      renderchunk3.func_178577_a(p_174970_5_);
                      RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 = renderchunk3.getRenderInfo();
-                     renderglobal$containerlocalrenderinformation1.initialize((EnumFacing)null, 0);
+                     renderglobal$containerlocalrenderinformation1.initialize(null, 0);
                      deque.add(renderglobal$containerlocalrenderinformation1);
                   }
                }
@@ -1138,7 +1141,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
    protected Vector3f func_174962_a(Entity p_174962_1_, double p_174962_2_) {
       float f = (float)((double)p_174962_1_.field_70127_C + (double)(p_174962_1_.field_70125_A - p_174962_1_.field_70127_C) * p_174962_2_);
       float f1 = (float)((double)p_174962_1_.field_70126_B + (double)(p_174962_1_.field_70177_z - p_174962_1_.field_70126_B) * p_174962_2_);
-      if(Minecraft.func_71410_x().field_71474_y.field_74320_O == 2) {
+      if(Minecraft.func_71410_x().field_71474_y.field_74330_P == 2) {
          f += 180.0F;
       }
 
@@ -1259,9 +1262,16 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
    }
 
    public void func_72734_e() {
-      if(Config.isShaders() && Keyboard.isKeyDown(61) && Keyboard.isKeyDown(19)) {
-         Shaders.uninit();
-         Shaders.loadShaderPack();
+      if(Config.isShaders()) {
+         if(Keyboard.isKeyDown(61) && Keyboard.isKeyDown(24)) {
+            GuiShaderOptions guishaderoptions = new GuiShaderOptions(null, Config.getGameSettings());
+            Config.getMinecraft().func_147108_a(guishaderoptions);
+         }
+
+         if(Keyboard.isKeyDown(61) && Keyboard.isKeyDown(19)) {
+            Shaders.uninit();
+            Shaders.loadShaderPack();
+         }
       }
 
       ++this.field_72773_u;
@@ -1335,7 +1345,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
    public void func_174976_a(float p_174976_1_, int p_174976_2_) {
       if(Reflector.ForgeWorldProvider_getSkyRenderer.exists()) {
          WorldProvider worldprovider = this.field_72777_q.field_71441_e.field_73011_w;
-         Object object = Reflector.call(worldprovider, Reflector.ForgeWorldProvider_getSkyRenderer, new Object[0]);
+         Object object = Reflector.call(worldprovider, Reflector.ForgeWorldProvider_getSkyRenderer);
          if(object != null) {
             Reflector.callVoid(object, Reflector.IRenderHandler_render, new Object[]{Float.valueOf(p_174976_1_), this.field_72769_h, this.field_72777_q});
             return;
@@ -1612,7 +1622,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
       if(!Config.isCloudsOff()) {
          if(Reflector.ForgeWorldProvider_getCloudRenderer.exists()) {
             WorldProvider worldprovider = this.field_72777_q.field_71441_e.field_73011_w;
-            Object object = Reflector.call(worldprovider, Reflector.ForgeWorldProvider_getCloudRenderer, new Object[0]);
+            Object object = Reflector.call(worldprovider, Reflector.ForgeWorldProvider_getCloudRenderer);
             if(object != null) {
                Reflector.callVoid(object, Reflector.IRenderHandler_render, new Object[]{Float.valueOf(p_180447_1_), this.field_72769_h, this.field_72777_q});
                return;
@@ -1911,6 +1921,11 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
       WorldBorder worldborder = this.field_72769_h.func_175723_af();
       double d0 = (double)(this.field_72777_q.field_71474_y.field_151451_c * 16);
       if(p_180449_1_.field_70165_t >= worldborder.func_177728_d() - d0 || p_180449_1_.field_70165_t <= worldborder.func_177726_b() + d0 || p_180449_1_.field_70161_v >= worldborder.func_177733_e() - d0 || p_180449_1_.field_70161_v <= worldborder.func_177736_c() + d0) {
+         if(Config.isShaders()) {
+            Shaders.pushProgram();
+            Shaders.useProgram(Shaders.ProgramTexturedLit);
+         }
+
          double d1 = 1.0D - worldborder.func_177745_a(p_180449_1_) / d0;
          d1 = Math.pow(d1, 4.0D);
          double d2 = p_180449_1_.field_70142_S + (p_180449_1_.field_70165_t - p_180449_1_.field_70142_S) * (double)p_180449_2_;
@@ -2008,6 +2023,9 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
          GlStateManager.func_179084_k();
          GlStateManager.func_179121_F();
          GlStateManager.func_179132_a(true);
+         if(Config.isShaders()) {
+            Shaders.popProgram();
+         }
       }
 
    }
@@ -2065,7 +2083,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                if(!flag1) {
                   TileEntity tileentity = this.field_72769_h.func_175625_s(blockpos);
                   if(tileentity != null) {
-                     flag1 = Reflector.callBoolean(tileentity, Reflector.ForgeTileEntity_canRenderBreaking, new Object[0]);
+                     flag1 = Reflector.callBoolean(tileentity, Reflector.ForgeTileEntity_canRenderBreaking);
                   }
                }
 
@@ -2268,7 +2286,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
    private EntityFX func_174974_b(int p_174974_1_, boolean p_174974_2_, double p_174974_3_, double p_174974_5_, double p_174974_7_, double p_174974_9_, double p_174974_11_, double p_174974_13_, int... p_174974_15_) {
       if(this.field_72777_q != null && this.field_72777_q.func_175606_aa() != null && this.field_72777_q.field_71452_i != null) {
-         int i = this.field_72777_q.field_71474_y.field_74362_aa;
+         int i = this.field_72777_q.field_71474_y.field_74363_ab;
          if(i == 1 && this.field_72769_h.field_73012_v.nextInt(3) == 0) {
             i = 2;
          }
@@ -2314,7 +2332,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             return null;
          } else {
             if(!p_174974_2_) {
-               double d3 = 1024.0D;
+               double d3 = 256.0D;
                if(p_174974_1_ == EnumParticleTypes.CRIT.func_179348_c()) {
                   d3 = 38416.0D;
                }
@@ -2429,7 +2447,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
          if(Item.func_150899_d(p_180439_4_) instanceof ItemRecord) {
             this.field_72769_h.func_175717_a(p_180439_3_, "records." + ((ItemRecord)Item.func_150899_d(p_180439_4_)).field_150929_a);
          } else {
-            this.field_72769_h.func_175717_a(p_180439_3_, (String)null);
+            this.field_72769_h.func_175717_a(p_180439_3_, null);
          }
          break;
       case 1006:

@@ -109,7 +109,8 @@ public class Framebuffer
 
             this.setFramebufferFilter(9728);
             GlStateManager.bindTexture(this.framebufferTexture);
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, this.framebufferTextureWidth, this.framebufferTextureHeight, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer)((ByteBuffer)null));
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, this.framebufferTextureWidth, 
+            		this.framebufferTextureHeight, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer)null);
             OpenGlHelper.glBindFramebuffer(OpenGlHelper.GL_FRAMEBUFFER, this.framebufferObject);
             OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, 3553, this.framebufferTexture, 0);
 
@@ -251,10 +252,10 @@ public class Framebuffer
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            worldrenderer.pos(0.0D, (double)f1, 0.0D).tex(0.0D, 0.0D).func_181669_b(255, 255, 255, 255).endVertex();
-            worldrenderer.pos((double)f, (double)f1, 0.0D).tex((double)f2, 0.0D).func_181669_b(255, 255, 255, 255).endVertex();
-            worldrenderer.pos((double)f, 0.0D, 0.0D).tex((double)f2, (double)f3).func_181669_b(255, 255, 255, 255).endVertex();
-            worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, (double)f3).func_181669_b(255, 255, 255, 255).endVertex();
+            worldrenderer.pos(0.0D, (double)f1, 0.0D).tex(0.0D, 0.0D).color(255, 255, 255, 255).endVertex();
+            worldrenderer.pos((double)f, (double)f1, 0.0D).tex((double)f2, 0.0D).color(255, 255, 255, 255).endVertex();
+            worldrenderer.pos((double)f, 0.0D, 0.0D).tex((double)f2, (double)f3).color(255, 255, 255, 255).endVertex();
+            worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, (double)f3).color(255, 255, 255, 255).endVertex();
             tessellator.draw();
             this.unbindFramebufferTexture();
             GlStateManager.depthMask(true);

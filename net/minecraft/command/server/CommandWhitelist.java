@@ -31,8 +31,6 @@ public class CommandWhitelist extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -41,15 +39,12 @@ public class CommandWhitelist extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.whitelist.usage", new Object[0]);
+            throw new WrongUsageException("commands.whitelist.usage");
         }
         else
         {
@@ -58,16 +53,18 @@ public class CommandWhitelist extends CommandBase
             if (args[0].equals("on"))
             {
                 minecraftserver.getConfigurationManager().setWhiteListEnabled(true);
-                notifyOperators(sender, this, "commands.whitelist.enabled", new Object[0]);
+                notifyOperators(sender, this, "commands.whitelist.enabled");
             }
             else if (args[0].equals("off"))
             {
                 minecraftserver.getConfigurationManager().setWhiteListEnabled(false);
-                notifyOperators(sender, this, "commands.whitelist.disabled", new Object[0]);
+                notifyOperators(sender, this, "commands.whitelist.disabled");
             }
             else if (args[0].equals("list"))
             {
-                sender.addChatMessage(new ChatComponentTranslation("commands.whitelist.list", new Object[] {Integer.valueOf(minecraftserver.getConfigurationManager().getWhitelistedPlayerNames().length), Integer.valueOf(minecraftserver.getConfigurationManager().getAvailablePlayerDat().length)}));
+                sender.addChatMessage(new ChatComponentTranslation("commands.whitelist.list", 
+                		new Object[] {minecraftserver.getConfigurationManager().getWhitelistedPlayerNames().length,
+                				minecraftserver.getConfigurationManager().getAvailablePlayerDat().length}));
                 String[] astring = minecraftserver.getConfigurationManager().getWhitelistedPlayerNames();
                 sender.addChatMessage(new ChatComponentText(joinNiceString(astring)));
             }
@@ -75,7 +72,7 @@ public class CommandWhitelist extends CommandBase
             {
                 if (args.length < 2)
                 {
-                    throw new WrongUsageException("commands.whitelist.add.usage", new Object[0]);
+                    throw new WrongUsageException("commands.whitelist.add.usage");
                 }
 
                 GameProfile gameprofile = minecraftserver.getPlayerProfileCache().getGameProfileForUsername(args[1]);
@@ -92,10 +89,10 @@ public class CommandWhitelist extends CommandBase
             {
                 if (args.length < 2)
                 {
-                    throw new WrongUsageException("commands.whitelist.remove.usage", new Object[0]);
+                    throw new WrongUsageException("commands.whitelist.remove.usage");
                 }
 
-                GameProfile gameprofile1 = minecraftserver.getConfigurationManager().getWhitelistedPlayers().func_152706_a(args[1]);
+                GameProfile gameprofile1 = minecraftserver.getConfigurationManager().getWhitelistedPlayers().getBannedProfile(args[1]);
 
                 if (gameprofile1 == null)
                 {
@@ -108,7 +105,7 @@ public class CommandWhitelist extends CommandBase
             else if (args[0].equals("reload"))
             {
                 minecraftserver.getConfigurationManager().loadWhiteList();
-                notifyOperators(sender, this, "commands.whitelist.reloaded", new Object[0]);
+                notifyOperators(sender, this, "commands.whitelist.reloaded");
             }
         }
     }

@@ -37,6 +37,8 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
    private final List<ITickable> field_110583_b = Lists.<ITickable>newArrayList();
    private final Map<String, Integer> field_110584_c = Maps.<String, Integer>newHashMap();
    private IResourceManager field_110582_d;
+   private ITextureObject boundTexture;
+   private ResourceLocation boundTextureLocation;
 
    public TextureManager(IResourceManager p_i1284_1_) {
       this.field_110582_d = p_i1284_1_;
@@ -67,6 +69,8 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
          TextureUtil.func_94277_a(itextureobject.func_110552_b());
       }
 
+      this.boundTexture = itextureobject;
+      this.boundTextureLocation = p_110577_1_;
    }
 
    public boolean func_110580_a(ResourceLocation p_110580_1_, ITickableTextureObject p_110580_2_) {
@@ -178,5 +182,13 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
          }
       }
 
+   }
+
+   public ITextureObject getBoundTexture() {
+      return this.boundTexture;
+   }
+
+   public ResourceLocation getBoundTextureLocation() {
+      return this.boundTextureLocation;
    }
 }

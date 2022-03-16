@@ -25,29 +25,23 @@ public class ModelAdapterGhast extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelGhast))
-        {
             return null;
-        }
         else
         {
             ModelGhast modelghast = (ModelGhast)model;
 
             if (modelPart.equals("body"))
-            {
                 return (ModelRenderer)Reflector.getFieldValue(modelghast, Reflector.ModelGhast_body);
-            }
             else
             {
                 String s = "tentacle";
 
                 if (modelPart.startsWith(s))
                 {
-                    ModelRenderer[] amodelrenderer = (ModelRenderer[])((ModelRenderer[])Reflector.getFieldValue(modelghast, Reflector.ModelGhast_tentacles));
+                    ModelRenderer[] amodelrenderer = (ModelRenderer[])Reflector.getFieldValue(modelghast, Reflector.ModelGhast_tentacles);
 
                     if (amodelrenderer == null)
-                    {
                         return null;
-                    }
                     else
                     {
                         String s1 = modelPart.substring(s.length());
@@ -57,16 +51,15 @@ public class ModelAdapterGhast extends ModelAdapter
                     }
                 }
                 else
-                {
                     return null;
-                }
             }
         }
     }
 
     public String[] getModelRendererNames()
     {
-        return new String[] {"body", "tentacle1", "tentacle2", "tentacle3", "tentacle4", "tentacle5", "tentacle6", "tentacle7", "tentacle8", "tentacle9"};
+        return new String[] {"body", "tentacle1", "tentacle2", "tentacle3", "tentacle4", "tentacle5", "tentacle6", 
+        		"tentacle7", "tentacle8", "tentacle9"};
     }
 
     public IEntityRenderer makeEntityRender(ModelBase modelBase, float shadowSize)

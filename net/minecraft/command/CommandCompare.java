@@ -29,8 +29,6 @@ public class CommandCompare extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -39,15 +37,12 @@ public class CommandCompare extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 9)
         {
-            throw new WrongUsageException("commands.compare.usage", new Object[0]);
+            throw new WrongUsageException("commands.compare.usage");
         }
         else
         {
@@ -61,7 +56,7 @@ public class CommandCompare extends CommandBase
 
             if (i > 524288)
             {
-                throw new CommandException("commands.compare.tooManyBlocks", new Object[] {Integer.valueOf(i), Integer.valueOf(524288)});
+                throw new CommandException("commands.compare.tooManyBlocks", i, 524288);
             }
             else if (structureboundingbox.minY >= 0 && structureboundingbox.maxY < 256 && structureboundingbox1.minY >= 0 && structureboundingbox1.maxY < 256)
             {
@@ -87,8 +82,8 @@ public class CommandCompare extends CommandBase
                         {
                             for (int l = structureboundingbox.minX; l <= structureboundingbox.maxX; ++l)
                             {
-                                blockpos$mutableblockpos.func_181079_c(l, k, j);
-                                blockpos$mutableblockpos1.func_181079_c(l + blockpos3.getX(), k + blockpos3.getY(), j + blockpos3.getZ());
+                                blockpos$mutableblockpos.set(l, k, j);
+                                blockpos$mutableblockpos1.set(l + blockpos3.getX(), k + blockpos3.getY(), j + blockpos3.getZ());
                                 boolean flag1 = false;
                                 IBlockState iblockstate = world.getBlockState(blockpos$mutableblockpos);
 
@@ -131,7 +126,7 @@ public class CommandCompare extends CommandBase
 
                                     if (flag1)
                                     {
-                                        throw new CommandException("commands.compare.failed", new Object[0]);
+                                        throw new CommandException("commands.compare.failed");
                                     }
                                 }
                             }
@@ -139,16 +134,16 @@ public class CommandCompare extends CommandBase
                     }
 
                     sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, i);
-                    notifyOperators(sender, this, "commands.compare.success", new Object[] {Integer.valueOf(i)});
+                    notifyOperators(sender, this, "commands.compare.success", i);
                 }
                 else
                 {
-                    throw new CommandException("commands.compare.outOfWorld", new Object[0]);
+                    throw new CommandException("commands.compare.outOfWorld");
                 }
             }
             else
             {
-                throw new CommandException("commands.compare.outOfWorld", new Object[0]);
+                throw new CommandException("commands.compare.outOfWorld");
             }
         }
     }

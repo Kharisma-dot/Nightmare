@@ -23,13 +23,13 @@ public class ModelAdapterSnowman extends ModelAdapter
     public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
     {
         if (!(model instanceof ModelSnowMan))
-        {
             return null;
-        }
         else
         {
             ModelSnowMan modelsnowman = (ModelSnowMan)model;
-            return modelPart.equals("body") ? modelsnowman.body : (modelPart.equals("body_bottom") ? modelsnowman.bottomBody : (modelPart.equals("head") ? modelsnowman.head : (modelPart.equals("left_hand") ? modelsnowman.leftHand : (modelPart.equals("right_hand") ? modelsnowman.rightHand : null))));
+            return modelPart.equals("body") ? modelsnowman.body : (modelPart.equals("body_bottom") ?
+            	modelsnowman.bottomBody : (modelPart.equals("head") ? modelsnowman.head : (modelPart.equals("left_hand") ?
+            	modelsnowman.leftHand : (modelPart.equals("right_hand") ? modelsnowman.rightHand : null))));
         }
     }
 

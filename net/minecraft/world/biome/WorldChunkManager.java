@@ -22,12 +22,12 @@ public class WorldChunkManager
     /** The biome list. */
     private BiomeCache biomeCache;
     private List<BiomeGenBase> biomesToSpawnIn;
-    private String field_180301_f;
+    private String generatorOptions;
 
     protected WorldChunkManager()
     {
         this.biomeCache = new BiomeCache(this);
-        this.field_180301_f = "";
+        this.generatorOptions = "";
         this.biomesToSpawnIn = Lists.<BiomeGenBase>newArrayList();
         this.biomesToSpawnIn.add(BiomeGenBase.forest);
         this.biomesToSpawnIn.add(BiomeGenBase.plains);
@@ -38,11 +38,11 @@ public class WorldChunkManager
         this.biomesToSpawnIn.add(BiomeGenBase.jungleHills);
     }
 
-    public WorldChunkManager(long seed, WorldType p_i45744_3_, String p_i45744_4_)
+    public WorldChunkManager(long seed, WorldType worldTypeIn, String options)
     {
         this();
-        this.field_180301_f = p_i45744_4_;
-        GenLayer[] agenlayer = GenLayer.initializeAllBiomeGenerators(seed, p_i45744_3_, p_i45744_4_);
+        this.generatorOptions = options;
+        GenLayer[] agenlayer = GenLayer.initializeAllBiomeGenerators(seed, worldTypeIn, options);
         this.genBiomes = agenlayer[0];
         this.biomeIndexLayer = agenlayer[1];
     }
@@ -62,7 +62,7 @@ public class WorldChunkManager
      */
     public BiomeGenBase getBiomeGenerator(BlockPos pos)
     {
-        return this.getBiomeGenerator(pos, (BiomeGenBase)null);
+        return this.getBiomeGenerator(pos, null);
     }
 
     public BiomeGenBase getBiomeGenerator(BlockPos pos, BiomeGenBase biomeGenBaseIn)
@@ -101,12 +101,12 @@ public class WorldChunkManager
             {
                 CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("DownfallBlock");
-                crashreportcategory.addCrashSection("biome id", Integer.valueOf(i));
-                crashreportcategory.addCrashSection("downfalls[] size", Integer.valueOf(listToReuse.length));
-                crashreportcategory.addCrashSection("x", Integer.valueOf(x));
-                crashreportcategory.addCrashSection("z", Integer.valueOf(z));
-                crashreportcategory.addCrashSection("w", Integer.valueOf(width));
-                crashreportcategory.addCrashSection("h", Integer.valueOf(length));
+                crashreportcategory.addCrashSection("biome id", i);
+                crashreportcategory.addCrashSection("downfalls[] size", listToReuse.length);
+                crashreportcategory.addCrashSection("x", x);
+                crashreportcategory.addCrashSection("z", z);
+                crashreportcategory.addCrashSection("w", width);
+                crashreportcategory.addCrashSection("h", length);
                 throw new ReportedException(crashreport);
             }
         }
@@ -149,11 +149,11 @@ public class WorldChunkManager
         {
             CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
             CrashReportCategory crashreportcategory = crashreport.makeCategory("RawBiomeBlock");
-            crashreportcategory.addCrashSection("biomes[] size", Integer.valueOf(biomes.length));
-            crashreportcategory.addCrashSection("x", Integer.valueOf(x));
-            crashreportcategory.addCrashSection("z", Integer.valueOf(z));
-            crashreportcategory.addCrashSection("w", Integer.valueOf(width));
-            crashreportcategory.addCrashSection("h", Integer.valueOf(height));
+            crashreportcategory.addCrashSection("biomes[] size", biomes.length);
+            crashreportcategory.addCrashSection("x", x);
+            crashreportcategory.addCrashSection("z", z);
+            crashreportcategory.addCrashSection("w", width);
+            crashreportcategory.addCrashSection("h", height);
             throw new ReportedException(crashreport);
         }
     }
@@ -170,8 +170,6 @@ public class WorldChunkManager
     /**
      * Return a list of biomes for the specified blocks. Args: listToReuse, x, y, width, length, cacheFlag (if false,
      * don't check biomeCache to avoid infinite loop in BiomeCacheBlock)
-     *  
-     * @param cacheFlag If false, don't check biomeCache to avoid infinite loop in BiomeCacheBlock
      */
     public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] listToReuse, int x, int z, int width, int length, boolean cacheFlag)
     {
@@ -234,9 +232,9 @@ public class WorldChunkManager
             CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
             CrashReportCategory crashreportcategory = crashreport.makeCategory("Layer");
             crashreportcategory.addCrashSection("Layer", this.genBiomes.toString());
-            crashreportcategory.addCrashSection("x", Integer.valueOf(p_76940_1_));
-            crashreportcategory.addCrashSection("z", Integer.valueOf(p_76940_2_));
-            crashreportcategory.addCrashSection("radius", Integer.valueOf(p_76940_3_));
+            crashreportcategory.addCrashSection("x", p_76940_1_);
+            crashreportcategory.addCrashSection("z", p_76940_2_);
+            crashreportcategory.addCrashSection("radius", p_76940_3_);
             crashreportcategory.addCrashSection("allowed", p_76940_4_);
             throw new ReportedException(crashreport);
         }

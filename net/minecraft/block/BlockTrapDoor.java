@@ -30,7 +30,7 @@ public class BlockTrapDoor extends Block
     protected BlockTrapDoor(Material materialIn)
     {
         super(materialIn);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(OPEN, Boolean.valueOf(false)).withProperty(HALF, BlockTrapDoor.DoorHalf.BOTTOM));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(OPEN, false).withProperty(HALF, BlockTrapDoor.DoorHalf.BOTTOM));
         float f = 0.5F;
         float f1 = 1.0F;
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
@@ -52,7 +52,7 @@ public class BlockTrapDoor extends Block
 
     public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
     {
-        return !((Boolean)worldIn.getBlockState(pos).getValue(OPEN)).booleanValue();
+        return !worldIn.getBlockState(pos).getValue(OPEN);
     }
 
     public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
@@ -86,7 +86,7 @@ public class BlockTrapDoor extends Block
         if (state.getBlock() == this)
         {
             boolean flag = state.getValue(HALF) == BlockTrapDoor.DoorHalf.TOP;
-            Boolean obool = (Boolean)state.getValue(OPEN);
+            boolean obool = state.getValue(OPEN);
             EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
             float f = 0.1875F;
 
@@ -99,7 +99,7 @@ public class BlockTrapDoor extends Block
                 this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.1875F, 1.0F);
             }
 
-            if (obool.booleanValue())
+            if (obool)
             {
                 if (enumfacing == EnumFacing.NORTH)
                 {
@@ -134,7 +134,7 @@ public class BlockTrapDoor extends Block
         {
             state = state.cycleProperty(OPEN);
             worldIn.setBlockState(pos, state, 2);
-            worldIn.playAuxSFXAtEntity(playerIn, ((Boolean)state.getValue(OPEN)).booleanValue() ? 1003 : 1006, pos, 0);
+            worldIn.playAuxSFXAtEntity(playerIn, state.getValue(OPEN) ? 1003 : 1006, pos, 0);
             return true;
         }
     }
@@ -159,12 +159,12 @@ public class BlockTrapDoor extends Block
 
                 if (flag || neighborBlock.canProvidePower())
                 {
-                    boolean flag1 = ((Boolean)state.getValue(OPEN)).booleanValue();
+                    boolean flag1 = state.getValue(OPEN);
 
                     if (flag1 != flag)
                     {
-                        worldIn.setBlockState(pos, state.withProperty(OPEN, Boolean.valueOf(flag)), 2);
-                        worldIn.playAuxSFXAtEntity((EntityPlayer)null, flag ? 1003 : 1006, pos, 0);
+                        worldIn.setBlockState(pos, state.withProperty(OPEN, flag), 2);
+                        worldIn.playAuxSFXAtEntity(null, flag ? 1003 : 1006, pos, 0);
                     }
                 }
             }
@@ -173,9 +173,6 @@ public class BlockTrapDoor extends Block
 
     /**
      * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit.
-     *  
-     * @param start The start vector
-     * @param end The end vector
      */
     public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
     {
@@ -193,7 +190,7 @@ public class BlockTrapDoor extends Block
 
         if (facing.getAxis().isHorizontal())
         {
-            iblockstate = iblockstate.withProperty(FACING, facing).withProperty(OPEN, Boolean.valueOf(false));
+            iblockstate = iblockstate.withProperty(FACING, facing).withProperty(OPEN, false);
             iblockstate = iblockstate.withProperty(HALF, hitY > 0.5F ? BlockTrapDoor.DoorHalf.TOP : BlockTrapDoor.DoorHalf.BOTTOM);
         }
 
@@ -261,7 +258,7 @@ public class BlockTrapDoor extends Block
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(OPEN, Boolean.valueOf((meta & 4) != 0)).withProperty(HALF, (meta & 8) == 0 ? BlockTrapDoor.DoorHalf.BOTTOM : BlockTrapDoor.DoorHalf.TOP);
+        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(OPEN, (meta & 4) != 0).withProperty(HALF, (meta & 8) == 0 ? BlockTrapDoor.DoorHalf.BOTTOM : BlockTrapDoor.DoorHalf.TOP);
     }
 
     /**
@@ -272,7 +269,7 @@ public class BlockTrapDoor extends Block
         int i = 0;
         i = i | getMetaForFacing((EnumFacing)state.getValue(FACING));
 
-        if (((Boolean)state.getValue(OPEN)).booleanValue())
+        if (state.getValue(OPEN))
         {
             i |= 4;
         }

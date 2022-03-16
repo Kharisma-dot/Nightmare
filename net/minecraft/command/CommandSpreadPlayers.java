@@ -37,8 +37,6 @@ public class CommandSpreadPlayers extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -47,15 +45,12 @@ public class CommandSpreadPlayers extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 6)
         {
-            throw new WrongUsageException("commands.spreadplayers.usage", new Object[0]);
+            throw new WrongUsageException("commands.spreadplayers.usage");
         }
         else
         {
@@ -104,7 +99,8 @@ public class CommandSpreadPlayers extends CommandBase
             }
             else
             {
-                sender.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.spreading." + (flag ? "teams" : "players"), new Object[] {Integer.valueOf(list.size()), Double.valueOf(d3), Double.valueOf(d0), Double.valueOf(d1), Double.valueOf(d2)}));
+                sender.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.spreading." + (flag ? "teams" : "players"),
+                		new Object[] {list.size(), d3, d0, d1, d2}));
                 this.func_110669_a(sender, list, new CommandSpreadPlayers.Position(d0, d1), d2, d3, ((Entity)list.get(0)).worldObj, flag);
             }
         }
@@ -120,11 +116,13 @@ public class CommandSpreadPlayers extends CommandBase
         CommandSpreadPlayers.Position[] acommandspreadplayers$position = this.func_110670_a(random, p_110669_9_ ? this.func_110667_a(p_110669_2_) : p_110669_2_.size(), d0, d1, d2, d3);
         int i = this.func_110668_a(p_110669_3_, p_110669_4_, worldIn, random, d0, d1, d2, d3, acommandspreadplayers$position, p_110669_9_);
         double d4 = this.func_110671_a(p_110669_2_, worldIn, acommandspreadplayers$position, p_110669_9_);
-        notifyOperators(p_110669_1_, this, "commands.spreadplayers.success." + (p_110669_9_ ? "teams" : "players"), new Object[] {Integer.valueOf(acommandspreadplayers$position.length), Double.valueOf(p_110669_3_.field_111101_a), Double.valueOf(p_110669_3_.field_111100_b)});
+        notifyOperators(p_110669_1_, this, "commands.spreadplayers.success." + (p_110669_9_ ? "teams" : "players"), 
+        		new Object[] {acommandspreadplayers$position.length, p_110669_3_.field_111101_a, p_110669_3_.field_111100_b});
 
         if (acommandspreadplayers$position.length > 1)
         {
-            p_110669_1_.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.info." + (p_110669_9_ ? "teams" : "players"), new Object[] {String.format("%.2f", new Object[]{Double.valueOf(d4)}), Integer.valueOf(i)}));
+            p_110669_1_.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.info." + (p_110669_9_ ? "teams" : "players"), 
+            		new Object[] {String.format("%.2f", d4), i}));
         }
     }
 
@@ -140,7 +138,7 @@ public class CommandSpreadPlayers extends CommandBase
             }
             else
             {
-                set.add((Team)null);
+                set.add(null);
             }
         }
 
@@ -221,7 +219,9 @@ public class CommandSpreadPlayers extends CommandBase
 
         if (i >= 10000)
         {
-            throw new CommandException("commands.spreadplayers.failure." + (p_110668_15_ ? "teams" : "players"), new Object[] {Integer.valueOf(p_110668_14_.length), Double.valueOf(p_110668_1_.field_111101_a), Double.valueOf(p_110668_1_.field_111100_b), String.format("%.2f", new Object[]{Double.valueOf(d0)})});
+            throw new CommandException("commands.spreadplayers.failure." + (p_110668_15_ ? "teams" : "players"), 
+            		new Object[] {p_110668_14_.length, p_110668_1_.field_111101_a, p_110668_1_.field_111100_b, 
+            				String.format("%.2f", d0)});
         }
         else
         {

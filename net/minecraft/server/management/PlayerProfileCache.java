@@ -80,9 +80,6 @@ public class PlayerProfileCache
 
      *  The UUID of the GameProfile will <b>not</b> be null. If the server is offline, a UUID based on the hash of the
      * username will be used.
-     *  
-     * @param server The Minecraft Server
-     * @param username The player's username
      */
     private static GameProfile getGameProfile(MinecraftServer server, String username)
     {
@@ -102,7 +99,7 @@ public class PlayerProfileCache
 
         if (!server.isServerInOnlineMode() && agameprofile[0] == null)
         {
-            UUID uuid = EntityPlayer.getUUID(new GameProfile((UUID)null, username));
+            UUID uuid = EntityPlayer.getUUID(new GameProfile(null, username));
             GameProfile gameprofile = new GameProfile(uuid, username);
             profilelookupcallback.onProfileLookupSucceeded(gameprofile);
         }
@@ -112,20 +109,14 @@ public class PlayerProfileCache
 
     /**
      * Add an entry to this cache
-     *  
-     * @param gameProfile The entry's {@link GameProfile}
      */
     public void addEntry(GameProfile gameProfile)
     {
-        this.addEntry(gameProfile, (Date)null);
+        this.addEntry(gameProfile, null);
     }
 
     /**
      * Add an entry to this cache
-     *  
-     * @param gameProfile The entry's {@link GameProfile}
-     * @param expirationDate The expiration date for this entry. {@code null} is allowed, 1 month will be used in this
-     * case.
      */
     private void addEntry(GameProfile gameProfile, Date expirationDate)
     {
@@ -158,8 +149,6 @@ public class PlayerProfileCache
     /**
      * Get a player's GameProfile given their username. Mojang's server's will be contacted if the entry is not cached
      * locally.
-     *  
-     * @param username The player's username
      */
     public GameProfile getGameProfileForUsername(String username)
     {
@@ -206,8 +195,6 @@ public class PlayerProfileCache
 
     /**
      * Get a player's {@link GameProfile} given their UUID
-     *  
-     * @param uuid The player's UUID
      */
     public GameProfile getProfileByUUID(UUID uuid)
     {
@@ -217,8 +204,6 @@ public class PlayerProfileCache
 
     /**
      * Get a {@link ProfileEntry} by UUID
-     *  
-     * @param uuid The UUID
      */
     private PlayerProfileCache.ProfileEntry getByUUID(UUID uuid)
     {

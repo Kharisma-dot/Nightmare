@@ -72,17 +72,17 @@ public enum FunctionType
 
     private FunctionType(ExpressionType expressionType, String name, ExpressionType[] parameterTypes)
     {
-    	this(0, expressionType, name, parameterTypes);
+        this(0, expressionType, name, parameterTypes);
     }
 
     private FunctionType(int precedence, ExpressionType expressionType, String name, ExpressionType[] parameterTypes)
     {
-    	this(precedence, expressionType, name, new Parameters(parameterTypes));
+        this(precedence, expressionType, name, new Parameters(parameterTypes));
     }
 
     private FunctionType(ExpressionType expressionType, String name, IParameters parameters)
     {
-    	this(0, expressionType, name, parameters);
+        this(0, expressionType, name, parameters);
     }
 
     private FunctionType(int precedence, ExpressionType expressionType, String name, IParameters parameters)
@@ -169,7 +169,7 @@ public enum FunctionType
                 return (float)Math.atan((double)evalFloat(args, 0));
 
             case ATAN2:
-                return (float)MathHelper.func_181159_b((double)evalFloat(args, 0), (double)evalFloat(args, 1));
+                return (float)MathHelper.atan2((double)evalFloat(args, 0), (double)evalFloat(args, 1));
 
             case TORAD:
                 return MathUtils.toRad(evalFloat(args, 0));
@@ -229,9 +229,7 @@ public enum FunctionType
                 World world = minecraft.theWorld;
 
                 if (world == null)
-                {
                     return 0.0F;
-                }
 
                 return (float)(world.getTotalWorldTime() % 24000L) + Config.renderPartialTicks;
 
@@ -243,9 +241,7 @@ public enum FunctionType
                     int l = k * 2;
 
                     if (evalBool(args, l))
-                    {
                         return evalFloat(args, l + 1);
-                    }
                 }
 
                 return evalFloat(args, i * 2);
@@ -267,9 +263,7 @@ public enum FunctionType
     private float getMin(IExpression[] exprs)
     {
         if (exprs.length == 2)
-        {
             return Math.min(evalFloat(exprs, 0), evalFloat(exprs, 1));
-        }
         else
         {
             float f = evalFloat(exprs, 0);
@@ -279,9 +273,7 @@ public enum FunctionType
                 float f1 = evalFloat(exprs, i);
 
                 if (f1 < f)
-                {
                     f = f1;
-                }
             }
 
             return f;
@@ -291,9 +283,7 @@ public enum FunctionType
     private float getMax(IExpression[] exprs)
     {
         if (exprs.length == 2)
-        {
             return Math.max(evalFloat(exprs, 0), evalFloat(exprs, 1));
-        }
         else
         {
             float f = evalFloat(exprs, 0);
@@ -303,9 +293,7 @@ public enum FunctionType
                 float f1 = evalFloat(exprs, i);
 
                 if (f1 > f)
-                {
                     f = f1;
-                }
             }
 
             return f;
@@ -373,9 +361,7 @@ public enum FunctionType
                     float f4 = evalFloat(args, i);
 
                     if (f3 == f4)
-                    {
                         return true;
-                    }
                 }
 
                 return false;
@@ -416,9 +402,7 @@ public enum FunctionType
             FunctionType functiontype = VALUES[i];
 
             if (functiontype.getName().equals(str))
-            {
                 return functiontype;
-            }
         }
 
         return null;

@@ -1,9 +1,6 @@
 package net.minecraft.client.renderer.tileentity;
 
 import java.util.Calendar;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.client.model.ModelChest;
@@ -11,7 +8,6 @@ import net.minecraft.client.model.ModelLargeChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ResourceLocation;
-import nightmare.Nightmare;
 
 public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntityChest>
 {
@@ -23,7 +19,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
     private static final ResourceLocation textureNormal = new ResourceLocation("textures/entity/chest/normal.png");
     private ModelChest simpleChest = new ModelChest();
     private ModelChest largeChest = new ModelLargeChest();
-    private boolean isChristams;
+    private boolean isChristmas;
 
     public TileEntityChestRenderer()
     {
@@ -31,17 +27,12 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 
         if (calendar.get(2) + 1 == 12 && calendar.get(5) >= 24 && calendar.get(5) <= 26)
         {
-            this.isChristams = true;
+            this.isChristmas = true;
         }
     }
 
     public void renderTileEntityAt(TileEntityChest te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        if (Nightmare.instance.moduleManager.getModuleByName("Chams").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Chams"), "Chest").getValBoolean()) {
-            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-            GL11.glPolygonOffset(1.0F, -1000000F);
-        }
-        
         GlStateManager.enableDepth();
         GlStateManager.depthFunc(515);
         GlStateManager.depthMask(true);
@@ -82,7 +73,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
                     GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
                     GlStateManager.matrixMode(5888);
                 }
-                else if (this.isChristams)
+                else if (this.isChristmas)
                 {
                     this.bindTexture(textureChristmas);
                 }
@@ -108,7 +99,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
                     GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
                     GlStateManager.matrixMode(5888);
                 }
-                else if (this.isChristams)
+                else if (this.isChristmas)
                 {
                     this.bindTexture(textureChristmasDouble);
                 }
@@ -202,11 +193,6 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
                 GlStateManager.matrixMode(5890);
                 GlStateManager.popMatrix();
                 GlStateManager.matrixMode(5888);
-            }
-            
-            if (Nightmare.instance.moduleManager.getModuleByName("Chams").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Chams"), "Chest").getValBoolean()) {
-                GL11.glPolygonOffset(1.0F, 1000000F);
-                GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
             }
         }
     }

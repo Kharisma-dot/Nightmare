@@ -18,12 +18,12 @@ import net.minecraft.world.World;
 
 public class BlockSilverfish extends Block
 {
-    public static final PropertyEnum<BlockSilverfish.EnumType> VARIANT = PropertyEnum.<BlockSilverfish.EnumType>create("variant", BlockSilverfish.EnumType.class);
+    public static final PropertyEnum<EnumType> VARIANT = PropertyEnum.<EnumType>create("variant", EnumType.class);
 
     public BlockSilverfish()
     {
         super(Material.clay);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockSilverfish.EnumType.STONE));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.STONE));
         this.setHardness(0.0F);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
@@ -39,12 +39,13 @@ public class BlockSilverfish extends Block
     public static boolean canContainSilverfish(IBlockState blockState)
     {
         Block block = blockState.getBlock();
-        return blockState == Blocks.stone.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE) || block == Blocks.cobblestone || block == Blocks.stonebrick;
+        return blockState == Blocks.stone.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE) 
+        	|| block == Blocks.cobblestone || block == Blocks.stonebrick;
     }
 
     protected ItemStack createStackedBlock(IBlockState state)
     {
-        switch ((BlockSilverfish.EnumType)state.getValue(VARIANT))
+        switch (state.getValue(VARIANT))
         {
             case COBBLESTONE:
                 return new ItemStack(Blocks.cobblestone);
@@ -68,21 +69,21 @@ public class BlockSilverfish extends Block
 
     /**
      * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
      */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
-        if (!worldIn.isRemote && worldIn.getGameRules().getGameRuleBooleanValue("doTileDrops"))
+        if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops"))
         {
             EntitySilverfish entitysilverfish = new EntitySilverfish(worldIn);
-            entitysilverfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
+            entitysilverfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0f, 0f);
             worldIn.spawnEntityInWorld(entitysilverfish);
             entitysilverfish.spawnExplosionParticle();
         }
     }
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
@@ -94,10 +95,8 @@ public class BlockSilverfish extends Block
      */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        for (BlockSilverfish.EnumType blocksilverfish$enumtype : BlockSilverfish.EnumType.values())
-        {
+        for (EnumType blocksilverfish$enumtype : EnumType.values())
             list.add(new ItemStack(itemIn, 1, blocksilverfish$enumtype.getMetadata()));
-        }
     }
 
     /**
@@ -105,7 +104,7 @@ public class BlockSilverfish extends Block
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(VARIANT, BlockSilverfish.EnumType.byMetadata(meta));
+        return this.getDefaultState().withProperty(VARIANT, EnumType.byMetadata(meta));
     }
 
     /**
@@ -113,7 +112,7 @@ public class BlockSilverfish extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((BlockSilverfish.EnumType)state.getValue(VARIANT)).getMetadata();
+        return state.getValue(VARIANT).getMetadata();
     }
 
     protected BlockState createBlockState()
@@ -166,7 +165,7 @@ public class BlockSilverfish extends Block
             }
         };
 
-        private static final BlockSilverfish.EnumType[] META_LOOKUP = new BlockSilverfish.EnumType[values().length];
+        private static final EnumType[] META_LOOKUP = new EnumType[values().length];
         private final int meta;
         private final String name;
         private final String unlocalizedName;
@@ -193,12 +192,10 @@ public class BlockSilverfish extends Block
             return this.name;
         }
 
-        public static BlockSilverfish.EnumType byMetadata(int meta)
+        public static EnumType byMetadata(int meta)
         {
             if (meta < 0 || meta >= META_LOOKUP.length)
-            {
                 meta = 0;
-            }
 
             return META_LOOKUP[meta];
         }
@@ -215,24 +212,18 @@ public class BlockSilverfish extends Block
 
         public abstract IBlockState getModelBlock();
 
-        public static BlockSilverfish.EnumType forModelBlock(IBlockState model)
+        public static EnumType forModelBlock(IBlockState model)
         {
-            for (BlockSilverfish.EnumType blocksilverfish$enumtype : values())
-            {
+            for (EnumType blocksilverfish$enumtype : values())
                 if (model == blocksilverfish$enumtype.getModelBlock())
-                {
                     return blocksilverfish$enumtype;
-                }
-            }
 
             return STONE;
         }
 
         static {
-            for (BlockSilverfish.EnumType blocksilverfish$enumtype : values())
-            {
+            for (EnumType blocksilverfish$enumtype : values())
                 META_LOOKUP[blocksilverfish$enumtype.getMetadata()] = blocksilverfish$enumtype;
-            }
         }
     }
 }

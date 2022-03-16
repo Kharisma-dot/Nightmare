@@ -11,11 +11,11 @@ public class BlockEventData
     private int eventID;
     private int eventParameter;
 
-    public BlockEventData(BlockPos pos, Block blockType, int eventId, int p_i45756_4_)
+    public BlockEventData(BlockPos pos, Block blockType, int eventId, int param)
     {
         this.position = pos;
         this.eventID = eventId;
-        this.eventParameter = p_i45756_4_;
+        this.eventParameter = param;
         this.blockType = blockType;
     }
 
@@ -42,15 +42,13 @@ public class BlockEventData
         return this.blockType;
     }
 
-    public boolean equals(Object p_equals_1_)
+    public boolean equals(Object object)
     {
-        if (!(p_equals_1_ instanceof BlockEventData))
-        {
+        if (!(object instanceof BlockEventData))
             return false;
-        }
         else
         {
-            BlockEventData blockeventdata = (BlockEventData)p_equals_1_;
+            BlockEventData blockeventdata = (BlockEventData)object;
             return this.position.equals(blockeventdata.position) && this.eventID == blockeventdata.eventID && this.eventParameter == blockeventdata.eventParameter && this.blockType == blockeventdata.blockType;
         }
     }

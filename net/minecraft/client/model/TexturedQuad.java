@@ -45,9 +45,6 @@ public class TexturedQuad
     /**
      * Draw this primitve. This is typically called only once as the generated drawing instructions are saved by the
      * renderer and reused later.
-     *  
-     * @param renderer The renderer instance
-     * @param scale The amount of scale to apply to this object
      */
     public void draw(WorldRenderer renderer, float scale)
     {
@@ -77,7 +74,7 @@ public class TexturedQuad
         for (int i = 0; i < 4; ++i)
         {
             PositionTextureVertex positiontexturevertex = this.vertexPositions[i];
-            renderer.pos(positiontexturevertex.vector3D.xCoord * (double)scale, positiontexturevertex.vector3D.yCoord * (double)scale, positiontexturevertex.vector3D.zCoord * (double)scale).tex((double)positiontexturevertex.texturePositionX, (double)positiontexturevertex.texturePositionY).func_181663_c(f, f1, f2).endVertex();
+            renderer.pos(positiontexturevertex.vector3D.xCoord * (double)scale, positiontexturevertex.vector3D.yCoord * (double)scale, positiontexturevertex.vector3D.zCoord * (double)scale).tex((double)positiontexturevertex.texturePositionX, (double)positiontexturevertex.texturePositionY).normal(f, f1, f2).endVertex();
         }
 
         Tessellator.getInstance().draw();

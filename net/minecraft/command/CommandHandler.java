@@ -20,6 +20,15 @@ public class CommandHandler implements ICommandManager
     private final Map<String, ICommand> commandMap = Maps.<String, ICommand>newHashMap();
     private final Set<ICommand> commandSet = Sets.<ICommand>newHashSet();
 
+    /**
+     * Attempt to execute a command. This method should return the number of times that the command was executed. If the
+     * command does not exist or if the player does not have permission, 0 will be returned. A number greater than 1 can
+     * be returned if a player selector is used.
+     *  
+     * @param sender The person who executed the command. This could be an EntityPlayer, RCon Source, Command Block,
+     * etc.
+     * @param rawCommand The raw arguments that were passed. This includes the command name.
+     */
     public int executeCommand(ICommandSender sender, String rawCommand)
     {
         rawCommand = rawCommand.trim();
@@ -38,7 +47,7 @@ public class CommandHandler implements ICommandManager
 
         if (icommand == null)
         {
-            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("commands.generic.notFound", new Object[0]);
+            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("commands.generic.notFound");
             chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
             sender.addChatMessage(chatcomponenttranslation);
         }
@@ -74,7 +83,7 @@ public class CommandHandler implements ICommandManager
         }
         else
         {
-            ChatComponentTranslation chatcomponenttranslation1 = new ChatComponentTranslation("commands.generic.permission", new Object[0]);
+            ChatComponentTranslation chatcomponenttranslation1 = new ChatComponentTranslation("commands.generic.permission");
             chatcomponenttranslation1.getChatStyle().setColor(EnumChatFormatting.RED);
             sender.addChatMessage(chatcomponenttranslation1);
         }
@@ -104,7 +113,7 @@ public class CommandHandler implements ICommandManager
         }
         catch (Throwable var9)
         {
-            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("commands.generic.exception", new Object[0]);
+            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("commands.generic.exception");
             chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
             sender.addChatMessage(chatcomponenttranslation);
             logger.warn("Couldn\'t process command: \'" + input + "\'");

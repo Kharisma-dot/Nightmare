@@ -38,8 +38,6 @@ public abstract class CommandBase implements ICommand
 
     /**
      * Returns true if the given command sender is allowed to use this command.
-     *  
-     * @param sender The CommandSender
      */
     public boolean canCommandSenderUseCommand(ICommandSender sender)
     {
@@ -74,11 +72,11 @@ public abstract class CommandBase implements ICommand
 
         if (i < min)
         {
-            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {Integer.valueOf(i), Integer.valueOf(min)});
+            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {i, min});
         }
         else if (i > max)
         {
-            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {Integer.valueOf(i), Integer.valueOf(max)});
+            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {i, max});
         }
         else
         {
@@ -104,11 +102,11 @@ public abstract class CommandBase implements ICommand
 
         if (i < min)
         {
-            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {Long.valueOf(i), Long.valueOf(min)});
+            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {i, min});
         }
         else if (i > max)
         {
-            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {Long.valueOf(i), Long.valueOf(max)});
+            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {i, max});
         }
         else
         {
@@ -154,11 +152,11 @@ public abstract class CommandBase implements ICommand
 
         if (d0 < min)
         {
-            throw new NumberInvalidException("commands.generic.double.tooSmall", new Object[] {Double.valueOf(d0), Double.valueOf(min)});
+            throw new NumberInvalidException("commands.generic.double.tooSmall", new Object[] {Double.valueOf(d0), min});
         }
         else if (d0 > max)
         {
-            throw new NumberInvalidException("commands.generic.double.tooBig", new Object[] {Double.valueOf(d0), Double.valueOf(max)});
+            throw new NumberInvalidException("commands.generic.double.tooBig", new Object[] {Double.valueOf(d0), max});
         }
         else
         {
@@ -196,7 +194,7 @@ public abstract class CommandBase implements ICommand
         }
         else
         {
-            throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.", new Object[0]);
+            throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
         }
     }
 
@@ -231,7 +229,7 @@ public abstract class CommandBase implements ICommand
         }
     }
 
-    public static Entity func_175768_b(ICommandSender p_175768_0_, String p_175768_1_) throws EntityNotFoundException
+    public static Entity getEntity(ICommandSender p_175768_0_, String p_175768_1_) throws EntityNotFoundException
     {
         return getEntity(p_175768_0_, p_175768_1_, Entity.class);
     }
@@ -260,7 +258,7 @@ public abstract class CommandBase implements ICommand
             }
             catch (IllegalArgumentException var6)
             {
-                throw new EntityNotFoundException("commands.generic.entity.invalidUuid", new Object[0]);
+                throw new EntityNotFoundException("commands.generic.entity.invalidUuid");
             }
         }
 
@@ -276,7 +274,7 @@ public abstract class CommandBase implements ICommand
 
     public static List<Entity> func_175763_c(ICommandSender p_175763_0_, String p_175763_1_) throws EntityNotFoundException
     {
-        return (List<Entity>)(PlayerSelector.hasArguments(p_175763_1_) ? PlayerSelector.matchEntities(p_175763_0_, p_175763_1_, Entity.class) : Lists.newArrayList(new Entity[] {func_175768_b(p_175763_0_, p_175763_1_)}));
+        return (List<Entity>)(PlayerSelector.hasArguments(p_175763_1_) ? PlayerSelector.matchEntities(p_175763_0_, p_175763_1_, Entity.class) : Lists.newArrayList(new Entity[] {getEntity(p_175763_0_, p_175763_1_)}));
     }
 
     public static String getPlayerName(ICommandSender sender, String query) throws PlayerNotFoundException
@@ -312,7 +310,7 @@ public abstract class CommandBase implements ICommand
         {
             try
             {
-                return func_175768_b(p_175758_0_, p_175758_1_).getUniqueID().toString();
+                return getEntity(p_175758_0_, p_175758_1_).getUniqueID().toString();
             }
             catch (EntityNotFoundException entitynotfoundexception)
             {
@@ -401,7 +399,7 @@ public abstract class CommandBase implements ICommand
 
         if (flag && Double.isNaN(p_175767_0_))
         {
-            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {Double.valueOf(p_175767_0_)});
+            throw new NumberInvalidException("commands.generic.num.invalid",p_175767_0_);
         }
         else
         {
@@ -428,12 +426,12 @@ public abstract class CommandBase implements ICommand
             {
                 if (d0 < (double)min)
                 {
-                    throw new NumberInvalidException("commands.generic.double.tooSmall", new Object[] {Double.valueOf(d0), Integer.valueOf(min)});
+                    throw new NumberInvalidException("commands.generic.double.tooSmall", new Object[] {Double.valueOf(d0), min});
                 }
 
                 if (d0 > (double)max)
                 {
-                    throw new NumberInvalidException("commands.generic.double.tooBig", new Object[] {Double.valueOf(d0), Integer.valueOf(max)});
+                    throw new NumberInvalidException("commands.generic.double.tooBig", new Object[] {Double.valueOf(d0), max});
                 }
             }
 
@@ -452,7 +450,7 @@ public abstract class CommandBase implements ICommand
 
         if (flag && Double.isNaN(base))
         {
-            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {Double.valueOf(base)});
+            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {base});
         }
         else
         {
@@ -479,12 +477,12 @@ public abstract class CommandBase implements ICommand
             {
                 if (d0 < (double)min)
                 {
-                    throw new NumberInvalidException("commands.generic.double.tooSmall", new Object[] {Double.valueOf(d0), Integer.valueOf(min)});
+                    throw new NumberInvalidException("commands.generic.double.tooSmall", new Object[] {Double.valueOf(d0), min});
                 }
 
                 if (d0 > (double)max)
                 {
-                    throw new NumberInvalidException("commands.generic.double.tooBig", new Object[] {Double.valueOf(d0), Integer.valueOf(max)});
+                    throw new NumberInvalidException("commands.generic.double.tooBig", new Object[] {Double.valueOf(d0), max});
                 }
             }
 
@@ -711,9 +709,6 @@ public abstract class CommandBase implements ICommand
 
     /**
      * Return whether the specified command parameter index is a username parameter.
-     *  
-     * @param args The arguments that were given
-     * @param index The argument index that we are checking
      */
     public boolean isUsernameIndex(String[] args, int index)
     {

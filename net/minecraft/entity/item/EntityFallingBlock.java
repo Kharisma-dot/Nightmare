@@ -128,7 +128,7 @@ public class EntityFallingBlock extends Entity
 
                         if (!this.canSetAsBlock)
                         {
-                            if (this.worldObj.canBlockBePlaced(block, blockpos1, true, EnumFacing.UP, (Entity)null, (ItemStack)null) && !BlockFalling.canFallInto(this.worldObj, blockpos1.down()) && this.worldObj.setBlockState(blockpos1, this.fallTile, 3))
+                            if (this.worldObj.canBlockBePlaced(block, blockpos1, true, EnumFacing.UP, null, null) && !BlockFalling.canFallInto(this.worldObj, blockpos1.down()) && this.worldObj.setBlockState(blockpos1, this.fallTile, 3))
                             {
                                 if (block instanceof BlockFalling)
                                 {
@@ -159,7 +159,7 @@ public class EntityFallingBlock extends Entity
                                     }
                                 }
                             }
-                            else if (this.shouldDropItem && this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+                            else if (this.shouldDropItem && this.worldObj.getGameRules().getBoolean("doEntityDrops"))
                             {
                                 this.entityDropItem(new ItemStack(block, 1, block.damageDropped(this.fallTile)), 0.0F);
                             }
@@ -168,7 +168,7 @@ public class EntityFallingBlock extends Entity
                 }
                 else if (this.fallTime > 100 && !this.worldObj.isRemote && (blockpos1.getY() < 1 || blockpos1.getY() > 256) || this.fallTime > 600)
                 {
-                    if (this.shouldDropItem && this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+                    if (this.shouldDropItem && this.worldObj.getGameRules().getBoolean("doEntityDrops"))
                     {
                         this.entityDropItem(new ItemStack(block, 1, block.damageDropped(this.fallTile)), 0.0F);
                     }
@@ -200,7 +200,7 @@ public class EntityFallingBlock extends Entity
 
                 if (flag && (double)this.rand.nextFloat() < 0.05000000074505806D + (double)i * 0.05D)
                 {
-                    int j = ((Integer)this.fallTile.getValue(BlockAnvil.DAMAGE)).intValue();
+                    int j = this.fallTile.getValue(BlockAnvil.DAMAGE);
                     ++j;
 
                     if (j > 2)
@@ -209,7 +209,7 @@ public class EntityFallingBlock extends Entity
                     }
                     else
                     {
-                        this.fallTile = this.fallTile.withProperty(BlockAnvil.DAMAGE, Integer.valueOf(j));
+                        this.fallTile = this.fallTile.withProperty(BlockAnvil.DAMAGE, j);
                     }
                 }
             }
@@ -312,8 +312,8 @@ public class EntityFallingBlock extends Entity
         if (this.fallTile != null)
         {
             Block block = this.fallTile.getBlock();
-            category.addCrashSection("Immitating block ID", Integer.valueOf(Block.getIdFromBlock(block)));
-            category.addCrashSection("Immitating block data", Integer.valueOf(block.getMetaFromState(this.fallTile)));
+            category.addCrashSection("Immitating block ID", Block.getIdFromBlock(block));
+            category.addCrashSection("Immitating block data", block.getMetaFromState(this.fallTile));
         }
     }
 

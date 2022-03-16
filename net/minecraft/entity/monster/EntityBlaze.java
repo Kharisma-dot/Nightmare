@@ -164,12 +164,16 @@ public class EntityBlaze extends EntityMob
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
-        if (p_70628_1_)
+        if (wasRecentlyHit)
         {
-            int i = this.rand.nextInt(2 + p_70628_2_);
+            int i = this.rand.nextInt(2 + lootingModifier);
 
             for (int j = 0; j < i; ++j)
             {
@@ -196,7 +200,7 @@ public class EntityBlaze extends EntityMob
             b0 = (byte)(b0 & -2);
         }
 
-        this.dataWatcher.updateObject(16, Byte.valueOf(b0));
+        this.dataWatcher.updateObject(16, b0);
     }
 
     /**
@@ -280,7 +284,7 @@ public class EntityBlaze extends EntityMob
                     if (this.field_179467_b > 1)
                     {
                         float f = MathHelper.sqrt_float(MathHelper.sqrt_double(d0)) * 0.5F;
-                        this.blaze.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1009, new BlockPos((int)this.blaze.posX, (int)this.blaze.posY, (int)this.blaze.posZ), 0);
+                        this.blaze.worldObj.playAuxSFXAtEntity(null, 1009, new BlockPos((int)this.blaze.posX, (int)this.blaze.posY, (int)this.blaze.posZ), 0);
 
                         for (int i = 0; i < 1; ++i)
                         {

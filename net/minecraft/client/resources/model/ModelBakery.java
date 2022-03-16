@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockPart;
 import net.minecraft.client.renderer.block.model.BlockPartFace;
 import net.minecraft.client.renderer.block.model.FaceBakery;
+import net.minecraft.client.renderer.block.model.ITransformation;
 import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.block.model.ModelBlockDefinition;
@@ -40,9 +41,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IRegistry;
 import net.minecraft.util.RegistrySimple;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ITransformation;
-import net.minecraftforge.client.model.TRSRTransformation;
-import net.minecraftforge.fml.common.registry.RegistryDelegate;
 import net.optifine.CustomItems;
 import net.optifine.reflect.Reflector;
 import net.optifine.util.StrUtils;
@@ -74,7 +72,6 @@ public class ModelBakery
     private Map<String, ResourceLocation> itemLocations = Maps.<String, ResourceLocation>newLinkedHashMap();
     private final Map<ResourceLocation, ModelBlockDefinition> blockDefinitions = Maps.<ResourceLocation, ModelBlockDefinition>newHashMap();
     private Map<Item, List<String>> variantNames = Maps.<Item, List<String>>newIdentityHashMap();
-    private static Map<RegistryDelegate<Item>, Set<String>> customVariantNames = Maps.<RegistryDelegate<Item>, Set<String>>newHashMap();
 
     public ModelBakery(IResourceManager p_i46085_1_, TextureMap p_i46085_2_, BlockModelShapes p_i46085_3_)
     {
@@ -380,11 +377,6 @@ public class ModelBakery
         this.variantNames.put(Item.getItemFromBlock(Blocks.oak_fence), Lists.newArrayList(new String[] {"oak_fence"}));
         this.variantNames.put(Items.oak_door, Lists.newArrayList(new String[] {"oak_door"}));
 
-        for (Entry<RegistryDelegate<Item>, Set<String>> entry : customVariantNames.entrySet())
-        {
-            this.variantNames.put((Item) ((RegistryDelegate)entry.getKey()).get(), Lists.newArrayList(((Set)entry.getValue()).iterator()));
-        }
-
         CustomItems.update();
         CustomItems.loadModels(this);
     }
@@ -404,12 +396,6 @@ public class ModelBakery
     private ResourceLocation getItemLocation(String p_177583_1_)
     {
         ResourceLocation resourcelocation = new ResourceLocation(p_177583_1_);
-
-        if (Reflector.ForgeHooksClient.exists())
-        {
-            resourcelocation = new ResourceLocation(p_177583_1_.replaceAll("#.*", ""));
-        }
-
         return new ResourceLocation(resourcelocation.getResourceDomain(), "item/" + resourcelocation.getResourcePath());
     }
 
@@ -454,18 +440,13 @@ public class ModelBakery
             ResourceLocation resourcelocation = (ResourceLocation)entry.getValue();
             ModelResourceLocation modelresourcelocation1 = new ModelResourceLocation((String)entry.getKey(), "inventory");
 
-            if (Reflector.ModelLoader_getInventoryVariant.exists())
-            {
-                modelresourcelocation1 = (ModelResourceLocation)Reflector.call(Reflector.ModelLoader_getInventoryVariant, new Object[] {entry.getKey()});
-            }
-
             ModelBlock modelblock1 = (ModelBlock)this.models.get(resourcelocation);
 
             if (modelblock1 != null && modelblock1.isResolved())
             {
                 if (this.isCustomRenderer(modelblock1))
                 {
-                    this.bakedRegistry.putObject(modelresourcelocation1, new BuiltInModel(modelblock1.func_181682_g()));
+                    this.bakedRegistry.putObject(modelresourcelocation1, new BuiltInModel(modelblock1.getAllTransforms()));
                 }
                 else
                 {
@@ -525,40 +506,28 @@ public class ModelBakery
         SimpleBakedModel.Builder simplebakedmodel$builder = (new SimpleBakedModel.Builder(p_bakeModel_1_)).setTexture(textureatlassprite);
 
         for (BlockPart blockpart : p_bakeModel_1_.getElements())
-        {
             for (EnumFacing enumfacing : blockpart.mapFaces.keySet())
             {
                 BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
                 TextureAtlasSprite textureatlassprite1 = this.sprites.get(new ResourceLocation(p_bakeModel_1_.resolveTextureName(blockpartface.texture)));
-                boolean flag = true;
 
-                if (Reflector.ForgeHooksClient.exists())
-                {
-                    flag = TRSRTransformation.isInteger(p_bakeModel_2_.getMatrix());
-                }
-
-                if (blockpartface.cullFace != null && flag)
-                {
+                if (blockpartface.cullFace != null)
                     simplebakedmodel$builder.addFaceQuad(p_bakeModel_2_.rotate(blockpartface.cullFace), this.makeBakedQuad(blockpart, blockpartface, textureatlassprite1, enumfacing, p_bakeModel_2_, p_bakeModel_3_));
-                }
                 else
-                {
                     simplebakedmodel$builder.addGeneralQuad(this.makeBakedQuad(blockpart, blockpartface, textureatlassprite1, enumfacing, p_bakeModel_2_, p_bakeModel_3_));
-                }
             }
-        }
 
         return simplebakedmodel$builder.makeBakedModel();
     }
 
-    private BakedQuad makeBakedQuad(BlockPart p_177589_1_, BlockPartFace p_177589_2_, TextureAtlasSprite p_177589_3_, EnumFacing p_177589_4_, ModelRotation p_177589_5_, boolean p_177589_6_)
+    private BakedQuad makeBakedQuad(BlockPart blockPart, BlockPartFace blockPartFace, TextureAtlasSprite sprite, EnumFacing facing, ModelRotation modelRotation, boolean p_177589_6_)
     {
-        return Reflector.ForgeHooksClient.exists() ? this.makeBakedQuad(p_177589_1_, p_177589_2_, p_177589_3_, p_177589_4_, p_177589_5_, p_177589_6_) : this.faceBakery.makeBakedQuad(p_177589_1_.positionFrom, p_177589_1_.positionTo, p_177589_2_, p_177589_3_, p_177589_4_, p_177589_5_, p_177589_1_.partRotation, p_177589_6_, p_177589_1_.shade);
+        return this.faceBakery.makeBakedQuad(blockPart.positionFrom, blockPart.positionTo, blockPartFace, sprite, facing, modelRotation, blockPart.partRotation, p_177589_6_, blockPart.shade);
     }
 
-    protected BakedQuad makeBakedQuad(BlockPart p_makeBakedQuad_1_, BlockPartFace p_makeBakedQuad_2_, TextureAtlasSprite p_makeBakedQuad_3_, EnumFacing p_makeBakedQuad_4_, ITransformation p_makeBakedQuad_5_, boolean p_makeBakedQuad_6_)
+    protected BakedQuad makeBakedQuad(BlockPart blockPart, BlockPartFace blockPartFace, TextureAtlasSprite sprite, EnumFacing facing, ITransformation transform, boolean p_makeBakedQuad_6_)
     {
-        return this.faceBakery.makeBakedQuad(p_makeBakedQuad_1_.positionFrom, p_makeBakedQuad_1_.positionTo, p_makeBakedQuad_2_, p_makeBakedQuad_3_, p_makeBakedQuad_4_, p_makeBakedQuad_5_, p_makeBakedQuad_1_.partRotation, p_makeBakedQuad_6_, p_makeBakedQuad_1_.shade);
+        return this.faceBakery.makeBakedQuad(blockPart.positionFrom, blockPart.positionTo, blockPartFace, sprite, facing, transform, blockPart.partRotation, p_makeBakedQuad_6_, blockPart.shade);
     }
 
     private void loadModelsCheck()
@@ -566,9 +535,7 @@ public class ModelBakery
         this.loadModels();
 
         for (ModelBlock modelblock : this.models.values())
-        {
             modelblock.getParentFromMap(this.models);
-        }
 
         ModelBlock.checkModelHierarchy(this.models);
     }
@@ -584,9 +551,7 @@ public class ModelBakery
             ResourceLocation resourcelocation1 = ((ModelBlock)this.models.get(resourcelocation)).getParentLocation();
 
             if (resourcelocation1 != null)
-            {
                 deque.add(resourcelocation1);
-            }
         }
 
         while (!((Deque)deque).isEmpty())
@@ -596,18 +561,14 @@ public class ModelBakery
             try
             {
                 if (this.models.get(resourcelocation2) != null)
-                {
                     continue;
-                }
 
                 ModelBlock modelblock = this.loadModel(resourcelocation2);
                 this.models.put(resourcelocation2, modelblock);
                 ResourceLocation resourcelocation3 = modelblock.getParentLocation();
 
                 if (resourcelocation3 != null && !set.contains(resourcelocation3))
-                {
                     deque.add(resourcelocation3);
-                }
             }
             catch (Exception var6)
             {
@@ -618,48 +579,42 @@ public class ModelBakery
         }
     }
 
-    private List<ResourceLocation> getParentPath(ResourceLocation p_177573_1_)
+    private List<ResourceLocation> getParentPath(ResourceLocation loc)
     {
-        List<ResourceLocation> list = Lists.newArrayList(new ResourceLocation[] {p_177573_1_});
-        ResourceLocation resourcelocation = p_177573_1_;
+        List<ResourceLocation> list = Lists.newArrayList(new ResourceLocation[] {loc});
+        ResourceLocation resourcelocation = loc;
 
         while ((resourcelocation = this.getParentLocation(resourcelocation)) != null)
-        {
             list.add(0, resourcelocation);
-        }
 
         return list;
     }
 
-    private ResourceLocation getParentLocation(ResourceLocation p_177576_1_)
+    private ResourceLocation getParentLocation(ResourceLocation loc)
     {
         for (Entry<ResourceLocation, ModelBlock> entry : this.models.entrySet())
         {
             ModelBlock modelblock = (ModelBlock)entry.getValue();
 
-            if (modelblock != null && p_177576_1_.equals(modelblock.getParentLocation()))
-            {
+            if (modelblock != null && loc.equals(modelblock.getParentLocation()))
                 return (ResourceLocation)entry.getKey();
-            }
         }
 
         return null;
     }
 
-    private Set<ResourceLocation> getTextureLocations(ModelBlock p_177585_1_)
+    private Set<ResourceLocation> getTextureLocations(ModelBlock model)
     {
         Set<ResourceLocation> set = Sets.<ResourceLocation>newHashSet();
 
-        for (BlockPart blockpart : p_177585_1_.getElements())
-        {
+        for (BlockPart blockpart : model.getElements())
             for (BlockPartFace blockpartface : blockpart.mapFaces.values())
             {
-                ResourceLocation resourcelocation = new ResourceLocation(p_177585_1_.resolveTextureName(blockpartface.texture));
+                ResourceLocation resourcelocation = new ResourceLocation(model.resolveTextureName(blockpartface.texture));
                 set.add(resourcelocation);
             }
-        }
 
-        set.add(new ResourceLocation(p_177585_1_.resolveTextureName("particle")));
+        set.add(new ResourceLocation(model.resolveTextureName("particle")));
         return set;
     }
 
@@ -696,64 +651,47 @@ public class ModelBakery
                 set.add(new ResourceLocation(modelblock.resolveTextureName("particle")));
 
                 if (this.hasItemModel(modelblock))
-                {
                     for (String s : ItemModelGenerator.LAYERS)
                     {
                         ResourceLocation resourcelocation2 = new ResourceLocation(modelblock.resolveTextureName(s));
 
                         if (modelblock.getRootModel() == MODEL_COMPASS && !TextureMap.LOCATION_MISSING_TEXTURE.equals(resourcelocation2))
-                        {
                             TextureAtlasSprite.setLocationNameCompass(resourcelocation2.toString());
-                        }
                         else if (modelblock.getRootModel() == MODEL_CLOCK && !TextureMap.LOCATION_MISSING_TEXTURE.equals(resourcelocation2))
-                        {
                             TextureAtlasSprite.setLocationNameClock(resourcelocation2.toString());
-                        }
 
                         set.add(resourcelocation2);
                     }
-                }
                 else if (!this.isCustomRenderer(modelblock))
-                {
                     for (BlockPart blockpart : modelblock.getElements())
-                    {
                         for (BlockPartFace blockpartface : blockpart.mapFaces.values())
                         {
                             ResourceLocation resourcelocation1 = new ResourceLocation(modelblock.resolveTextureName(blockpartface.texture));
                             set.add(resourcelocation1);
                         }
-                    }
-                }
             }
         }
 
         return set;
     }
 
-    private boolean hasItemModel(ModelBlock p_177581_1_)
+    private boolean hasItemModel(ModelBlock model)
     {
-        if (p_177581_1_ == null)
-        {
+        if (model == null)
             return false;
-        }
         else
         {
-            ModelBlock modelblock = p_177581_1_.getRootModel();
+            ModelBlock modelblock = model.getRootModel();
             return modelblock == MODEL_GENERATED || modelblock == MODEL_COMPASS || modelblock == MODEL_CLOCK;
         }
     }
 
-    private boolean isCustomRenderer(ModelBlock p_177587_1_)
+    private boolean isCustomRenderer(ModelBlock model)
     {
-        if (p_177587_1_ == null)
-        {
+        if (model == null)
             return false;
-        }
         else
-        {
-            ModelBlock modelblock = p_177587_1_.getRootModel();
-            return modelblock == MODEL_ENTITY;
-        }
+            return model.getRootModel() == MODEL_ENTITY;
     }
 
     private void bakeItemModels()
@@ -767,48 +705,40 @@ public class ModelBakery
                 ModelBlock modelblock1 = this.makeItemModel(modelblock);
 
                 if (modelblock1 != null)
-                {
                     modelblock1.name = resourcelocation.toString();
-                }
 
                 this.models.put(resourcelocation, modelblock1);
             }
             else if (this.isCustomRenderer(modelblock))
-            {
                 this.models.put(resourcelocation, modelblock);
-            }
         }
 
         for (TextureAtlasSprite textureatlassprite : this.sprites.values())
-        {
             if (!textureatlassprite.hasAnimationMetadata())
-            {
                 textureatlassprite.clearFramesTextureData();
-            }
-        }
     }
 
-    private ModelBlock makeItemModel(ModelBlock p_177582_1_)
+    private ModelBlock makeItemModel(ModelBlock model)
     {
-        return this.itemModelGenerator.makeItemModel(this.textureMap, p_177582_1_);
+        return this.itemModelGenerator.makeItemModel(this.textureMap, model);
     }
 
-    public ModelBlock getModelBlock(ResourceLocation p_getModelBlock_1_)
+    public ModelBlock getModelBlock(ResourceLocation loc)
     {
-        ModelBlock modelblock = (ModelBlock)this.models.get(p_getModelBlock_1_);
+        ModelBlock modelblock = (ModelBlock)this.models.get(loc);
         return modelblock;
     }
 
-    public static void fixModelLocations(ModelBlock p_fixModelLocations_0_, String p_fixModelLocations_1_)
+    public static void fixModelLocations(ModelBlock model, String p_fixModelLocations_1_)
     {
-        ResourceLocation resourcelocation = fixModelLocation(p_fixModelLocations_0_.getParentLocation(), p_fixModelLocations_1_);
+        ResourceLocation resourcelocation = fixModelLocation(model.getParentLocation(), p_fixModelLocations_1_);
 
-        if (resourcelocation != p_fixModelLocations_0_.getParentLocation())
+        if (resourcelocation != model.getParentLocation())
         {
-            Reflector.setFieldValue(p_fixModelLocations_0_, Reflector.ModelBlock_parentLocation, resourcelocation);
+            Reflector.setFieldValue(model, Reflector.ModelBlock_parentLocation, resourcelocation);
         }
 
-        Map<String, String> map = (Map)Reflector.getFieldValue(p_fixModelLocations_0_, Reflector.ModelBlock_textures);
+        Map<String, String> map = (Map)Reflector.getFieldValue(model, Reflector.ModelBlock_textures);
 
         if (map != null)
         {
@@ -825,31 +755,25 @@ public class ModelBakery
         }
     }
 
-    public static ResourceLocation fixModelLocation(ResourceLocation p_fixModelLocation_0_, String p_fixModelLocation_1_)
+    public static ResourceLocation fixModelLocation(ResourceLocation loc, String p_fixModelLocation_1_)
     {
-        if (p_fixModelLocation_0_ != null && p_fixModelLocation_1_ != null)
+        if (loc != null && p_fixModelLocation_1_ != null)
         {
-            if (!p_fixModelLocation_0_.getResourceDomain().equals("minecraft"))
-            {
-                return p_fixModelLocation_0_;
-            }
+            if (!loc.getResourceDomain().equals("minecraft"))
+                return loc;
             else
             {
-                String s = p_fixModelLocation_0_.getResourcePath();
+                String s = loc.getResourcePath();
                 String s1 = fixResourcePath(s, p_fixModelLocation_1_);
 
                 if (s1 != s)
-                {
-                    p_fixModelLocation_0_ = new ResourceLocation(p_fixModelLocation_0_.getResourceDomain(), s1);
-                }
+                    loc = new ResourceLocation(loc.getResourceDomain(), s1);
 
-                return p_fixModelLocation_0_;
+                return loc;
             }
         }
         else
-        {
-            return p_fixModelLocation_0_;
-        }
+            return loc;
     }
 
     private static String fixResourcePath(String p_fixResourcePath_0_, String p_fixResourcePath_1_)
@@ -858,36 +782,6 @@ public class ModelBakery
         p_fixResourcePath_0_ = StrUtils.removeSuffix(p_fixResourcePath_0_, ".json");
         p_fixResourcePath_0_ = StrUtils.removeSuffix(p_fixResourcePath_0_, ".png");
         return p_fixResourcePath_0_;
-    }
-
-    @Deprecated
-    public static void addVariantName(Item p_addVariantName_0_, String... p_addVariantName_1_)
-    {
-        RegistryDelegate registrydelegate = (RegistryDelegate)Reflector.getFieldValue(p_addVariantName_0_, Reflector.ForgeItem_delegate);
-
-        if (customVariantNames.containsKey(registrydelegate))
-        {
-            ((Set)customVariantNames.get(registrydelegate)).addAll(Lists.newArrayList(p_addVariantName_1_));
-        }
-        else
-        {
-            customVariantNames.put(registrydelegate, Sets.newHashSet(p_addVariantName_1_));
-        }
-    }
-
-    public static <T extends ResourceLocation> void registerItemVariants(Item p_registerItemVariants_0_, T... p_registerItemVariants_1_)
-    {
-        RegistryDelegate registrydelegate = (RegistryDelegate)Reflector.getFieldValue(p_registerItemVariants_0_, Reflector.ForgeItem_delegate);
-
-        if (!customVariantNames.containsKey(registrydelegate))
-        {
-            customVariantNames.put(registrydelegate, Sets.<String>newHashSet());
-        }
-
-        for (ResourceLocation resourcelocation : p_registerItemVariants_1_)
-        {
-            ((Set)customVariantNames.get(registrydelegate)).add(resourcelocation.toString());
-        }
     }
 
     static

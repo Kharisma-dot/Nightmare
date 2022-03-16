@@ -66,12 +66,10 @@ public abstract class ModelAdapter
             ModelRenderer modelrenderer = this.getModelRenderer(model, s);
 
             if (modelrenderer != null)
-            {
                 list.add(modelrenderer);
-            }
         }
 
-        ModelRenderer[] amodelrenderer = (ModelRenderer[])((ModelRenderer[])list.toArray(new ModelRenderer[list.size()]));
+        ModelRenderer[] amodelrenderer = (ModelRenderer[])list.toArray(new ModelRenderer[list.size()]);
         return amodelrenderer;
     }
 }

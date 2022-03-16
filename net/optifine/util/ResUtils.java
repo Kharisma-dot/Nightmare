@@ -35,7 +35,7 @@ public class ResUtils
         for (int i = 0; i < airesourcepack.length; ++i)
         {
             IResourcePack iresourcepack = airesourcepack[i];
-            String[] astring = collectFiles(iresourcepack, (String[])prefixes, (String[])suffixes, (String[])null);
+            String[] astring = collectFiles(iresourcepack, (String[])prefixes, (String[])suffixes, null);
             set.addAll(Arrays.<String>asList(astring));
         }
 
@@ -50,7 +50,7 @@ public class ResUtils
 
     public static String[] collectFiles(IResourcePack rp, String[] prefixes, String[] suffixes)
     {
-        return collectFiles(rp, (String[])prefixes, (String[])suffixes, (String[])null);
+        return collectFiles(rp, (String[])prefixes, (String[])suffixes, null);
     }
 
     public static String[] collectFiles(IResourcePack rp, String[] prefixes, String[] suffixes, String[] defaultPaths)

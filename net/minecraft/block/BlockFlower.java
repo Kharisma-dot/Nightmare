@@ -30,7 +30,7 @@ public abstract class BlockFlower extends BlockBush
      */
     public int damageDropped(IBlockState state)
     {
-        return ((BlockFlower.EnumFlowerType)state.getValue(this.getTypeProperty())).getMeta();
+        return state.getValue(this.getTypeProperty()).getMeta();
     }
 
     /**
@@ -38,10 +38,8 @@ public abstract class BlockFlower extends BlockBush
      */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        for (BlockFlower.EnumFlowerType blockflower$enumflowertype : BlockFlower.EnumFlowerType.getTypes(this.getBlockType()))
-        {
+        for (EnumFlowerType blockflower$enumflowertype : EnumFlowerType.getTypes(this.getBlockType()))
             list.add(new ItemStack(itemIn, 1, blockflower$enumflowertype.getMeta()));
-        }
     }
 
     /**
@@ -49,7 +47,7 @@ public abstract class BlockFlower extends BlockBush
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(this.getTypeProperty(), BlockFlower.EnumFlowerType.getType(this.getBlockType(), meta));
+        return this.getDefaultState().withProperty(this.getTypeProperty(), EnumFlowerType.getType(this.getBlockType(), meta));
     }
 
     /**
@@ -57,18 +55,11 @@ public abstract class BlockFlower extends BlockBush
      */
     public abstract BlockFlower.EnumFlowerColor getBlockType();
 
-    public IProperty<BlockFlower.EnumFlowerType> getTypeProperty()
+    public IProperty<EnumFlowerType> getTypeProperty()
     {
         if (this.type == null)
-        {
-            this.type = PropertyEnum.<BlockFlower.EnumFlowerType>create("type", BlockFlower.EnumFlowerType.class, new Predicate<BlockFlower.EnumFlowerType>()
-            {
-                public boolean apply(BlockFlower.EnumFlowerType p_apply_1_)
-                {
-                    return p_apply_1_.getBlockType() == BlockFlower.this.getBlockType();
-                }
-            });
-        }
+            this.type = PropertyEnum.<EnumFlowerType>create("type", EnumFlowerType.class, 
+            		(flower) -> flower.getBlockType() == BlockFlower.this.getBlockType());
 
         return this.type;
     }
@@ -78,7 +69,7 @@ public abstract class BlockFlower extends BlockBush
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((BlockFlower.EnumFlowerType)state.getValue(this.getTypeProperty())).getMeta();
+        return state.getValue(this.getTypeProperty()).getMeta();
     }
 
     protected BlockState createBlockState()
@@ -152,9 +143,7 @@ public abstract class BlockFlower extends BlockBush
             BlockFlower.EnumFlowerType[] ablockflower$enumflowertype = TYPES_FOR_BLOCK[blockType.ordinal()];
 
             if (meta < 0 || meta >= ablockflower$enumflowertype.length)
-            {
                 meta = 0;
-            }
 
             return ablockflower$enumflowertype[meta];
         }
@@ -180,16 +169,11 @@ public abstract class BlockFlower extends BlockBush
         }
 
         static {
-            for (final BlockFlower.EnumFlowerColor blockflower$enumflowercolor : BlockFlower.EnumFlowerColor.values())
+            for (final EnumFlowerColor blockflower$enumflowercolor : EnumFlowerColor.values())
             {
-                Collection<BlockFlower.EnumFlowerType> collection = Collections2.<BlockFlower.EnumFlowerType>filter(Lists.newArrayList(values()), new Predicate<BlockFlower.EnumFlowerType>()
-                {
-                    public boolean apply(BlockFlower.EnumFlowerType p_apply_1_)
-                    {
-                        return p_apply_1_.getBlockType() == blockflower$enumflowercolor;
-                    }
-                });
-                TYPES_FOR_BLOCK[blockflower$enumflowercolor.ordinal()] = (BlockFlower.EnumFlowerType[])collection.toArray(new BlockFlower.EnumFlowerType[collection.size()]);
+                Collection<EnumFlowerType> collection = Collections2.<EnumFlowerType>filter(Lists.newArrayList(values()),
+                		(flower) -> flower.getBlockType() == blockflower$enumflowercolor);
+                TYPES_FOR_BLOCK[blockflower$enumflowercolor.ordinal()] = (EnumFlowerType[])collection.toArray(new EnumFlowerType[collection.size()]);
             }
         }
     }

@@ -182,7 +182,7 @@ public class TextureUtils
                 BufferedImage bufferedimage = new BufferedImage(i, j * 2, 2);
                 Graphics2D graphics2d = bufferedimage.createGraphics();
                 graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                graphics2d.drawImage(bi, 0, 0, i, j, (ImageObserver)null);
+                graphics2d.drawImage(bi, 0, 0, i, j, null);
                 return bufferedimage;
             }
         }
@@ -438,7 +438,7 @@ public class TextureUtils
         }
 
         graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, object);
-        graphics2d.drawImage(bi, 0, 0, w2, k, (ImageObserver)null);
+        graphics2d.drawImage(bi, 0, 0, w2, k, null);
         return bufferedimage;
     }
 
@@ -661,7 +661,7 @@ public class TextureUtils
     {
         for (int i = 65536; i > 0; i >>= 1)
         {
-            GlStateManager.glTexImage2D(32868, 0, 6408, i, i, 0, 6408, 5121, (IntBuffer)null);
+            GlStateManager.glTexImage2D(32868, 0, 6408, i, i, 0, 6408, 5121, null);
             int j = GL11.glGetError();
             int k = GlStateManager.glGetTexLevelParameteri(32868, 0, 4096);
 

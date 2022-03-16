@@ -23,12 +23,11 @@ public class BlockBush extends Block
         this(materialIn, materialIn.getMaterialMapColor());
     }
 
-    protected BlockBush(Material p_i46452_1_, MapColor p_i46452_2_)
+    protected BlockBush(Material material, MapColor mapColor)
     {
-        super(p_i46452_1_, p_i46452_2_);
+        super(material, mapColor);
         this.setTickRandomly(true);
-        float f = 0.2F;
-        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f * 3.0F, 0.5F + f);
+        this.setBlockBounds(0.3f, 0f, 0.3f, 0.7f, 0.6f, 0.7f);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
 

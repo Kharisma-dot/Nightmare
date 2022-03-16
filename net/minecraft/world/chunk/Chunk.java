@@ -1117,68 +1117,68 @@ public class Chunk
         return false;
     }
 
-    public void populateChunk(IChunkProvider p_76624_1_, IChunkProvider p_76624_2_, int p_76624_3_, int p_76624_4_)
+    public void populateChunk(IChunkProvider p_76624_1_, IChunkProvider p_76624_2_, int x, int z)
     {
-        boolean flag = p_76624_1_.chunkExists(p_76624_3_, p_76624_4_ - 1);
-        boolean flag1 = p_76624_1_.chunkExists(p_76624_3_ + 1, p_76624_4_);
-        boolean flag2 = p_76624_1_.chunkExists(p_76624_3_, p_76624_4_ + 1);
-        boolean flag3 = p_76624_1_.chunkExists(p_76624_3_ - 1, p_76624_4_);
-        boolean flag4 = p_76624_1_.chunkExists(p_76624_3_ - 1, p_76624_4_ - 1);
-        boolean flag5 = p_76624_1_.chunkExists(p_76624_3_ + 1, p_76624_4_ + 1);
-        boolean flag6 = p_76624_1_.chunkExists(p_76624_3_ - 1, p_76624_4_ + 1);
-        boolean flag7 = p_76624_1_.chunkExists(p_76624_3_ + 1, p_76624_4_ - 1);
+        boolean flag = p_76624_1_.chunkExists(x, z - 1);
+        boolean flag1 = p_76624_1_.chunkExists(x + 1, z);
+        boolean flag2 = p_76624_1_.chunkExists(x, z + 1);
+        boolean flag3 = p_76624_1_.chunkExists(x - 1, z);
+        boolean flag4 = p_76624_1_.chunkExists(x - 1, z - 1);
+        boolean flag5 = p_76624_1_.chunkExists(x + 1, z + 1);
+        boolean flag6 = p_76624_1_.chunkExists(x - 1, z + 1);
+        boolean flag7 = p_76624_1_.chunkExists(x + 1, z - 1);
 
         if (flag1 && flag2 && flag5)
         {
             if (!this.isTerrainPopulated)
             {
-                p_76624_1_.populate(p_76624_2_, p_76624_3_, p_76624_4_);
+                p_76624_1_.populate(p_76624_2_, x, z);
             }
             else
             {
-                p_76624_1_.func_177460_a(p_76624_2_, this, p_76624_3_, p_76624_4_);
+                p_76624_1_.populateChunk(p_76624_2_, this, x, z);
             }
         }
 
         if (flag3 && flag2 && flag6)
         {
-            Chunk chunk = p_76624_1_.provideChunk(p_76624_3_ - 1, p_76624_4_);
+            Chunk chunk = p_76624_1_.provideChunk(x - 1, z);
 
             if (!chunk.isTerrainPopulated)
             {
-                p_76624_1_.populate(p_76624_2_, p_76624_3_ - 1, p_76624_4_);
+                p_76624_1_.populate(p_76624_2_, x - 1, z);
             }
             else
             {
-                p_76624_1_.func_177460_a(p_76624_2_, chunk, p_76624_3_ - 1, p_76624_4_);
+                p_76624_1_.populateChunk(p_76624_2_, chunk, x - 1, z);
             }
         }
 
         if (flag && flag1 && flag7)
         {
-            Chunk chunk1 = p_76624_1_.provideChunk(p_76624_3_, p_76624_4_ - 1);
+            Chunk chunk1 = p_76624_1_.provideChunk(x, z - 1);
 
             if (!chunk1.isTerrainPopulated)
             {
-                p_76624_1_.populate(p_76624_2_, p_76624_3_, p_76624_4_ - 1);
+                p_76624_1_.populate(p_76624_2_, x, z - 1);
             }
             else
             {
-                p_76624_1_.func_177460_a(p_76624_2_, chunk1, p_76624_3_, p_76624_4_ - 1);
+                p_76624_1_.populateChunk(p_76624_2_, chunk1, x, z - 1);
             }
         }
 
         if (flag4 && flag && flag3)
         {
-            Chunk chunk2 = p_76624_1_.provideChunk(p_76624_3_ - 1, p_76624_4_ - 1);
+            Chunk chunk2 = p_76624_1_.provideChunk(x - 1, z - 1);
 
             if (!chunk2.isTerrainPopulated)
             {
-                p_76624_1_.populate(p_76624_2_, p_76624_3_ - 1, p_76624_4_ - 1);
+                p_76624_1_.populate(p_76624_2_, x - 1, z - 1);
             }
             else
             {
-                p_76624_1_.func_177460_a(p_76624_2_, chunk2, p_76624_3_ - 1, p_76624_4_ - 1);
+                p_76624_1_.populateChunk(p_76624_2_, chunk2, x - 1, z - 1);
             }
         }
     }
@@ -1483,7 +1483,7 @@ public class Chunk
 
         if (!this.worldObj.provider.getHasNoSky())
         {
-            if (this.worldObj.isAreaLoaded(blockpos.add(-1, 0, -1), blockpos.add(16, this.worldObj.func_181545_F(), 16)))
+            if (this.worldObj.isAreaLoaded(blockpos.add(-1, 0, -1), blockpos.add(16, this.worldObj.getSeaLevel(), 16)))
             {
                 label92:
 
@@ -1527,32 +1527,32 @@ public class Chunk
         this.recheckGaps(false);
     }
 
-    private void func_180700_a(EnumFacing p_180700_1_)
+    private void func_180700_a(EnumFacing facing)
     {
         if (this.isTerrainPopulated)
         {
-            if (p_180700_1_ == EnumFacing.EAST)
+            if (facing == EnumFacing.EAST)
             {
                 for (int i = 0; i < 16; ++i)
                 {
                     this.func_150811_f(15, i);
                 }
             }
-            else if (p_180700_1_ == EnumFacing.WEST)
+            else if (facing == EnumFacing.WEST)
             {
                 for (int j = 0; j < 16; ++j)
                 {
                     this.func_150811_f(0, j);
                 }
             }
-            else if (p_180700_1_ == EnumFacing.SOUTH)
+            else if (facing == EnumFacing.SOUTH)
             {
                 for (int k = 0; k < 16; ++k)
                 {
                     this.func_150811_f(k, 15);
                 }
             }
-            else if (p_180700_1_ == EnumFacing.NORTH)
+            else if (facing == EnumFacing.NORTH)
             {
                 for (int l = 0; l < 16; ++l)
                 {
@@ -1569,12 +1569,12 @@ public class Chunk
         boolean flag1 = false;
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos((this.xPosition << 4) + x, 0, (this.zPosition << 4) + z);
 
-        for (int j = i + 16 - 1; j > this.worldObj.func_181545_F() || j > 0 && !flag1; --j)
+        for (int j = i + 16 - 1; j > this.worldObj.getSeaLevel() || j > 0 && !flag1; --j)
         {
-            blockpos$mutableblockpos.func_181079_c(blockpos$mutableblockpos.getX(), j, blockpos$mutableblockpos.getZ());
+            blockpos$mutableblockpos.set(blockpos$mutableblockpos.getX(), j, blockpos$mutableblockpos.getZ());
             int k = this.getBlockLightOpacity(blockpos$mutableblockpos);
 
-            if (k == 255 && blockpos$mutableblockpos.getY() < this.worldObj.func_181545_F())
+            if (k == 255 && blockpos$mutableblockpos.getY() < this.worldObj.getSeaLevel())
             {
                 flag1 = true;
             }
@@ -1591,7 +1591,7 @@ public class Chunk
 
         for (int l = blockpos$mutableblockpos.getY(); l > 0; --l)
         {
-            blockpos$mutableblockpos.func_181079_c(blockpos$mutableblockpos.getX(), l, blockpos$mutableblockpos.getZ());
+            blockpos$mutableblockpos.set(blockpos$mutableblockpos.getX(), l, blockpos$mutableblockpos.getZ());
 
             if (this.getBlock(blockpos$mutableblockpos).getLightValue() > 0)
             {

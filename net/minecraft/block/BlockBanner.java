@@ -29,9 +29,7 @@ public class BlockBanner extends BlockContainer
     protected BlockBanner()
     {
         super(Material.wood);
-        float f = 0.25F;
-        float f1 = 1.0F;
-        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
+        this.setBlockBounds(0.25f, 0f, 0.25f, 0.75f, 1f, 0.75f);
     }
 
     /**
@@ -71,7 +69,10 @@ public class BlockBanner extends BlockContainer
         return false;
     }
 
-    public boolean func_181623_g()
+    /**
+     * Return true if an entity can be spawned inside the block (used to get the player's bed spawn location)
+     */
+    public boolean canSpawnInBlock()
     {
         return true;
     }
@@ -86,17 +87,12 @@ public class BlockBanner extends BlockContainer
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Items.banner;
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Items.banner;
@@ -104,9 +100,6 @@ public class BlockBanner extends BlockContainer
 
     /**
      * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
      */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
@@ -125,14 +118,12 @@ public class BlockBanner extends BlockContainer
             spawnAsEntity(worldIn, pos, itemstack);
         }
         else
-        {
             super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
-        }
     }
 
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
-        return !this.func_181087_e(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos);
+        return !this.hasInvalidNeighbor(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos);
     }
 
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)
@@ -142,14 +133,12 @@ public class BlockBanner extends BlockContainer
             TileEntityBanner tileentitybanner = (TileEntityBanner)te;
             ItemStack itemstack = new ItemStack(Items.banner, 1, ((TileEntityBanner)te).getBaseColor());
             NBTTagCompound nbttagcompound = new NBTTagCompound();
-            TileEntityBanner.func_181020_a(nbttagcompound, tileentitybanner.getBaseColor(), tileentitybanner.func_181021_d());
+            TileEntityBanner.setBaseColorAndPatterns(nbttagcompound, tileentitybanner.getBaseColor(), tileentitybanner.getPatterns());
             itemstack.setTagInfo("BlockEntityTag", nbttagcompound);
             spawnAsEntity(worldIn, pos, itemstack);
         }
         else
-        {
-            super.harvestBlock(worldIn, player, pos, state, (TileEntity)null);
-        }
+            super.harvestBlock(worldIn, player, pos, state, null);
     }
 
     public static class BlockBannerHanging extends BlockBanner
@@ -162,30 +151,30 @@ public class BlockBanner extends BlockContainer
         public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
         {
             EnumFacing enumfacing = (EnumFacing)worldIn.getBlockState(pos).getValue(FACING);
-            float f = 0.0F;
-            float f1 = 0.78125F;
-            float f2 = 0.0F;
-            float f3 = 1.0F;
-            float f4 = 0.125F;
-            this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+            float f = 0f;
+            float f1 = 0.78125f;
+            float f2 = 0f;
+            float f3 = 1f;
+            float f4 = 0.125f;
+            this.setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
 
             switch (enumfacing)
             {
                 case NORTH:
                 default:
-                    this.setBlockBounds(f2, f, 1.0F - f4, f3, f1, 1.0F);
+                    this.setBlockBounds(f2, f, 1f - f4, f3, f1, 1f);
                     break;
 
                 case SOUTH:
-                    this.setBlockBounds(f2, f, 0.0F, f3, f1, f4);
+                    this.setBlockBounds(f2, f, 0f, f3, f1, f4);
                     break;
 
                 case WEST:
-                    this.setBlockBounds(1.0F - f4, f, f2, 1.0F, f1, f3);
+                    this.setBlockBounds(1f - f4, f, f2, 1f, f1, f3);
                     break;
 
                 case EAST:
-                    this.setBlockBounds(0.0F, f, f2, f4, f1, f3);
+                    this.setBlockBounds(0f, f, f2, f4, f1, f3);
             }
         }
 
@@ -207,9 +196,7 @@ public class BlockBanner extends BlockContainer
             EnumFacing enumfacing = EnumFacing.getFront(meta);
 
             if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-            {
                 enumfacing = EnumFacing.NORTH;
-            }
 
             return this.getDefaultState().withProperty(FACING, enumfacing);
         }
@@ -229,7 +216,7 @@ public class BlockBanner extends BlockContainer
     {
         public BlockBannerStanding()
         {
-            this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, Integer.valueOf(0)));
+            this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, 0));
         }
 
         public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
@@ -245,12 +232,12 @@ public class BlockBanner extends BlockContainer
 
         public IBlockState getStateFromMeta(int meta)
         {
-            return this.getDefaultState().withProperty(ROTATION, Integer.valueOf(meta));
+            return this.getDefaultState().withProperty(ROTATION, meta);
         }
 
         public int getMetaFromState(IBlockState state)
         {
-            return ((Integer)state.getValue(ROTATION)).intValue();
+            return state.getValue(ROTATION);
         }
 
         protected BlockState createBlockState()

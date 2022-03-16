@@ -14,8 +14,8 @@ public abstract class BlockRotatedPillar extends Block
         super(materialIn, materialIn.getMaterialMapColor());
     }
 
-    protected BlockRotatedPillar(Material p_i46385_1_, MapColor p_i46385_2_)
+    protected BlockRotatedPillar(Material material, MapColor color)
     {
-        super(p_i46385_1_, p_i46385_2_);
+        super(material, color);
     }
 }

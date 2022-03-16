@@ -40,9 +40,7 @@ public class BlockIce extends BlockBreakable
             ItemStack itemstack = this.createStackedBlock(state);
 
             if (itemstack != null)
-            {
                 spawnAsEntity(worldIn, pos, itemstack);
-            }
         }
         else
         {
@@ -57,9 +55,7 @@ public class BlockIce extends BlockBreakable
             Material material = worldIn.getBlockState(pos.down()).getBlock().getMaterial();
 
             if (material.blocksMovement() || material.isLiquid())
-            {
                 worldIn.setBlockState(pos, Blocks.flowing_water.getDefaultState());
-            }
         }
     }
 
@@ -76,9 +72,7 @@ public class BlockIce extends BlockBreakable
         if (worldIn.getLightFor(EnumSkyBlock.BLOCK, pos) > 11 - this.getLightOpacity())
         {
             if (worldIn.provider.doesWaterVaporize())
-            {
                 worldIn.setBlockToAir(pos);
-            }
             else
             {
                 this.dropBlockAsItem(worldIn, pos, worldIn.getBlockState(pos), 0);

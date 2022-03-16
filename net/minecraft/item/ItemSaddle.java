@@ -40,13 +40,10 @@ public class ItemSaddle extends Item
     /**
      * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
      * the damage on the stack.
-     *  
-     * @param target The Entity being hit
-     * @param attacker the attacking entity
      */
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
     {
-        this.itemInteractionForEntity(stack, (EntityPlayer)null, target);
+        this.itemInteractionForEntity(stack, null, target);
         return true;
     }
 }

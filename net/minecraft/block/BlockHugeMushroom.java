@@ -19,11 +19,11 @@ public class BlockHugeMushroom extends Block
     public static final PropertyEnum<BlockHugeMushroom.EnumType> VARIANT = PropertyEnum.<BlockHugeMushroom.EnumType>create("variant", BlockHugeMushroom.EnumType.class);
     private final Block smallBlock;
 
-    public BlockHugeMushroom(Material p_i46392_1_, MapColor p_i46392_2_, Block p_i46392_3_)
+    public BlockHugeMushroom(Material material, MapColor mapColor, Block smallBlock)
     {
-        super(p_i46392_1_, p_i46392_2_);
+        super(material, mapColor);
         this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockHugeMushroom.EnumType.ALL_OUTSIDE));
-        this.smallBlock = p_i46392_3_;
+        this.smallBlock = smallBlock;
     }
 
     /**
@@ -39,7 +39,7 @@ public class BlockHugeMushroom extends Block
      */
     public MapColor getMapColor(IBlockState state)
     {
-        switch ((BlockHugeMushroom.EnumType)state.getValue(VARIANT))
+        switch (state.getValue(VARIANT))
         {
             case ALL_STEM:
                 return MapColor.clothColor;
@@ -57,17 +57,12 @@ public class BlockHugeMushroom extends Block
 
     /**
      * Get the Item that this Block should drop when harvested.
-     *  
-     * @param fortune the level of the Fortune enchantment on the player's tool
      */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(this.smallBlock);
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return Item.getItemFromBlock(this.smallBlock);
@@ -95,7 +90,7 @@ public class BlockHugeMushroom extends Block
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((BlockHugeMushroom.EnumType)state.getValue(VARIANT)).getMetadata();
+        return state.getValue(VARIANT).getMetadata();
     }
 
     protected BlockState createBlockState()
@@ -119,7 +114,7 @@ public class BlockHugeMushroom extends Block
         ALL_OUTSIDE(14, "all_outside"),
         ALL_STEM(15, "all_stem");
 
-        private static final BlockHugeMushroom.EnumType[] META_LOOKUP = new BlockHugeMushroom.EnumType[16];
+        private static final EnumType[] META_LOOKUP = new EnumType[16];
         private final int meta;
         private final String name;
 
@@ -139,14 +134,12 @@ public class BlockHugeMushroom extends Block
             return this.name;
         }
 
-        public static BlockHugeMushroom.EnumType byMetadata(int meta)
+        public static EnumType byMetadata(int meta)
         {
             if (meta < 0 || meta >= META_LOOKUP.length)
-            {
                 meta = 0;
-            }
 
-            BlockHugeMushroom.EnumType blockhugemushroom$enumtype = META_LOOKUP[meta];
+            EnumType blockhugemushroom$enumtype = META_LOOKUP[meta];
             return blockhugemushroom$enumtype == null ? META_LOOKUP[0] : blockhugemushroom$enumtype;
         }
 
@@ -156,10 +149,8 @@ public class BlockHugeMushroom extends Block
         }
 
         static {
-            for (BlockHugeMushroom.EnumType blockhugemushroom$enumtype : values())
-            {
+            for (EnumType blockhugemushroom$enumtype : values())
                 META_LOOKUP[blockhugemushroom$enumtype.getMetadata()] = blockhugemushroom$enumtype;
-            }
         }
     }
 }

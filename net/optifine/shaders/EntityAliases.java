@@ -51,49 +51,18 @@ public class EntityAliases
 
         if (shaderPack != null)
         {
-            if (Reflector.Loader_getActiveModList.exists() && Config.getResourceManager() == null)
+        	List<Integer> list = new ArrayList();
+            String s = "/shaders/entity.properties";
+            InputStream inputstream = shaderPack.getResourceAsStream(s);
+
+            if (inputstream != null)
             {
-                Config.dbg("[Shaders] Delayed loading of entity mappings after resources are loaded");
-                updateOnResourcesReloaded = true;
+                loadEntityAliases(inputstream, s, list);
             }
-            else
+
+            if (((List)list).size() > 0)
             {
-                List<Integer> list = new ArrayList();
-                String s = "/shaders/entity.properties";
-                InputStream inputstream = shaderPack.getResourceAsStream(s);
-
-                if (inputstream != null)
-                {
-                    loadEntityAliases(inputstream, s, list);
-                }
-
-                loadModEntityAliases(list);
-
-                if (((List)list).size() > 0)
-                {
-                    entityAliases = toArray(list);
-                }
-            }
-        }
-    }
-
-    private static void loadModEntityAliases(List<Integer> listEntityAliases)
-    {
-        String[] astring = ReflectorForge.getForgeModIds();
-
-        for (int i = 0; i < astring.length; ++i)
-        {
-            String s = astring[i];
-
-            try
-            {
-                ResourceLocation resourcelocation = new ResourceLocation(s, "shaders/entity.properties");
-                InputStream inputstream = Config.getResourceStream(resourcelocation);
-                loadEntityAliases(inputstream, resourcelocation.toString(), listEntityAliases);
-            }
-            catch (IOException var6)
-            {
-                ;
+                entityAliases = toArray(list);
             }
         }
     }
@@ -111,9 +80,9 @@ public class EntityAliases
                 Config.dbg("[Shaders] Parsing entity mappings: " + path);
                 ConnectedParser connectedparser = new ConnectedParser("Shaders");
 
-                for (Object e : properties.keySet())
+                for (Object s0 : properties.keySet())
                 {
-                    String s = (String) e;
+                    String s = (String) s0;
                     String s1 = properties.getProperty(s);
                     String s2 = "entity.";
 
@@ -161,10 +130,10 @@ public class EntityAliases
     {
         while (list.size() <= index)
         {
-            list.add(Integer.valueOf(-1));
+            list.add(-1);
         }
 
-        list.set(index, Integer.valueOf(val));
+        list.set(index, val);
     }
 
     private static int[] toArray(List<Integer> list)
@@ -173,7 +142,7 @@ public class EntityAliases
 
         for (int i = 0; i < aint.length; ++i)
         {
-            aint[i] = ((Integer)list.get(i)).intValue();
+            aint[i] = list.get(i);
         }
 
         return aint;

@@ -18,7 +18,7 @@ public class BlockDragonEgg extends Block
     public BlockDragonEgg()
     {
         super(Material.dragonEgg, MapColor.blackColor);
-        this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
+        this.setBlockBounds(0.0625F, 0f, 0.0625F, 0.9375F, 1f, 0.9375F);
     }
 
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
@@ -46,23 +46,17 @@ public class BlockDragonEgg extends Block
             int i = 32;
 
             if (!BlockFalling.fallInstantly && worldIn.isAreaLoaded(pos.add(-i, -i, -i), pos.add(i, i, i)))
-            {
                 worldIn.spawnEntityInWorld(new EntityFallingBlock(worldIn, (double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F), this.getDefaultState()));
-            }
             else
             {
                 worldIn.setBlockToAir(pos);
                 BlockPos blockpos;
 
                 for (blockpos = pos; BlockFalling.canFallInto(worldIn, blockpos) && blockpos.getY() > 0; blockpos = blockpos.down())
-                {
                     ;
-                }
 
                 if (blockpos.getY() > 0)
-                {
                     worldIn.setBlockState(blockpos, this.getDefaultState(), 2);
-                }
             }
         }
     }
@@ -83,7 +77,6 @@ public class BlockDragonEgg extends Block
         IBlockState iblockstate = worldIn.getBlockState(pos);
 
         if (iblockstate.getBlock() == this)
-        {
             for (int i = 0; i < 1000; ++i)
             {
                 BlockPos blockpos = pos.add(worldIn.rand.nextInt(16) - worldIn.rand.nextInt(16), worldIn.rand.nextInt(8) - worldIn.rand.nextInt(8), worldIn.rand.nextInt(16) - worldIn.rand.nextInt(16));
@@ -91,7 +84,6 @@ public class BlockDragonEgg extends Block
                 if (worldIn.getBlockState(blockpos).getBlock().blockMaterial == Material.air)
                 {
                     if (worldIn.isRemote)
-                    {
                         for (int j = 0; j < 128; ++j)
                         {
                             double d0 = worldIn.rand.nextDouble();
@@ -103,7 +95,6 @@ public class BlockDragonEgg extends Block
                             double d3 = (double)blockpos.getZ() + (double)(pos.getZ() - blockpos.getZ()) * d0 + (worldIn.rand.nextDouble() - 0.5D) * 1.0D + 0.5D;
                             worldIn.spawnParticle(EnumParticleTypes.PORTAL, d1, d2, d3, (double)f, (double)f1, (double)f2, new int[0]);
                         }
-                    }
                     else
                     {
                         worldIn.setBlockState(blockpos, iblockstate, 2);
@@ -113,7 +104,6 @@ public class BlockDragonEgg extends Block
                     return;
                 }
             }
-        }
     }
 
     /**
@@ -142,9 +132,6 @@ public class BlockDragonEgg extends Block
         return true;
     }
 
-    /**
-     * Used by pick block on the client to get a block's item form, if it exists.
-     */
     public Item getItem(World worldIn, BlockPos pos)
     {
         return null;

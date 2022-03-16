@@ -15,8 +15,6 @@ public class IntHashMap<V>
 
     /**
      * Makes the passed in integer suitable for hashing by a number of shifts
-     *  
-     * @param integer Integer to make suitable for hashing
      */
     private static int computeHash(int integer)
     {
@@ -47,7 +45,7 @@ public class IntHashMap<V>
             }
         }
 
-        return (V)null;
+        return null;
     }
 
     /**
@@ -253,8 +251,8 @@ public class IntHashMap<V>
             else
             {
                 IntHashMap.Entry<V> entry = (IntHashMap.Entry)p_equals_1_;
-                Object object = Integer.valueOf(this.getHash());
-                Object object1 = Integer.valueOf(entry.getHash());
+                Object object = this.getHash();
+                Object object1 = entry.getHash();
 
                 if (object == object1 || object != null && object.equals(object1))
                 {

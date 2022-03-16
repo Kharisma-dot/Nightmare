@@ -71,13 +71,11 @@ public class CustomModelRegistry
         String[] astring = modelAdapter.getAliases();
 
         if (astring != null)
-        {
             for (int i = 0; i < astring.length; ++i)
             {
                 String s = astring[i];
                 addModelAdapter(map, modelAdapter, s);
             }
-        }
 
         ModelBase modelbase = modelAdapter.makeModel();
         String[] astring1 = modelAdapter.getModelRendererNames();
@@ -88,18 +86,14 @@ public class CustomModelRegistry
             ModelRenderer modelrenderer = modelAdapter.getModelRenderer(modelbase, s1);
 
             if (modelrenderer == null)
-            {
                 Config.warn("Model renderer not found, model: " + modelAdapter.getName() + ", name: " + s1);
-            }
         }
     }
 
     private static void addModelAdapter(Map<String, ModelAdapter> map, ModelAdapter modelAdapter, String name)
     {
         if (map.containsKey(name))
-        {
             Config.warn("Model adapter already registered for id: " + name + ", class: " + modelAdapter.getEntityClass().getName());
-        }
 
         map.put(name, modelAdapter);
     }
@@ -112,7 +106,7 @@ public class CustomModelRegistry
     public static String[] getModelNames()
     {
         Set<String> set = mapModelAdapters.keySet();
-        String[] astring = (String[])((String[])set.toArray(new String[set.size()]));
+        String[] astring = (String[])set.toArray(new String[set.size()]);
         return astring;
     }
 }

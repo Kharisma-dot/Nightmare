@@ -35,7 +35,7 @@ public class ResourceIndex
             {
                 bufferedreader = Files.newReader(file2, Charsets.UTF_8);
                 JsonObject jsonobject = (new JsonParser()).parse((Reader)bufferedreader).getAsJsonObject();
-                JsonObject jsonobject1 = JsonUtils.getJsonObject(jsonobject, "objects", (JsonObject)null);
+                JsonObject jsonobject1 = JsonUtils.getJsonObject(jsonobject, "objects", null);
 
                 if (jsonobject1 != null)
                 {

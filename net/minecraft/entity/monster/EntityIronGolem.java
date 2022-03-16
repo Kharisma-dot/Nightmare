@@ -63,7 +63,7 @@ public class EntityIronGolem extends EntityGolem
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(16, (byte)0);
     }
 
     protected void updateAITasks()
@@ -102,14 +102,14 @@ public class EntityIronGolem extends EntityGolem
         return p_70682_1_;
     }
 
-    protected void collideWithEntity(Entity p_82167_1_)
+    protected void collideWithEntity(Entity entityIn)
     {
-        if (p_82167_1_ instanceof IMob && !(p_82167_1_ instanceof EntityCreeper) && this.getRNG().nextInt(20) == 0)
+        if (entityIn instanceof IMob && !(entityIn instanceof EntityCreeper) && this.getRNG().nextInt(20) == 0)
         {
-            this.setAttackTarget((EntityLivingBase)p_82167_1_);
+            this.setAttackTarget((EntityLivingBase)entityIn);
         }
 
-        super.collideWithEntity(p_82167_1_);
+        super.collideWithEntity(entityIn);
     }
 
     /**
@@ -187,7 +187,7 @@ public class EntityIronGolem extends EntityGolem
         return flag;
     }
 
-    public void handleHealthUpdate(byte id)
+    public void handleStatusUpdate(byte id)
     {
         if (id == 4)
         {
@@ -200,7 +200,7 @@ public class EntityIronGolem extends EntityGolem
         }
         else
         {
-            super.handleHealthUpdate(id);
+            super.handleStatusUpdate(id);
         }
     }
 
@@ -243,8 +243,12 @@ public class EntityIronGolem extends EntityGolem
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         int i = this.rand.nextInt(3);
 
@@ -277,11 +281,11 @@ public class EntityIronGolem extends EntityGolem
 
         if (p_70849_1_)
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 | 1)));
+            this.dataWatcher.updateObject(16, (byte)(b0 | 1));
         }
         else
         {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 & -2)));
+            this.dataWatcher.updateObject(16, (byte)(b0 & -2));
         }
     }
 

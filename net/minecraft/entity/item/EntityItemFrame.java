@@ -33,7 +33,7 @@ public class EntityItemFrame extends EntityHanging
     protected void entityInit()
     {
         this.getDataWatcher().addObjectByDataType(8, 5);
-        this.getDataWatcher().addObject(9, Byte.valueOf((byte)0));
+        this.getDataWatcher().addObject(9, (byte)0);
     }
 
     public float getCollisionBorderSize()
@@ -55,7 +55,7 @@ public class EntityItemFrame extends EntityHanging
             if (!this.worldObj.isRemote)
             {
                 this.dropItemOrSelf(source.getEntity(), false);
-                this.setDisplayedItem((ItemStack)null);
+                this.setDisplayedItem(null);
             }
 
             return true;
@@ -97,7 +97,7 @@ public class EntityItemFrame extends EntityHanging
 
     public void dropItemOrSelf(Entity p_146065_1_, boolean p_146065_2_)
     {
-        if (this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+        if (this.worldObj.getGameRules().getBoolean("doEntityDrops"))
         {
             ItemStack itemstack = this.getDisplayedItem();
 
@@ -136,10 +136,10 @@ public class EntityItemFrame extends EntityHanging
             if (p_110131_1_.getItem() == Items.filled_map)
             {
                 MapData mapdata = ((ItemMap)p_110131_1_.getItem()).getMapData(p_110131_1_, this.worldObj);
-                mapdata.playersVisibleOnMap.remove("frame-" + this.getEntityId());
+                mapdata.mapDecorations.remove("frame-" + this.getEntityId());
             }
 
-            p_110131_1_.setItemFrame((EntityItemFrame)null);
+            p_110131_1_.setItemFrame(null);
         }
     }
 
@@ -186,7 +186,7 @@ public class EntityItemFrame extends EntityHanging
 
     private void func_174865_a(int p_174865_1_, boolean p_174865_2_)
     {
-        this.getDataWatcher().updateObject(9, Byte.valueOf((byte)(p_174865_1_ % 8)));
+        this.getDataWatcher().updateObject(9, (byte)(p_174865_1_ % 8));
 
         if (p_174865_2_ && this.hangingPosition != null)
         {
@@ -250,7 +250,7 @@ public class EntityItemFrame extends EntityHanging
 
                 if (!playerIn.capabilities.isCreativeMode && --itemstack.stackSize <= 0)
                 {
-                    playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, (ItemStack)null);
+                    playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, null);
                 }
             }
         }

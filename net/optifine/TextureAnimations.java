@@ -97,7 +97,7 @@ public class TextureAnimations
 
     private static TextureAnimation[] getTextureAnimations(IResourcePack rp)
     {
-        String[] astring = ResUtils.collectFiles(rp, (String)"mcpatcher/anim/", (String)".properties", (String[])null);
+        String[] astring = ResUtils.collectFiles(rp, "mcpatcher/anim/", ".properties", null);
 
         if (astring.length <= 0)
         {
@@ -118,6 +118,7 @@ public class TextureAnimations
                     InputStream inputstream = rp.getInputStream(resourcelocation);
                     Properties properties = new PropertiesOrdered();
                     properties.load(inputstream);
+                    inputstream.close();
                     TextureAnimation textureanimation = makeTextureAnimation(properties, resourcelocation);
 
                     if (textureanimation != null)
@@ -334,7 +335,7 @@ public class TextureAnimations
         BufferedImage bufferedimage = new BufferedImage(width, height, 2);
         Graphics2D graphics2d = bufferedimage.createGraphics();
         graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics2d.drawImage(image, 0, 0, width, height, (ImageObserver)null);
+        graphics2d.drawImage(image, 0, 0, width, height, null);
         return bufferedimage;
     }
 

@@ -18,8 +18,6 @@ public class CommandSaveOff extends CommandBase
 
     /**
      * Gets the usage string for the command.
-     *  
-     * @param sender The {@link ICommandSender} who is requesting usage details.
      */
     public String getCommandUsage(ICommandSender sender)
     {
@@ -28,9 +26,6 @@ public class CommandSaveOff extends CommandBase
 
     /**
      * Callback when the command is invoked
-     *  
-     * @param sender The {@link ICommandSender sender} who executed the command
-     * @param args The arguments that were passed with the command
      */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
@@ -53,11 +48,11 @@ public class CommandSaveOff extends CommandBase
 
         if (flag)
         {
-            notifyOperators(sender, this, "commands.save.disabled", new Object[0]);
+            notifyOperators(sender, this, "commands.save.disabled");
         }
         else
         {
-            throw new CommandException("commands.save-off.alreadyOff", new Object[0]);
+            throw new CommandException("commands.save-off.alreadyOff");
         }
     }
 }
