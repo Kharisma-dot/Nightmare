@@ -15,15 +15,13 @@ import nightmare.fonts.api.FontManager;
 import nightmare.fonts.api.FontType;
 
 public final class SimpleFontManager implements FontManager {
-
-	//region instantiating
+	
 	private SimpleFontManager() {}
 
 	public static FontManager create() {
 		return new SimpleFontManager();
 	}
-	//endregion
-
+	
 	private static final String FONT_DIRECTORY = "nightmare/fonts/";
 	private final FontRegistry fonts = new FontRegistry();
 
@@ -45,8 +43,7 @@ public final class SimpleFontManager implements FontManager {
 				}
 			});
 		}
-
-		//region reading font
+		
 		private static java.awt.Font readFontFromResources(FontType fontType) throws IOException {
 			IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
 			ResourceLocation location = new ResourceLocation(FONT_DIRECTORY + fontType.fileName());
@@ -76,6 +73,5 @@ public final class SimpleFontManager implements FontManager {
 
 			return font;
 		}
-		//endregion
 	}
 }

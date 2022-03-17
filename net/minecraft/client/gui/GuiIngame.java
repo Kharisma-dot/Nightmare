@@ -776,15 +776,17 @@ public class GuiIngame extends Gui
 
                 if (flag)
                 {
-                    if (i6 * 2 + 1 < j)
-                    {
-                        this.drawTexturedModalRect(i4, j4, j6 + 54, 9 * k4, 9, 9);
-                    }
+                	if(Nightmare.instance.moduleManager.getModuleByName("OldAnimation").isDisabled() || (Nightmare.instance.moduleManager.getModuleByName("OldAnimation").isToggled() && !Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("OldAnimation"), "Health").getValBoolean())) {
+                        if (i6 * 2 + 1 < j)
+                        {
+                            this.drawTexturedModalRect(i4, j4, j6 + 54, 9 * k4, 9, 9);
+                        }
 
-                    if (i6 * 2 + 1 == j)
-                    {
-                        this.drawTexturedModalRect(i4, j4, j6 + 63, 9 * k4, 9, 9);
-                    }
+                        if (i6 * 2 + 1 == j)
+                        {
+                            this.drawTexturedModalRect(i4, j4, j6 + 63, 9 * k4, 9, 9);
+                        }
+                	}
                 }
 
                 if (f2 <= 0.0F)

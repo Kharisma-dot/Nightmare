@@ -1470,24 +1470,24 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         {
             this.leftClickCounter = 0;
         }
-
-        if (this.leftClickCounter <= 0 && !this.thePlayer.isUsingItem())
-        {
-            if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
-            {
-                BlockPos blockpos = this.objectMouseOver.getBlockPos();
-
-                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit))
-                {
+        if (this.leftClickCounter <= 0 && !this.thePlayer.isUsingItem()) {
+            if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                final BlockPos blockpos = this.objectMouseOver.getBlockPos();
+                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit)) {
                     this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
                     this.thePlayer.swingItem();
                 }
             }
-            else
-            {
+            else {
                 this.playerController.resetBlockRemoving();
             }
         }
+        else if (this.leftClickCounter <= 0 && leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+            final BlockPos blockpos = this.objectMouseOver.getBlockPos();
+            if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
+                this.thePlayer.fakeSwingItem();
+            }
+        }   
     }
 
     private void clickMouse()

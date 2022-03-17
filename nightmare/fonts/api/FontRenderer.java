@@ -11,8 +11,7 @@ public interface FontRenderer {
 	int getHeight();
 	boolean isAntiAlias();
 	boolean isFractionalMetrics();
-
-	//region default methods
+	
 	default float drawString(CharSequence text, float x, float y, int color) {
 		return drawString(text, x, y, color, false);
 	}
@@ -28,5 +27,4 @@ public interface FontRenderer {
 	default float drawCenteredString(CharSequence text, float x, float y, int color) {
 		return drawCenteredString(text, x, y, color, false);
 	}
-	//endregion
 }

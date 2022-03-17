@@ -41,8 +41,7 @@ final class SimpleFontRenderer implements FontRenderer {
     private DynamicTexture textureItalic;
     private DynamicTexture textureItalicBold;
     private int fontHeight = -1;
-
-    //region instantiating
+    
     private SimpleFontRenderer(Font awtFont, boolean antiAlias, boolean fractionalMetrics) {
         this.awtFont = awtFont;
         this.antiAlias = antiAlias;
@@ -125,7 +124,6 @@ final class SimpleFontRenderer implements FontRenderer {
         this.textureItalic = setupTexture(awtFont.deriveFont(Font.ITALIC), antiAlias, fractionalMetrics, italicChars);
         this.textureItalicBold = setupTexture(awtFont.deriveFont(Font.BOLD | Font.ITALIC), antiAlias, fractionalMetrics, boldItalicChars);
     }
-    //endregion
 
     @Override
     public float drawString(CharSequence text, double x, double y, int color, boolean dropShadow) {
@@ -146,7 +144,6 @@ final class SimpleFontRenderer implements FontRenderer {
 
         if (color == 0x20FFFFFF) color = 0xFFFFFF;
         if ((color & 0xFC000000) == 0) color |= 0xFF000000;
-        //endregion
 
         if (shadow) {
             color = (color & 0xFCFCFC) >> 2 | color & 0xFF000000;
@@ -158,8 +155,7 @@ final class SimpleFontRenderer implements FontRenderer {
 
         x *= 2.0D;
         y = (y - 3.0D) * 2.0D;
-
-        //region rendering
+        
         GL11.glPushMatrix();
         GlStateManager.scale(0.5D, 0.5D, 0.5D);
         GlStateManager.enableBlend();
@@ -239,8 +235,7 @@ final class SimpleFontRenderer implements FontRenderer {
 
                     charData = this.charData;
                 }
-
-                //noinspection AssignmentToForLoopParameter
+                
                 i++;
             } else if (character < charData.length) {
                 GL11.glBegin(GL11.GL_TRIANGLES);
@@ -270,7 +265,6 @@ final class SimpleFontRenderer implements FontRenderer {
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_DONT_CARE);
         GL11.glPopMatrix();
-        //endregion
 
         return (float) x / 2.0F;
     }
@@ -337,24 +331,22 @@ final class SimpleFontRenderer implements FontRenderer {
             if (character == COLOR_PREFIX && i + 1 < size) {
                 int colorIndex = COLORS.indexOf(text.charAt(i + 1));
 
-                if (colorIndex < 16) { // color
+                if (colorIndex < 16) {
                     bold = false;
                     italic = false;
-                } else if (colorIndex == 17) { // bold
+                } else if (colorIndex == 17) {
                     bold = true;
                     if (italic) currentData = boldItalicChars;
                     else currentData = boldChars;
-                } else if (colorIndex == 20) { // italic
+                } else if (colorIndex == 20) {
                     italic = true;
                     if (bold) currentData = boldItalicChars;
                     else currentData = italicChars;
-                } else if (colorIndex == 21) { // reset
+                } else if (colorIndex == 21) {
                     bold = false;
                     italic = false;
                     currentData = charData;
                 }
-
-                //noinspection AssignmentToForLoopParameter
                 i++;
             } else if (character < currentData.length) {
                 width += currentData[character].width - (character == ' ' ? 8 : 9);
@@ -372,8 +364,7 @@ final class SimpleFontRenderer implements FontRenderer {
     public CharData[] getCharData() {
         return charData;
     }
-
-    //region shit
+    
     private static int[] setupMinecraftColorCodes() {
         int[] colorCodes = new int[32];
 
@@ -409,9 +400,7 @@ final class SimpleFontRenderer implements FontRenderer {
         private CharData() {
         }
     }
-
-    //endregion
-    //region rendering
+    
     private static void drawChar(CharData[] chars, char c, float x, float y) {
         drawQuad(x, y, chars[c].width, chars[c].height, chars[c].storedX, chars[c].storedY, chars[c].width, chars[c].height);
     }
@@ -446,9 +435,7 @@ final class SimpleFontRenderer implements FontRenderer {
         GL11.glEnd();
         GL11.glEnable(GL_TEXTURE_2D);
     }
-
-    //endregion
-    //region lombok
+    
     @Override
     public String getName() {
         return awtFont.getFamily();
@@ -468,5 +455,4 @@ final class SimpleFontRenderer implements FontRenderer {
     public boolean isFractionalMetrics() {
         return fractionalMetrics;
     }
-    //endregion
 }

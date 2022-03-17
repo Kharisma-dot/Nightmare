@@ -37,6 +37,8 @@ public class GuiNewChat extends Gui
     private String lastMessage = "";
     private int sameMessageAmount, line;
     
+    public static boolean autoplay = false;
+    
     public GuiNewChat(Minecraft mcIn)
     {
         this.mc = mcIn;
@@ -191,11 +193,26 @@ public class GuiNewChat extends Gui
     /**
      * prints the ChatComponent to Chat. If the ID is not 0, deletes an existing Chat Line of that ID from the GUI
      */
-    public void printChatMessageWithOptionalDeletion(IChatComponent p_146234_1_, int p_146234_2_)
+    public void printChatMessageWithOptionalDeletion(IChatComponent chatComponent, int p_146234_2_)
     {
         percentComplete = 0;
-        this.setChatLine(p_146234_1_, p_146234_2_, this.mc.ingameGUI.getUpdateCounter(), false);
-        logger.info("[CHAT] " + p_146234_1_.getUnformattedText());
+        this.setChatLine(chatComponent, p_146234_2_, this.mc.ingameGUI.getUpdateCounter(), false);
+        
+        if(Minecraft.getMinecraft().getCurrentServerData() != null && Minecraft.getMinecraft().getCurrentServerData().serverIP.contains("hypixel")) {
+        	if(Nightmare.instance.moduleManager.getModuleByName("AutoHypixel").isToggled()) {
+        		if(Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("AutoHypixel"),"AutoGG").getValBoolean()) {
+        			if (chatComponent.getUnformattedText().contains("WINNER!") ||  chatComponent.getUnformattedText().contains("1st Killer -") || chatComponent.getUnformattedText().contains("Top Survivors"))
+        				Minecraft.getMinecraft().thePlayer.sendChatMessage("/achat gg");
+        		}
+        		
+        		if(Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("AutoHypixel"),"AutoPlay").getValBoolean()) {
+        			if (chatComponent.getUnformattedText().contains("WINNER!") ||  chatComponent.getUnformattedText().contains("1st Killer -") || chatComponent.getUnformattedText().contains("Top Survivors") || chatComponent.getUnformattedText().contains("You died!")) {
+        				this.autoplay = true;
+        			}
+        		}
+        	}
+        }
+        logger.info("[CHAT] " + chatComponent.getUnformattedText());
     }
 
     private void setChatLine(IChatComponent p_146237_1_, int p_146237_2_, int p_146237_3_, boolean p_146237_4_)

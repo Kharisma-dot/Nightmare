@@ -1,9 +1,5 @@
 package nightmare.fonts.api;
 
-/**
- * @author Artyom Popov
- * @since June 30, 2020
- */
 @FunctionalInterface
 public interface FontManager {
 

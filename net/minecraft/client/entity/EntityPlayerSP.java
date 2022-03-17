@@ -328,6 +328,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
         super.swingItem();
         this.sendQueue.addToSendQueue(new C0APacketAnimation());
     }
+    
+    public void fakeSwingItem()
+    {
+        super.swingItem();
+    }
 
     public void respawnPlayer()
     {

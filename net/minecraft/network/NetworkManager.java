@@ -153,15 +153,19 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
     }
 
     protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception
-    {
-        EventReceivePacket event = new EventReceivePacket(p_channelRead0_2_);
-        event.call();
-        
+    {   
         if (this.channel.isOpen())
         {
+            EventReceivePacket event = new EventReceivePacket(p_channelRead0_2_);
+            event.call();
+            
+            if(event.isCancelled()) {
+            	return;
+            }
+            
             try
             {
-                p_channelRead0_2_.processPacket(this.packetListener);
+				event.getPacket().processPacket(this.packetListener);
             }
             catch (ThreadQuickExitException var4)
             {
