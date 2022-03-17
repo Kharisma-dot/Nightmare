@@ -612,10 +612,8 @@ public class GuiIngame extends Gui
         k1 = (int) (Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("HUD"), "Y").getValDouble() + j1 / 3);
     	j = (int) (Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("HUD"), "X").getValDouble() - i - b0);
     	
-    	if(mc.currentScreen instanceof GuiHudEditor) {
-			Gui.drawRect(scoreboardX, scoreboardY, scoreboardX1, scoreboardY - 15, ColorUtils.getClientColor());
-	        Fonts.REGULAR.REGULAR_23.REGULAR_23.drawString("Scoreboard", scoreboardX + 5, scoreboardY - 11, -1, false);
-    	}
+		Gui.drawRect(scoreboardX, scoreboardY, scoreboardX1, scoreboardY - 15, ColorUtils.getClientColor());
+        Fonts.REGULAR.REGULAR_23.REGULAR_23.drawString("Scoreboard", scoreboardX + 5, scoreboardY - 11, -1, false);
     	
     	if(Nightmare.instance.moduleManager.getModuleByName("Blur").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Blur"), "Scoreboard").getValBoolean()) {
     		BlurUtils.drawBlurRect(blurX, blurY, blurX1, blurY1);
