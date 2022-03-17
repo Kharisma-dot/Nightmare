@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import nightmare.Nightmare;
 import nightmare.clickgui.ClickGUI;
@@ -29,6 +30,8 @@ public class Button extends Component {
 	private ArrayList<Component> components;
 	public boolean open;
 	private int height;
+	
+	private FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 	
 	public Button(Module mod, Frame parent, int offset) {
 		this.module = mod;
@@ -71,9 +74,23 @@ public class Button extends Component {
 	@Override
 	public void renderComponent() {
 		Gui.drawRect(frame.getX(), this.frame.getY() + this.offset, frame.getX() + frame.getWidth(), this.frame.getY() + 18 + this.offset, ColorUtils.getBackgroundColor());
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.module.getName(), (frame.getX() + 2), (frame.getY() + offset + 2) + 4, module.isToggled() ? ColorUtils.getClientColor() : -1);
-		if(this.components.size() > 2)
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.open ? "-" : "+", (frame.getX() + frame.getWidth() - 10), (frame.getY() + offset + 2) + 4, -1, true);
+		
+		boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ClickGUI"), "VanillaFont").getValBoolean();
+		
+		if(vanilla) {
+			fr.drawString(this.module.getName(), (frame.getX() + 2), (frame.getY() + offset + 2) + 4, module.isToggled() ? ColorUtils.getClientColor() : -1);
+		}else {
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.module.getName(), (frame.getX() + 2), (frame.getY() + offset + 2) + 4, module.isToggled() ? ColorUtils.getClientColor() : -1);
+		}
+		
+		if(this.components.size() > 2) {
+			if(vanilla) {
+				fr.drawString(this.open ? "-" : "+", (frame.getX() + frame.getWidth() - 10), (frame.getY() + offset + 2) + 4, -1, true);
+			}else {
+				Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.open ? "-" : "+", (frame.getX() + frame.getWidth() - 10), (frame.getY() + offset + 2) + 4, -1, true);
+			}
+		}
+		
 		if(this.open) {
 			if(!this.components.isEmpty()) {
 				for(Component comp : this.components) {

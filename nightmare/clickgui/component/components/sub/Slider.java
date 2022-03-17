@@ -6,7 +6,9 @@ import java.math.RoundingMode;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import nightmare.Nightmare;
 import nightmare.clickgui.component.Component;
 import nightmare.clickgui.component.components.Button;
 import nightmare.fonts.impl.Fonts;
@@ -26,6 +28,8 @@ public class Slider extends Component {
 
 	private double renderWidth;
 	
+	private FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+	
 	public Slider(Setting value, Button button, int offset) {
 		this.set = value;
 		this.parent = button;
@@ -36,10 +40,18 @@ public class Slider extends Component {
 	
 	@Override
 	public void renderComponent() {
+		
+		boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ClickGUI"), "VanillaFont").getValBoolean();
+		
 		Gui.drawRect(parent.frame.getX(), parent.frame.getY() + offset, parent.frame.getX() + parent.frame.getWidth(), parent.frame.getY() + offset + 18, ColorUtils.getBackgroundColor());
 		final int drag = (int)(this.set.getValDouble() / this.set.getMax() * this.parent.frame.getWidth());
 		Gui.drawRect(parent.frame.getX(), parent.frame.getY() + offset + 2, parent.frame.getX() + (int) renderWidth, parent.frame.getY() + offset + 18, ColorUtils.getClientColor());
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.set.getName() + ": " + this.set.getValDouble() , (parent.frame.getX() + 5), (parent.frame.getY() + offset + 2)  + 5, -1);
+		
+		if(vanilla) {
+			fr.drawString(this.set.getName() + ": " + this.set.getValDouble() , (parent.frame.getX() + 5), (parent.frame.getY() + offset + 2)  + 5, -1);
+		}else {
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.set.getName() + ": " + this.set.getValDouble() , (parent.frame.getX() + 5), (parent.frame.getY() + offset + 2)  + 5, -1);
+		}
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,11 +24,14 @@ import nightmare.utils.WorldUtils;
 
 public class NameTags extends Module{
 
+	private FontRenderer fr = mc.fontRendererObj;
+	
 	public NameTags() {
 		super("NameTags", 0, Category.RENDER);
 		
 		Nightmare.instance.settingsManager.rSetting(new Setting("Armor", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Background", this, true));
+		Nightmare.instance.settingsManager.rSetting(new Setting("VanillaFont", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Scale", this, 0.6, 0.1, 1, false));
 	}
 	
@@ -53,6 +57,9 @@ public class NameTags extends Module{
         double originalPositionX = camera.posX;
         double originalPositionY = camera.posY;
         double originalPositionZ = camera.posZ;
+        
+        boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(this, "VanillaFont").getValBoolean();
+        
         camera.posX = this.interpolate(camera.prevPosX, camera.posX, delta);
         camera.posY = this.interpolate(camera.prevPosY, camera.posY, delta);
         camera.posZ = this.interpolate(camera.prevPosZ, camera.posZ, delta);
@@ -60,8 +67,14 @@ public class NameTags extends Module{
 
         double distance = camera.getDistance(x + this.mc.getRenderManager().viewerPosX, y + this.mc.getRenderManager().viewerPosY, z + this.mc.getRenderManager().viewerPosZ);
 
-        float width = Fonts.REGULAR.REGULAR_20.REGULAR_20.stringWidth(player.getDisplayName().getFormattedText()) / 2;
+        float width;
 
+        if(vanilla) {
+        	width = fr.getStringWidth(player.getDisplayName().getFormattedText()) / 2;
+        }else {
+        	width = Fonts.REGULAR.REGULAR_20.REGULAR_20.stringWidth(player.getDisplayName().getFormattedText()) / 2;
+        }
+        
         double scale = (double) (0.004F * Nightmare.instance.settingsManager.getSettingByName(this, "Scale").getValDouble()) * distance;
 
         if (scale < 0.01)
@@ -80,12 +93,24 @@ public class NameTags extends Module{
         GlStateManager.rotate(this.mc.getRenderManager().playerViewX, var10001, 0.0F, 0.0F);
         GlStateManager.scale(-scale, -scale, scale);
         if(Nightmare.instance.settingsManager.getSettingByName(this, "Background").getValBoolean()) {
-            RenderUtils.drawRect(-width - 2, -(Fonts.REGULAR.REGULAR_20.REGULAR_20.getHeight() + 3), (float) width + 2.0F, 2.0F, ColorUtils.getBackgroundColor());
+        	
+        	if(vanilla) {
+                RenderUtils.drawRect(-width - 2, -(fr.FONT_HEIGHT + 3), (float) width + 2.0F, 2.0F, ColorUtils.getBackgroundColor());
+        	}else {
+                RenderUtils.drawRect(-width - 2, -(Fonts.REGULAR.REGULAR_20.REGULAR_20.getHeight() + 3), (float) width + 2.0F, 2.0F, ColorUtils.getBackgroundColor());
+        	}
         }
+        
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         
         GL11.glDepthMask(false);
-        Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(player.getDisplayName().getFormattedText(), -width, -(Fonts.REGULAR.REGULAR_20.REGULAR_20.getHeight()), this.getDisplayColour(player));
+        
+        if(vanilla) {
+            fr.drawString(player.getDisplayName().getFormattedText(), (int) -width, -(fr.FONT_HEIGHT), this.getDisplayColour(player));
+        }else {
+            Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(player.getDisplayName().getFormattedText(), -width, -(Fonts.REGULAR.REGULAR_20.REGULAR_20.getHeight()), this.getDisplayColour(player));
+        }
+        
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         GL11.glDepthMask(true);
 

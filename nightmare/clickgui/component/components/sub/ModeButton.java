@@ -3,7 +3,9 @@ package nightmare.clickgui.component.components.sub;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import nightmare.Nightmare;
 import nightmare.clickgui.component.Component;
 import nightmare.clickgui.component.components.Button;
 import nightmare.fonts.impl.Fonts;
@@ -23,6 +25,8 @@ public class ModeButton extends Component {
 
 	private int modeIndex;
 	
+	private FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+	
 	public ModeButton(Setting set, Button button, Module mod, int offset) {
 		this.set = set;
 		this.parent = button;
@@ -41,7 +45,14 @@ public class ModeButton extends Component {
 	@Override
 	public void renderComponent() {
 		Gui.drawRect(parent.frame.getX(), parent.frame.getY() + offset, parent.frame.getX() + (parent.frame.getWidth() * 1), parent.frame.getY() + offset + 18, ColorUtils.getBackgroundColor());
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString("Mode: " + set.getValString(), (parent.frame.getX() + 7), (parent.frame.getY() + offset + 2) + 5, -1);
+		
+		boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ClickGUI"), "VanillaFont").getValBoolean();
+		
+		if(vanilla) {
+			fr.drawString("Mode: " + set.getValString(), (parent.frame.getX() + 7), (parent.frame.getY() + offset + 2) + 5, -1);
+		}else {
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString("Mode: " + set.getValString(), (parent.frame.getX() + 7), (parent.frame.getY() + offset + 2) + 5, -1);
+		}
 	}
 	
 	@Override

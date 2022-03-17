@@ -2,7 +2,10 @@ package nightmare.clickgui.component.components.sub;
 
 import java.awt.Color;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import nightmare.Nightmare;
 import nightmare.clickgui.component.Component;
 import nightmare.clickgui.component.components.Button;
 import nightmare.fonts.impl.Fonts;
@@ -18,6 +21,8 @@ public class Checkbox extends Component {
 	private int x;
 	private int y;
 	
+	private FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+	
 	public Checkbox(Setting option, Button button, int offset) {
 		this.op = option;
 		this.parent = button;
@@ -29,11 +34,23 @@ public class Checkbox extends Component {
 	@Override
 	public void renderComponent() {
 		Gui.drawRect(parent.frame.getX(), parent.frame.getY() + offset, parent.frame.getX() + (parent.frame.getWidth() * 1), parent.frame.getY() + offset + 18, ColorUtils.getBackgroundColor());
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.op.getName(), (parent.frame.getX() + 17), (parent.frame.getY() + offset + 7), -1);
+		
+		boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ClickGUI"), "VanillaFont").getValBoolean();
+		
+		if(vanilla) {
+			fr.drawString(this.op.getName(), (parent.frame.getX() + 17), (parent.frame.getY() + offset + 7), -1);
+		}else {
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.op.getName(), (parent.frame.getX() + 17), (parent.frame.getY() + offset + 7), -1);
+		}
+		
 		Gui.drawRect(parent.frame.getX() + 4, parent.frame.getY() + offset + 5, parent.frame.getX() + 14, parent.frame.getY() + offset + 15, ColorUtils.getClientColor());
 		
 		if(op.getValBoolean()) {
-			Fonts.ICON.ICON_20.ICON_20.drawString("A", parent.frame.getX() + 4, parent.frame.getY() + offset + 8, -1);
+			if(vanilla) {
+				fr.drawString("✔", parent.frame.getX() + 5, parent.frame.getY() + offset + 6, -1, true);
+			}else {
+				Fonts.ICON.ICON_20.ICON_20.drawString("A", parent.frame.getX() + 4, parent.frame.getY() + offset + 8, -1);
+			}
 		}
 	}
 	

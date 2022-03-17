@@ -2,7 +2,10 @@ package nightmare.clickgui.component.components.sub;
 
 import java.awt.Color;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import nightmare.Nightmare;
 import nightmare.clickgui.component.Component;
 import nightmare.clickgui.component.components.Button;
 import nightmare.fonts.impl.Fonts;
@@ -17,6 +20,8 @@ public class VisibleButton extends Component {
 	private int x;
 	private int y;
 	private Module mod;
+	
+	private FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 	
 	public VisibleButton(Button button, Module mod, int offset) {
 		this.parent = button;
@@ -33,8 +38,16 @@ public class VisibleButton extends Component {
 	
 	@Override
 	public void renderComponent() {
+		
+		boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ClickGUI"), "VanillaFont").getValBoolean();
+		
 		Gui.drawRect(parent.frame.getX(), parent.frame.getY() + offset, parent.frame.getX() + (parent.frame.getWidth() * 1), parent.frame.getY() + offset + 18, ColorUtils.getBackgroundColor());
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString("Visible: " + mod.visible, (parent.frame.getX() + 7), (parent.frame.getY() + offset + 1) + 5, -1);
+		
+		if(vanilla) {
+			fr.drawString("Visible: " + mod.visible, (parent.frame.getX() + 7), (parent.frame.getY() + offset + 1) + 5, -1);
+		}else {
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString("Visible: " + mod.visible, (parent.frame.getX() + 7), (parent.frame.getY() + offset + 1) + 5, -1);
+		}
 	}
 	
 	@Override

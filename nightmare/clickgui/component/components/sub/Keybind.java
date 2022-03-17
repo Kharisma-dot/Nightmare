@@ -5,7 +5,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import nightmare.Nightmare;
 import nightmare.clickgui.component.Component;
 import nightmare.clickgui.component.components.Button;
 import nightmare.fonts.impl.Fonts;
@@ -19,6 +21,8 @@ public class Keybind extends Component {
 	private int offset;
 	private int x;
 	private int y;
+	
+	private FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 	
 	public Keybind(Button button, int offset) {
 		this.parent = button;
@@ -35,7 +39,14 @@ public class Keybind extends Component {
 	@Override
 	public void renderComponent() {
 		Gui.drawRect(parent.frame.getX(), parent.frame.getY() + offset, parent.frame.getX() + (parent.frame.getWidth() * 1), parent.frame.getY() + offset + 18, ColorUtils.getBackgroundColor());
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(binding ? "Press a key..." : ("Key: " + Keyboard.getKeyName(this.parent.module.getKey())), (parent.frame.getX() + 7), (parent.frame.getY() + offset + 1) + 5, -1);
+		
+		boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ClickGUI"), "VanillaFont").getValBoolean();
+		
+		if(vanilla) {
+			fr.drawString(binding ? "Press a key..." : ("Key: " + Keyboard.getKeyName(this.parent.module.getKey())), (parent.frame.getX() + 7), (parent.frame.getY() + offset + 1) + 5, -1);
+		}else {
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(binding ? "Press a key..." : ("Key: " + Keyboard.getKeyName(this.parent.module.getKey())), (parent.frame.getX() + 7), (parent.frame.getY() + offset + 1) + 5, -1);
+		}
 	}
 	
 	@Override

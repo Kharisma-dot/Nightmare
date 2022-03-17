@@ -2,6 +2,7 @@ package nightmare.clickgui.component;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import nightmare.Nightmare;
@@ -24,6 +25,8 @@ public class Frame {
 	public boolean isDragging;
 	public int dragX;
 	public int dragY;
+	
+	private FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 	
 	public Frame(Category cat) {
 		this.components = new ArrayList<Component>();
@@ -71,8 +74,17 @@ public class Frame {
 	public void renderFrame(FontRenderer fontRenderer) {
 		
 		Gui.drawRect(this.x, this.y - 4, this.x + this.width, this.y + this.barHeight, ColorUtils.getClientColor());
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.category.name().replace("COMBAT", "Combat").replace("MOVEMENT", "Movement").replace("RENDER", "Render").replace("PLAYER", "Player").replace("WORLD", "World").replace("MISC", "Misc"), this.x + 2, (this.y) + 2, -1);
-		Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.open ? "-" : "+", this.x + 89, (this.y) + 1, -1);
+		
+		boolean vanilla = Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("ClickGUI"), "VanillaFont").getValBoolean();
+		
+		if(vanilla) {
+			fr.drawString(this.category.name().replace("COMBAT", "Combat").replace("MOVEMENT", "Movement").replace("RENDER", "Render").replace("PLAYER", "Player").replace("WORLD", "World").replace("MISC", "Misc"), this.x + 2, (this.y) + 2, -1);
+			fr.drawString(this.open ? "-" : "+", this.x + 89, (this.y) + 1, -1);
+		}else {
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.category.name().replace("COMBAT", "Combat").replace("MOVEMENT", "Movement").replace("RENDER", "Render").replace("PLAYER", "Player").replace("WORLD", "World").replace("MISC", "Misc"), this.x + 2, (this.y) + 2, -1);
+			Fonts.REGULAR.REGULAR_20.REGULAR_20.drawString(this.open ? "-" : "+", this.x + 89, (this.y) + 1, -1);
+		}
+
 		if(this.open) {
 			if(!this.components.isEmpty()) {
 				for(Component component : components) {
