@@ -6,3 +6,6 @@ A free and open source Legit hack client for Minecraft! :)
 - [ClickGUI(Base)](https://masterof13fps.com/forum/index.php?threads/lemon-clickgui-with-herocode-settings.5419/)
 - [CommandManager](https://youtu.be/o8fuBYUB6cI)
 - [Module,SettingManager](https://www.youtube.com/c/Herocode/featured)
+# Libraries
+- [fastutil](https://github.com/vigna/fastutil)
+- [openauth](https://github.com/AnshGulavani/MCP-Snippets/blob/main/Utils/Microsoft%20Auth/openauth-1.1.2.jar)
