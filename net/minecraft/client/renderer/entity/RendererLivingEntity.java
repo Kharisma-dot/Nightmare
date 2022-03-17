@@ -606,6 +606,10 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
     public void renderName(T entity, double x, double y, double z)
     {
+    	if(Nightmare.instance.moduleManager.getModuleByName("Nametags").isToggled()) {
+    		return;
+    	}
+    	
     	if (this.canRenderName(entity))
         {
             double d0 = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);

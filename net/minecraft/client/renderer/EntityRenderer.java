@@ -98,6 +98,7 @@ import net.optifine.util.MemoryMonitor;
 import net.optifine.util.TextureUtils;
 import net.optifine.util.TimedEvent;
 import nightmare.Nightmare;
+import nightmare.event.impl.EventRender3D;
 import nightmare.module.combat.Reach;
 
 public class EntityRenderer implements IResourceManagerReloadListener
@@ -1789,7 +1790,10 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
 
         this.mc.mcProfiler.endStartSection("hand");
-
+        
+		EventRender3D event = new EventRender3D(partialTicks);
+		event.call();
+        
         if (this.renderHand && !Shaders.isShadowPass)
         {
             if (flag)

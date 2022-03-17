@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer.entity;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.optifine.entity.model.IEntityRenderer;
 import net.optifine.shaders.Shaders;
-import org.lwjgl.opengl.GL11;
+import nightmare.Nightmare;
 
 public abstract class Render<T extends Entity> implements IEntityRenderer
 {
@@ -65,7 +67,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
 
     protected void renderName(T entity, double x, double y, double z)
     {
-        if (this.canRenderName(entity))
+        if (this.canRenderName(entity) && Nightmare.instance.moduleManager.getModuleByName("Nametags").isDisabled())
         {
             this.renderLivingLabel(entity, entity.getDisplayName().getFormattedText(), x, y, z, 64);
         }
