@@ -8,6 +8,7 @@ import nightmare.module.combat.AutoClicker;
 import nightmare.module.combat.HitBox;
 import nightmare.module.combat.Reach;
 import nightmare.module.combat.Velocity;
+import nightmare.module.misc.AntiAtlas;
 import nightmare.module.misc.FPSBoost;
 import nightmare.module.misc.NameProtect;
 import nightmare.module.misc.NoPotionShift;
@@ -109,6 +110,7 @@ public class ModuleManager {
     	modules.add(new Timer());
     	
     	//Misc
+    	modules.add(new AntiAtlas());
     	modules.add(new FPSBoost());
     	modules.add(new NameProtect());
     	modules.add(new NoPotionShift());
