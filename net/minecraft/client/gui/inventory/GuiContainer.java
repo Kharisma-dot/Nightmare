@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -17,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import nightmare.Nightmare;
+
 import org.lwjgl.input.Keyboard;
 
 public abstract class GuiContainer extends GuiScreen
@@ -80,17 +83,22 @@ public abstract class GuiContainer extends GuiScreen
         this.inventorySlots = inventorySlotsIn;
         this.ignoreMouseUp = true;
     }
-
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
+    
     public void initGui()
     {
         super.initGui();
         this.mc.thePlayer.openContainer = this.inventorySlots;
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
+        //Blur
+    	if(Nightmare.instance.moduleManager.getModuleByName("Blur").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Blur"), "Container").getValBoolean()) {
+    		if (OpenGlHelper.shadersSupported && mc.getRenderViewEntity() instanceof EntityPlayer) {
+    			if (mc.entityRenderer.theShaderGroup != null) {
+    				mc.entityRenderer.theShaderGroup.deleteShaderGroup();
+    			}
+    			mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
+    		}
+    	}
     }
 
     /**
@@ -743,6 +751,12 @@ public abstract class GuiContainer extends GuiScreen
      */
     public void onGuiClosed()
     {
+		//Blur
+		if (mc.entityRenderer.theShaderGroup != null) {
+			mc.entityRenderer.theShaderGroup.deleteShaderGroup();
+			mc.entityRenderer.theShaderGroup = null;
+		}
+		
         if (this.mc.thePlayer != null)
         {
             this.inventorySlots.onContainerClosed(this.mc.thePlayer);

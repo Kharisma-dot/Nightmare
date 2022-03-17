@@ -12,6 +12,7 @@ public class Blur extends Module{
 		super("Blur", 0, Category.RENDER);
 		
 		Nightmare.instance.settingsManager.rSetting(new Setting("ClickGUI", this, false));
+		Nightmare.instance.settingsManager.rSetting(new Setting("Container", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Inventory", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Scoreboard", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("TargetHUD", this, false));
