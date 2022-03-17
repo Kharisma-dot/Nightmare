@@ -2,10 +2,13 @@ package nightmare.gui;
 
 import java.io.IOException;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiScreen;
 import nightmare.Nightmare;
+import nightmare.fonts.impl.Fonts;
+import nightmare.utils.ColorUtils;
 import nightmare.utils.MouseUtils;
 import nightmare.utils.ScreenUtils;
 
@@ -47,6 +50,12 @@ public class GuiHudEditor extends GuiScreen{
     
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    	
+    	if(Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("HUD"), "Scoreboard").getValBoolean()){
+    		Gui.drawRect(GuiIngame.scoreboardX, GuiIngame.scoreboardY, GuiIngame.scoreboardX1, GuiIngame.scoreboardY - 15, ColorUtils.getClientColor());
+            Fonts.REGULAR.REGULAR_23.REGULAR_23.drawString("Scoreboard", GuiIngame.scoreboardX + 5, GuiIngame.scoreboardY - 11, -1, false);
+    	}
+    	
     	if(this.draggingInventory == true) {
     		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Inventory"), "X").setValDouble(mouseX + this.dragInventoryX);
     		Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Inventory"), "Y").setValDouble(mouseY + this.dragInventoryY);
