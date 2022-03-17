@@ -23,7 +23,7 @@ public class Nightmare {
 	
 	public static Nightmare instance = new Nightmare();
 	
-	private String name = "Nightmare", version = "1.0";
+	private String name = "Nightmare", version = "1.1";
 	
     public SettingsManager settingsManager;
     public EventManager eventManager;
