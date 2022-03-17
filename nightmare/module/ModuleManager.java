@@ -14,6 +14,7 @@ import nightmare.module.misc.NameProtect;
 import nightmare.module.misc.NoPotionShift;
 import nightmare.module.misc.OldAnimation;
 import nightmare.module.misc.Particle;
+import nightmare.module.misc.Perspective;
 import nightmare.module.misc.Spin;
 import nightmare.module.movement.AutoWalk;
 import nightmare.module.movement.Blink;
@@ -119,6 +120,7 @@ public class ModuleManager {
     	modules.add(new NoPotionShift());
     	modules.add(new OldAnimation());
     	modules.add(new Particle());
+    	modules.add(new Perspective());
     	modules.add(new Spin());
     }
 
