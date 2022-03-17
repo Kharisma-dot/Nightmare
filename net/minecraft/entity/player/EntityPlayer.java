@@ -1309,6 +1309,19 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
         if (targetEntity.canAttackWithItem())
         {
+        	if(Nightmare.instance.moduleManager.getModuleByName("Particle").isToggled()) {
+        		
+        		for(int i = 0; i < (int) Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Particle"), "Multiplier").getValDouble(); i++) {
+                	this.onEnchantmentCritical(targetEntity);
+        		}
+            	
+        		if(Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Particle"), "Critical").getValBoolean()) {
+            		for(int i = 0; i < (int) Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("Particle"), "Multiplier").getValDouble(); i++) {
+                    	this.onCriticalHit(targetEntity);
+            		}
+        		}
+        	}
+        	
             if (!targetEntity.hitByEntity(this))
             {
                 float f = (float)this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
