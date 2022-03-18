@@ -22,31 +22,31 @@ public class AutoHypixel extends Module{
 	
     public String playCommand = "";
     
+    private boolean notification = true;
+    
 	public AutoHypixel() {
 		super("AutoHypixel", 0, Category.WORLD);
 		
-        ArrayList<String> options = new ArrayList<>();
-        options.add("Solo-Normal");
-        options.add("Solo-Insane");
-        
 		Nightmare.instance.settingsManager.rSetting(new Setting("AutoGG", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("AutoPlay", this, false));
-		Nightmare.instance.settingsManager.rSetting(new Setting("Mode", this, "Solo-Normal", options));
-		Nightmare.instance.settingsManager.rSetting(new Setting("Delay", this, 3, 0, 5, false));
+		Nightmare.instance.settingsManager.rSetting(new Setting("Delay", this, 3, 0, 5, true));
 	}
 	
 	@EventTarget
 	public void onUpdate(EventUpdate event) {
 		
 		int delay = (int) Nightmare.instance.settingsManager.getSettingByName(this, "Delay").getValDouble();
-		String mode = Nightmare.instance.settingsManager.getSettingByName(this, "Mode").getValString();
 		
 		if(GuiNewChat.autoplay == true) {
-			NotificationManager.show("AutoHypixel", "Sending you to next game", delay);
+			if(notification == true) {
+				NotificationManager.show("AutoHypixel", "Sending you to next game", delay * 1000);
+				notification = false;
+			}
 			if(timer.delay(1000 * delay)) {
 				mc.thePlayer.sendChatMessage(playCommand);
 				timer.reset();
 				GuiNewChat.autoplay = false;
+				notification = true;
 			}
 		}else {
 			timer.reset();
