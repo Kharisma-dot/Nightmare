@@ -3,6 +3,8 @@ package nightmare.module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import nightmare.Nightmare;
+import nightmare.gui.notification.NotificationManager;
+import nightmare.utils.ChatUtils;
 
 public class Module {
     protected static Minecraft mc = Minecraft.getMinecraft();
@@ -33,9 +35,11 @@ public class Module {
         onToggle();
         if(toggled) {
             onEnable();
+			NotificationManager.show("Module", ChatUtils.GREEN + "Toggle " + ChatUtils.RESET + name, 2500);
         }
         else {
             onDisable();
+			NotificationManager.show("Module", ChatUtils.RED + "Disable " + ChatUtils.RESET + name, 2500);
         }
 		if (Nightmare.instance.config != null) {
 			Nightmare.instance.config.save();

@@ -47,7 +47,7 @@ import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import nightmare.Nightmare;
 import nightmare.event.impl.EventRenderGUI;
-import nightmare.notification.NotificationManager;
+import nightmare.gui.notification.NotificationManager;
 import nightmare.utils.BlurUtils;
 import nightmare.utils.ScreenUtils;
 

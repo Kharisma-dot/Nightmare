@@ -10,6 +10,7 @@ import nightmare.Nightmare;
 import nightmare.event.EventTarget;
 import nightmare.event.impl.EventSendPacket;
 import nightmare.event.impl.EventUpdate;
+import nightmare.gui.notification.NotificationManager;
 import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
@@ -37,11 +38,12 @@ public class AutoHypixel extends Module{
 	@EventTarget
 	public void onUpdate(EventUpdate event) {
 		
-		int time = (int) Nightmare.instance.settingsManager.getSettingByName(this, "Delay").getValDouble();
+		int delay = (int) Nightmare.instance.settingsManager.getSettingByName(this, "Delay").getValDouble();
 		String mode = Nightmare.instance.settingsManager.getSettingByName(this, "Mode").getValString();
 		
 		if(GuiNewChat.autoplay == true) {
-			if(timer.delay(1000 * time)) {
+			NotificationManager.show("AutoHypixel", "Sending you to next game", delay);
+			if(timer.delay(1000 * delay)) {
 				mc.thePlayer.sendChatMessage(playCommand);
 				timer.reset();
 				GuiNewChat.autoplay = false;

@@ -1,4 +1,4 @@
-package nightmare.notification;
+package nightmare.gui.notification;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,20 +25,21 @@ public class Notification {
     private float animationY;
     private float width;
     private final float height;
-
+    private int delay;
     private Animation animation;
    
-    public Notification(String title, String message) {
+    public Notification(String title, String message, int delay) {
 
         this.message = message;
         this.title = title;
+        this.delay = delay;
         
         if(Fonts.REGULAR.REGULAR_20.REGULAR_20.stringWidth(title) < Fonts.REGULAR.REGULAR_16.REGULAR_16.stringWidth(message)) {
             this.width = Fonts.REGULAR.REGULAR_16.REGULAR_16.stringWidth(message) + 45;
         }else{
             this.width = Fonts.REGULAR.REGULAR_20.REGULAR_20.stringWidth(title) + 45;
         }
-        
+              
         this.height = 22.0f;
         this.animationX = 140.0f;
         animation = new Animation(100.0F, ScreenUtils.getHeight());
@@ -78,6 +79,6 @@ public class Notification {
     }
 
     private boolean isFinished() {
-        return timer.delay(2500);
+        return timer.delay(delay);
     }
 }

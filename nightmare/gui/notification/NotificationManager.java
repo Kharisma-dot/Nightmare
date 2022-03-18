@@ -1,4 +1,4 @@
-package nightmare.notification;
+package nightmare.gui.notification;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -17,7 +17,7 @@ public class NotificationManager {
         notifications.removeIf(Notification::shouldDelete);
     }
 
-    public static void show(String title, String message) {
-        notifications.add(new Notification(title, message));
+    public static void show(String title, String message, int delay) {
+        notifications.add(new Notification(title, message, delay));
     }
 }
