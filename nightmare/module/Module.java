@@ -35,7 +35,7 @@ public class Module {
         onToggle();
         if(toggled) {
             onEnable();
-			NotificationManager.show("Module", ChatUtils.GREEN + "Toggle " + ChatUtils.RESET + name, 2500);
+			NotificationManager.show("Module", ChatUtils.GREEN + "Enable " + ChatUtils.RESET + name, 2500);
         }
         else {
             onDisable();
