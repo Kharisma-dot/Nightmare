@@ -9,3 +9,4 @@ A free and open source Legit hack client for Minecraft! :)
 # Libraries
 - [fastutil](https://github.com/vigna/fastutil)
 - [openauth](https://github.com/AnshGulavani/MCP-Snippets/blob/main/Utils/Microsoft%20Auth/openauth-1.1.2.jar)
+- [Downloaded jar library files](https://www.mediafire.com/file/cmh3yre6ylh1adk/lib.zip/file)
