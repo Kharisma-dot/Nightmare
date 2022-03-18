@@ -27,7 +27,6 @@ public class AutoHypixel extends Module{
 		Nightmare.instance.settingsManager.rSetting(new Setting("AutoPlay", this, false));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Mode", this, "Solo-Normal", options));
 		Nightmare.instance.settingsManager.rSetting(new Setting("Delay", this, 3, 0, 5, false));
-		
 	}
 	
 	@EventTarget
