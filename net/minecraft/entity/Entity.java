@@ -50,6 +50,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import nightmare.Nightmare;
 import nightmare.event.impl.EventMove;
+import nightmare.event.impl.EventStep;
 
 public abstract class Entity implements ICommandSender
 {
@@ -732,15 +733,21 @@ public abstract class Entity implements ICommandSender
             }
 
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
-
-            if (this.stepHeight > 0.0F && flag1 && (d3 != x || d5 != z))
+            
+			EventStep eventStep = new EventStep(true, stepHeight);
+			if (this == Minecraft.getMinecraft().thePlayer) {
+				eventStep.call();
+			}
+				
+            double d11 = x;
+            double d7 = y;
+            double d8 = z;
+            
+            if ((x * x + z * z >= x * x + z * z) && eventStep.getStepHeight()  > 0.0F && flag1 && (d3 != x || d5 != z))
             {
-                double d11 = x;
-                double d7 = y;
-                double d8 = z;
                 AxisAlignedBB axisalignedbb3 = this.getEntityBoundingBox();
                 this.setEntityBoundingBox(axisalignedbb);
-                y = (double)this.stepHeight;
+                y = eventStep.getStepHeight();
                 List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().addCoord(d3, y, d5));
                 AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
                 AxisAlignedBB axisalignedbb5 = axisalignedbb4.addCoord(d3, 0.0D, d5);
@@ -811,6 +818,8 @@ public abstract class Entity implements ICommandSender
                     this.setEntityBoundingBox(axisalignedbb14);
                 }
 
+    			y = -eventStep.getStepHeight();
+    			
                 for (AxisAlignedBB axisalignedbb12 : list)
                 {
                     y = axisalignedbb12.calculateYOffset(this.getEntityBoundingBox(), y);
@@ -824,7 +833,10 @@ public abstract class Entity implements ICommandSender
                     y = d7;
                     z = d8;
                     this.setEntityBoundingBox(axisalignedbb3);
-                }
+                }else if (this == Minecraft.getMinecraft().thePlayer) {
+                	EventStep eventStep2 = new EventStep(false, stepHeight, 1 + y);
+                	eventStep2.call();
+				}
             }
 
             this.worldObj.theProfiler.endSection();

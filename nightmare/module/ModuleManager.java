@@ -24,6 +24,7 @@ import nightmare.module.movement.KeepSprint;
 import nightmare.module.movement.NoSlow;
 import nightmare.module.movement.SafeWalk;
 import nightmare.module.movement.Sprint;
+import nightmare.module.movement.Step;
 import nightmare.module.player.AutoArmor;
 import nightmare.module.player.AutoFish;
 import nightmare.module.player.AutoRespawn;
@@ -77,6 +78,7 @@ public class ModuleManager {
     	modules.add(new NoSlow());
     	modules.add(new SafeWalk());
     	modules.add(new Sprint());
+    	modules.add(new Step());
     	
     	//Render
     	modules.add(new ActiveMods());
