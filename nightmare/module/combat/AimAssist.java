@@ -60,7 +60,7 @@ public class AimAssist extends Module{
 			return;
 		}
 		
-		if(Nightmare.instance.moduleManager.getModuleByName("Spin").isToggled()) {
+		if(Nightmare.instance.moduleManager.getModuleByName("Spin").isToggled() || Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
 			return;
 		}
 		

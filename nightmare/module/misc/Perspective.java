@@ -38,11 +38,11 @@ public class Perspective extends Module{
 	}
 	
 	public static float getCameraYaw() {
-		return Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled() ? cameraYaw : mc.thePlayer.rotationYaw;
+		return cameraYaw;
 	}
 	
 	public static float getCameraPitch() {
-		return Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled() ? cameraPitch : mc.thePlayer.rotationPitch;
+		return cameraPitch;
 	}
 	
 	public static boolean overrideMouse()

@@ -737,8 +737,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     GlStateManager.rotate((float)(j * 90), 0.0F, 1.0F, 0.0F);
                 }
 
-                GlStateManager.rotate(Perspective.getCameraYaw() + (Perspective.getCameraYaw() - Perspective.getCameraYaw()) * partialTicks + 180.0F, 0.0F, -1.0F, 0.0F);
-                GlStateManager.rotate(Perspective.getCameraPitch() + (Perspective.getCameraPitch() - Perspective.getCameraPitch()) * partialTicks, -1.0F, 0.0F, 0.0F);
+            	if(Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+                    GlStateManager.rotate(Perspective.getCameraYaw() + (Perspective.getCameraYaw() - Perspective.getCameraYaw()) * partialTicks + 180.0F, 0.0F, -1.0F, 0.0F);
+                    GlStateManager.rotate(Perspective.getCameraPitch() + (Perspective.getCameraPitch() - Perspective.getCameraPitch()) * partialTicks, -1.0F, 0.0F, 0.0F);
+            	}else {
+                    GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, -1.0F, 0.0F);
+                    GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
+            	}
             }
         }
         else if (this.mc.gameSettings.thirdPersonView > 0)
@@ -751,9 +756,17 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
             else
             {
-                float f1 = Perspective.getCameraYaw();
-                float f2 = Perspective.getCameraPitch();
-
+                float f1;
+                float f2;
+                
+            	if(Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+            		f1 = Perspective.getCameraYaw();
+            		f2 = Perspective.getCameraPitch();
+            	}else {
+            		f1 = entity.rotationYaw;
+            		f2 = entity.rotationPitch;
+            	}
+            	
                 if (this.mc.gameSettings.thirdPersonView == 2)
                 {
                     f2 += 180.0F;
@@ -791,18 +804,28 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
                 }
 
-                GlStateManager.rotate(Perspective.getCameraPitch() - f2, 1.0F, 0.0F, 0.0F);
-                GlStateManager.rotate(Perspective.getCameraYaw() - f1, 0.0F, 1.0F, 0.0F);
+            	if(Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+                    GlStateManager.rotate(Perspective.getCameraPitch() - f2, 1.0F, 0.0F, 0.0F);
+                    GlStateManager.rotate(Perspective.getCameraYaw() - f1, 0.0F, 1.0F, 0.0F);
+            	}else {
+                    GlStateManager.rotate(entity.rotationPitch - f2, 1.0F, 0.0F, 0.0F);
+                    GlStateManager.rotate(entity.rotationYaw - f1, 0.0F, 1.0F, 0.0F);
+            	}
                 GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
-                GlStateManager.rotate(f1 - Perspective.getCameraYaw(), 0.0F, 1.0F, 0.0F);
-                GlStateManager.rotate(f2 - Perspective.getCameraPitch(), 1.0F, 0.0F, 0.0F);
+            	if(Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+                    GlStateManager.rotate(f1 - Perspective.getCameraYaw(), 0.0F, 1.0F, 0.0F);
+                    GlStateManager.rotate(f2 - Perspective.getCameraPitch(), 1.0F, 0.0F, 0.0F);
+            	}else {
+                    GlStateManager.rotate(f1 - entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+                    GlStateManager.rotate(f2 - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+            	}
             }
         }
         else
             GlStateManager.translate(0.0F, 0.0F, -0.1F);
         if (!this.mc.gameSettings.debugCamEnable)
         {
-            GlStateManager.rotate(Perspective.getCameraPitch() + (Perspective.getCameraPitch() - Perspective.getCameraPitch()) * partialTicks, 1.0F, 0.0F, 0.0F);
+        	GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
 
             if (entity instanceof EntityAnimal)
             {
@@ -810,7 +833,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 GlStateManager.rotate(entityanimal.prevRotationYawHead + (entityanimal.rotationYawHead - entityanimal.prevRotationYawHead) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
             }
             else
-                GlStateManager.rotate(Perspective.getCameraYaw() + (Perspective.getCameraYaw() - Perspective.getCameraYaw()) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
+            	if(Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+                	GlStateManager.rotate(Perspective.getCameraYaw() + (Perspective.getCameraYaw() - Perspective.getCameraYaw()) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
+            	}else {
+                	GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
+            	}
         }
 
         GlStateManager.translate(0.0F, -f, 0.0F);

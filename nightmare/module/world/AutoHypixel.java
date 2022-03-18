@@ -35,7 +35,7 @@ public class AutoHypixel extends Module{
 		
 		int time = (int) Nightmare.instance.settingsManager.getSettingByName(this, "Delay").getValDouble();
 		String mode = Nightmare.instance.settingsManager.getSettingByName(this, "Mode").getValString();
-		this.setDisplayName("AutoHypixel" + ChatUtils.GRAY + " " + mode);
+		
 		if(GuiNewChat.autoplay == true) {
 			if(timer.delay(1000 * time)) {
 				if(mode.equalsIgnoreCase("Solo-Normal")) {

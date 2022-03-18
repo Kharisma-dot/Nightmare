@@ -35,6 +35,11 @@ public class Spin extends Module{
 	public void onTick(EventTick event) {
 		String mode = Nightmare.instance.settingsManager.getSettingByName(this, "Mode").getValString();
 		
+		if(Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+			this.setToggled(false);
+			return;
+		}
+		
 		if(mode.equals("Left")) {
 			this.spinLeft();
 		}else if(mode.equals("Right")) {

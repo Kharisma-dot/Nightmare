@@ -2239,7 +2239,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.mcProfiler.endStartSection("pendingConnection");
             this.myNetworkManager.processReceivedPackets();
         }
-
+        
         EventTick event = new EventTick();
         event.call();
         
