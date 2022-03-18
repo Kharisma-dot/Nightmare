@@ -353,6 +353,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     /** Profiler currently displayed in the debug screen pie chart */
     private String debugProfilerName = "root";
 
+	long lastFrame;
+	
     public Minecraft(GameConfiguration gameConfig)
     {
         theMinecraft = this;
@@ -1059,7 +1061,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         long i = System.nanoTime();
         this.mcProfiler.startSection("root");
-
+		
         EventLoop event = new EventLoop();
         event.call();
         

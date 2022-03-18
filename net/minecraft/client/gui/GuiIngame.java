@@ -47,10 +47,9 @@ import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import nightmare.Nightmare;
 import nightmare.event.impl.EventRenderGUI;
-import nightmare.fonts.impl.Fonts;
-import nightmare.gui.GuiHudEditor;
+import nightmare.notification.NotificationManager;
 import nightmare.utils.BlurUtils;
-import nightmare.utils.ColorUtils;
+import nightmare.utils.ScreenUtils;
 
 public class GuiIngame extends Gui
 {
@@ -380,6 +379,10 @@ public class GuiIngame extends Gui
 
         EventRenderGUI event = new EventRenderGUI();
         event.call();
+        
+        if(Nightmare.instance.moduleManager.getModuleByName("HUD").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("HUD"), "Notification").getValBoolean()) {
+            NotificationManager.doRender(ScreenUtils.getWitdh(), ScreenUtils.getHeight());
+        }
         
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();

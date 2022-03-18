@@ -18,10 +18,10 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.ResourceLocation;
 import nightmare.Nightmare;
-import nightmare.clickgui.ClickGUI;
 import nightmare.event.EventTarget;
 import nightmare.event.impl.EventRenderGUI;
 import nightmare.fonts.impl.Fonts;
@@ -83,7 +83,6 @@ public class TargetHUD extends Module{
 			}
 			Gui.drawRect(x - 2, y - 2, x + 130, y + 34, ColorUtils.getBackgroundColor());
 			mc.getTextureManager().bindTexture(((AbstractClientPlayer) target).getLocationSkin());
-			//mc.getTextureManager().bindTexture(mc.thePlayer.getLocationSkin());
 	        GL11.glPushMatrix();
 	        GL11.glColor4f(1, 1, 1, 1);
 	        GL11.glScaled(4, 4, 4);
@@ -119,7 +118,7 @@ public class TargetHUD extends Module{
 	
 	private boolean canAttack(EntityLivingBase player) {
 
-		if(player instanceof EntityAnimal || player instanceof EntityMob || player instanceof EntityVillager || player instanceof EntityArmorStand || player instanceof EntityBat || player.getDisplayName().getFormattedText().contains("[NPC]")) {
+		if(player instanceof EntityAnimal || player instanceof EntitySquid || player instanceof EntityMob || player instanceof EntityVillager || player instanceof EntityArmorStand || player instanceof EntityBat || player.getDisplayName().getFormattedText().contains("[NPC]")) {
 			return false;
 		}
 
