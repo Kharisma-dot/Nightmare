@@ -111,7 +111,7 @@ public class GuiHudEditor extends GuiScreen{
         	this.dragpotionstatusY = this.potionstatusY - mouseY;
         }
         
-        if(MouseUtils.isInside(mouseX, mouseY, GuiIngame.scoreboardX, GuiIngame.scoreboardY - 15, GuiIngame.scoreboardX1, GuiIngame.scoreboardY) && Nightmare.instance.moduleManager.getModuleByName("HUD").isToggled() && mouseButton == 0) {
+        if(MouseUtils.isInside(mouseX, mouseY, GuiIngame.scoreboardX, GuiIngame.scoreboardY - 15, GuiIngame.scoreboardX1, GuiIngame.scoreboardY) && mouseButton == 0) {
         	this.draggingScoreboard = true;
         	this.dragScoreboardX = this.scoreboardX - mouseX;
         	this.dragScoreboardY = this.scoreboardY - mouseY;
