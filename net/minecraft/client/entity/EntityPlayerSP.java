@@ -803,7 +803,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
         if (this.isUsingItem() && !this.isRiding())
         {
-        	if(Nightmare.instance.moduleManager.getModuleByName("AutoClicker").isDisabled() || (Nightmare.instance.moduleManager.getModuleByName("AutoClicker").isToggled() && !Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("AutoClicker"), "AutoBlock").getValBoolean())) {
+        	if(Nightmare.instance.moduleManager.getModuleByName("NoSlow").isDisabled()) {
                 this.movementInput.moveStrafe *= 0.2F;
                 this.movementInput.moveForward *= 0.2F;
                 this.sprintToggleTimer = 0;

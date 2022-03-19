@@ -21,6 +21,7 @@ import nightmare.module.movement.Blink;
 import nightmare.module.movement.FastBridge;
 import nightmare.module.movement.GuiMove;
 import nightmare.module.movement.KeepSprint;
+import nightmare.module.movement.NoSlow;
 import nightmare.module.movement.SafeWalk;
 import nightmare.module.movement.Sprint;
 import nightmare.module.movement.Step;
@@ -74,6 +75,7 @@ public class ModuleManager {
     	modules.add(new FastBridge());
     	modules.add(new GuiMove());
     	modules.add(new KeepSprint());
+    	modules.add(new NoSlow());
     	modules.add(new SafeWalk());
     	modules.add(new Sprint());
     	modules.add(new Step());
