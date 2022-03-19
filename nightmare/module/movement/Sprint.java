@@ -11,6 +11,7 @@ import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
 import nightmare.utils.ChatUtils;
+import nightmare.utils.PlayerUtils;
 
 public class Sprint extends Module{
 
@@ -51,11 +52,7 @@ public class Sprint extends Module{
     	String mode = Nightmare.instance.settingsManager.getSettingByName(this, "Mode").getValString();
     	
     	if(mode.equals("Omni")) {
-            mc.thePlayer.setSprinting(this.isMoving());
+            mc.thePlayer.setSprinting(PlayerUtils.isMoving());
     	}
-    }
-    
-    public boolean isMoving() {
-        return mc.thePlayer.moveForward != 0 || mc.thePlayer.moveStrafing != 0;
     }
 }

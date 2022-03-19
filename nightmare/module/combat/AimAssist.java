@@ -52,15 +52,7 @@ public class AimAssist extends Module{
 		double maxAngle = Nightmare.instance.settingsManager.getSettingByName(this, "FOV").getValDouble();
 		double minAngle = 0;
 		
-		if (Nightmare.instance.settingsManager.getSettingByName(this, "ClickAim").getValBoolean() && !this.mc.gameSettings.keyBindAttack.isKeyDown()) {
-			return;
-		}
-		
-		if(Nightmare.instance.settingsManager.getSettingByName(this, "BreakBlock").getValBoolean() && mc.playerController.isHittingBlock()) {
-			return;
-		}
-		
-		if(Nightmare.instance.moduleManager.getModuleByName("Spin").isToggled() || Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+		if (Nightmare.instance.settingsManager.getSettingByName(this, "ClickAim").getValBoolean() && !this.mc.gameSettings.keyBindAttack.isKeyDown() || Nightmare.instance.settingsManager.getSettingByName(this, "BreakBlock").getValBoolean() && mc.playerController.isHittingBlock() || Nightmare.instance.moduleManager.getModuleByName("Spin").isToggled() || Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
 			return;
 		}
 		
@@ -212,6 +204,6 @@ public class AimAssist extends Module{
 	}
 	
 	public boolean isValid(Entity e) {
-		return !(e instanceof EntityLivingBase) ? false : (e instanceof EntityArmorStand ? false : (e instanceof EntityAnimal ? false : (e instanceof EntityMob ? false : (e.getDisplayName().getFormattedText().contains("[NPC]") ? false : (e == mc.thePlayer ? false : (e instanceof EntityVillager ? false : ((double) mc.thePlayer.getDistanceToEntity(e) > (Nightmare.instance.settingsManager.getSettingByName(this, "Range").getValDouble()) ? false : (e.getName().contains("#") ? false : (Nightmare.instance.settingsManager.getSettingByName(this, "Team").getValBoolean() && e.getDisplayName().getFormattedText().startsWith("\u00a7" + mc.thePlayer.getDisplayName().getFormattedText().charAt(1)) ? false : !e.getName().toLowerCase().contains("shop"))))))))));
+		return !(e instanceof EntityLivingBase) ? false : (e instanceof EntityArmorStand ? false : (e instanceof EntityAnimal ? false : (e instanceof EntityMob ? false : (e.getDisplayName().getFormattedText().contains("[NPC]") ? false : (e == mc.thePlayer ? false : (e instanceof EntityMob ? false : ((double) mc.thePlayer.getDistanceToEntity(e) > (Nightmare.instance.settingsManager.getSettingByName(this, "Range").getValDouble()) ? false : (e.getName().contains("#") ? false : (Nightmare.instance.settingsManager.getSettingByName(this, "Team").getValBoolean() && e.getDisplayName().getFormattedText().startsWith("\u00a7" + mc.thePlayer.getDisplayName().getFormattedText().charAt(1)) ? false : !e.getName().toLowerCase().contains("shop"))))))))));
 	}
 }

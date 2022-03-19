@@ -19,12 +19,7 @@ public class GuiMove extends Module{
 	@EventTarget
 	public void onUpdate(EventUpdate event) {
 		
-		if(mc.currentScreen != null) {
-			
-	        if (mc.currentScreen instanceof GuiChat) {
-	            return;
-	         }
-	        
+		if(mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat)) {
 	         KeyBinding.setKeyBindState(mc.gameSettings.keyBindForward.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindForward.getKeyCode()));
 	         KeyBinding.setKeyBindState(mc.gameSettings.keyBindBack.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindBack.getKeyCode()));
 	         KeyBinding.setKeyBindState(mc.gameSettings.keyBindRight.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindRight.getKeyCode()));

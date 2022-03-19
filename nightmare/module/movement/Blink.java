@@ -60,12 +60,7 @@ public class Blink extends Module{
 	@Override
 	public void onEnable() {
 		super.onEnable();
-		if(mc.thePlayer == null || mc.theWorld == null || mc.isSingleplayer()) {
-			this.setToggled(false);
-			return;
-		}
-		
-		if(Nightmare.instance.moduleManager.getModuleByName("Freecam").isToggled()) {
+		if(mc.thePlayer == null || mc.theWorld == null || mc.isSingleplayer() || Nightmare.instance.moduleManager.getModuleByName("Freecam").isToggled()) {
 			this.setToggled(false);
 			return;
 		}
