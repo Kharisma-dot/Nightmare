@@ -24,6 +24,7 @@ import nightmare.event.impl.EventUpdate;
 import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
+import nightmare.utils.PlayerUtils;
 import nightmare.utils.TimerUtils;
 
 public class AutoClicker extends Module{
@@ -62,7 +63,7 @@ public class AutoClicker extends Module{
 	@EventTarget
 	public void onUpdate(EventUpdate event) {
 		
-		if(Keyboard.isKeyDown(mc.gameSettings.keyBindSprint.getKeyCode()) || Nightmare.instance.moduleManager.getModuleByName("Sprint").isToggled()) {
+		if(Nightmare.instance.settingsManager.getSettingByName(this, "AutoBlock").getValBoolean() && Keyboard.isKeyDown(mc.gameSettings.keyBindSprint.getKeyCode()) || Nightmare.instance.moduleManager.getModuleByName("Sprint").isToggled() && mc.thePlayer.moveForward != 0.0f) {
 			mc.thePlayer.setSprinting(true);
 		}
 		
@@ -79,7 +80,7 @@ public class AutoClicker extends Module{
 			}
 		}
 		
-        if (shouldBlock()) {
+        if (shouldBlock() && PlayerUtils.isMoving()) {
             interactAutoBlock();
             mc.thePlayer.getHeldItem().useItemRightClick(mc.theWorld, mc.thePlayer);
             
@@ -144,8 +145,8 @@ public class AutoClicker extends Module{
     }
     
     public boolean shouldBlock() {
-    	if(mc.thePlayer != null || mc.theWorld != null) {
-            return Nightmare.instance.settingsManager.getSettingByName(this, "AutoBlock").getValBoolean() && mc.objectMouseOver.entityHit != null && (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) && mc.objectMouseOver.entityHit.isEntityAlive() && this.isToggled() && !mc.playerController.isHittingBlock();
+    	if(mc.thePlayer != null && mc.theWorld != null && mc.objectMouseOver.entityHit != null && mc.thePlayer.getHeldItem() != null) {
+            return Nightmare.instance.settingsManager.getSettingByName(this, "AutoBlock").getValBoolean() && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword && mc.objectMouseOver.entityHit.isEntityAlive() && this.isToggled() && !mc.playerController.isHittingBlock();
     	}else {
     		return false;
     	}
