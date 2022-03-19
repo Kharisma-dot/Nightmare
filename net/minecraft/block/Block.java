@@ -8,6 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -1489,5 +1490,18 @@ public class Block
         {
             return this.getBreakSound();
         }
+    }
+
+    public static EnumFacing getFacingDirection(BlockPos pos) {
+        EnumFacing direction = null;
+        Minecraft mc = Minecraft.getMinecraft();
+        if (!mc.theWorld.getBlockState(pos.add(0, 1, 0)).getBlock().isNormalCube()) {
+            direction = EnumFacing.UP;
+        }
+
+        MovingObjectPosition rayResult = mc.theWorld.rayTraceBlocks(
+                new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ),
+                new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D));
+        return rayResult != null ? rayResult.sideHit : direction;
     }
 }
