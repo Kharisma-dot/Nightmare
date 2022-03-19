@@ -80,7 +80,7 @@ public class AutoClicker extends Module{
 			}
 		}
 		
-        if (shouldBlock() && PlayerUtils.isMoving()) {
+        if (shouldBlock()) {
             interactAutoBlock();
             mc.thePlayer.getHeldItem().useItemRightClick(mc.theWorld, mc.thePlayer);
             
