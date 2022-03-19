@@ -26,6 +26,12 @@ public class Perspective extends Module{
 	@Override
 	public void onEnable() {
 		super.onEnable();
+		
+		if(mc.thePlayer == null || mc.theWorld == null) {
+			this.setToggled(false);
+			return;
+		}
+		
 		previousPerspective = mc.gameSettings.thirdPersonView;
 		cameraYaw = mc.thePlayer.rotationYaw;
 		cameraPitch = mc.thePlayer.rotationPitch;

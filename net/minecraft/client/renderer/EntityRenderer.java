@@ -825,7 +825,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.translate(0.0F, 0.0F, -0.1F);
         if (!this.mc.gameSettings.debugCamEnable)
         {
-        	GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
+           	if(Nightmare.instance.moduleManager.getModuleByName("Perspective").isToggled()) {
+            	GlStateManager.rotate(Perspective.getCameraPitch() + (Perspective.getCameraPitch() - Perspective.getCameraPitch()) * partialTicks, 1.0F, 0.0F, 0.0F);
+           	}else {
+            	GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
+           	}
 
             if (entity instanceof EntityAnimal)
             {
