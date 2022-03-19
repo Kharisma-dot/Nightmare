@@ -79,12 +79,12 @@ public class Spin extends Module{
         if (left < Nightmare.instance.settingsManager.getSettingByName(this, "Speed").getValDouble()) {
             player = mc.thePlayer;
             player.rotationYaw = (float)((double)player.rotationYaw + left);
-            this.setToggled(false);
+        	toggle();
         } else {
             player = mc.thePlayer;
             player.rotationYaw = (float) ((double)player.rotationYaw + Nightmare.instance.settingsManager.getSettingByName(this, "Speed").getValDouble());
             if ((double)mc.thePlayer.rotationYaw >= (double)this.yaw + 360) {
-                this.setToggled(false);
+            	toggle();
             }
         }
 	}
@@ -95,12 +95,12 @@ public class Spin extends Module{
         if (right > -Nightmare.instance.settingsManager.getSettingByName(this, "Speed").getValDouble()) {
             player = mc.thePlayer;
             player.rotationYaw = (float)((double)player.rotationYaw + right);
-            this.setToggled(false);
+        	toggle();
         } else {
             player = mc.thePlayer;
             player.rotationYaw = (float) ((double)player.rotationYaw - Nightmare.instance.settingsManager.getSettingByName(this, "Speed").getValDouble());
             if ((double)mc.thePlayer.rotationYaw <= (double)this.yaw - 360) {
-                this.setToggled(false);
+            	toggle();
             }
         }
 	}
