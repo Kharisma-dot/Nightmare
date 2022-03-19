@@ -18,8 +18,8 @@ import nightmare.clickgui.component.components.sub.VisibleButton;
 import nightmare.fonts.impl.Fonts;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
-import nightmare.utils.BlurUtils;
 import nightmare.utils.ColorUtils;
+import nightmare.utils.render.BlurUtils;
 
 public class Button extends Component {
 

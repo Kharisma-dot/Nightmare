@@ -48,8 +48,8 @@ import net.optifine.CustomColors;
 import nightmare.Nightmare;
 import nightmare.event.impl.EventRenderGUI;
 import nightmare.gui.notification.NotificationManager;
-import nightmare.utils.BlurUtils;
 import nightmare.utils.ScreenUtils;
+import nightmare.utils.render.BlurUtils;
 
 public class GuiIngame extends Gui
 {

@@ -8,11 +8,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import nightmare.fonts.impl.Fonts;
 import nightmare.module.Module;
 import nightmare.utils.ColorUtils;
-import nightmare.utils.RenderUtils;
 import nightmare.utils.ScreenUtils;
 import nightmare.utils.TimerUtils;
 import nightmare.utils.animation.Animation;
 import nightmare.utils.animation.AnimationUtils;
+import nightmare.utils.render.RenderUtils;
 
 public class Notification {
     public static Minecraft mc = Minecraft.getMinecraft();

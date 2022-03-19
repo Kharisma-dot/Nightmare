@@ -11,8 +11,8 @@ import nightmare.fonts.impl.Fonts;
 import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
-import nightmare.utils.BlurUtils;
 import nightmare.utils.ColorUtils;
+import nightmare.utils.render.BlurUtils;
 
 public class Inventory extends Module{
 

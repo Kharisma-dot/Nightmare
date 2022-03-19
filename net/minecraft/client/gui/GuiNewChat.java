@@ -11,6 +11,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import nightmare.Nightmare;
 import nightmare.utils.ChatUtils;
+import nightmare.utils.ServerUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -198,7 +199,7 @@ public class GuiNewChat extends Gui
         percentComplete = 0;
         this.setChatLine(chatComponent, p_146234_2_, this.mc.ingameGUI.getUpdateCounter(), false);
         
-        if(Minecraft.getMinecraft().getCurrentServerData() != null && Minecraft.getMinecraft().getCurrentServerData().serverIP.contains("hypixel")) {
+        if(ServerUtils.isHypixel()) {
         	if(Nightmare.instance.moduleManager.getModuleByName("AutoHypixel").isToggled()) {
         		if(Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("AutoHypixel"),"AutoGG").getValBoolean()) {
         			if (chatComponent.getUnformattedText().contains("WINNER!") ||  chatComponent.getUnformattedText().contains("1st Killer -") || chatComponent.getUnformattedText().contains("Top Survivors"))

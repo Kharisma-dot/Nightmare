@@ -19,8 +19,8 @@ import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
 import nightmare.utils.ColorUtils;
-import nightmare.utils.RenderUtils;
 import nightmare.utils.WorldUtils;
+import nightmare.utils.render.RenderUtils;
 
 public class NameTags extends Module{
 

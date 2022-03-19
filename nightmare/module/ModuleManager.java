@@ -46,6 +46,7 @@ import nightmare.module.render.ItemPhysic;
 import nightmare.module.render.NameTags;
 import nightmare.module.render.PotionStatus;
 import nightmare.module.render.TargetHUD;
+import nightmare.module.render.Trajectories;
 import nightmare.module.render.ViewClip;
 import nightmare.module.world.AutoHypixel;
 import nightmare.module.world.ChestStealer;
@@ -93,6 +94,7 @@ public class ModuleManager {
     	modules.add(new NameTags());
     	modules.add(new PotionStatus());
     	modules.add(new TargetHUD());
+    	modules.add(new Trajectories());
     	modules.add(new ViewClip());
     	
     	//Player

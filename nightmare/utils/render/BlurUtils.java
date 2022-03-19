@@ -1,4 +1,4 @@
-package nightmare.utils;
+package nightmare.utils.render;
 
 import java.io.IOException;
 
@@ -18,6 +18,7 @@ import net.minecraft.client.util.JsonException;
 import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
 import nightmare.Nightmare;
+import nightmare.utils.ScreenUtils;
 
 public class BlurUtils {
 	
