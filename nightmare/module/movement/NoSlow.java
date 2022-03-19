@@ -13,6 +13,7 @@ import nightmare.Nightmare;
 import nightmare.event.EventTarget;
 import nightmare.event.impl.EventPostMotionUpdate;
 import nightmare.event.impl.EventPreMotionUpdate;
+import nightmare.event.impl.EventSlowDown;
 import nightmare.event.impl.EventTick;
 import nightmare.module.Category;
 import nightmare.module.Module;
@@ -37,6 +38,11 @@ public class NoSlow extends Module{
 	public void onTick(EventTick event) {
 		String mode = Nightmare.instance.settingsManager.getSettingByName(this, "Mode").getValString();
 		this.setDisplayName("NoSlow " + ChatUtils.GRAY + mode);
+	}
+	
+	@EventTarget
+	public void onSlowDown(EventSlowDown event) {
+		event.setCancelled(true);
 	}
 	
 	@EventTarget

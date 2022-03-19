@@ -36,6 +36,6 @@ public class PlayerUtils {
     }
     
     public static boolean isMoving() {
-        return mc.thePlayer.moveForward != 0.0f || Minecraft.getMinecraft().thePlayer.moveStrafing != 0.0f;
+        return mc.thePlayer.moveForward != 0.0f || mc.thePlayer.moveStrafing != 0.0f;
     }
 }

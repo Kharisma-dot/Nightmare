@@ -4,19 +4,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import nightmare.Nightmare;
 import nightmare.event.EventTarget;
 import nightmare.event.impl.EventPreMotionUpdate;
-import nightmare.event.impl.EventSendPacket;
 import nightmare.event.impl.EventTick;
-import nightmare.event.impl.EventUpdate;
 import nightmare.module.Category;
 import nightmare.module.Module;
 import nightmare.settings.Setting;
@@ -26,8 +21,6 @@ public class AutoClicker extends Module{
 
 	private TimerUtils timer = new TimerUtils();
 	
-    private boolean blocking;
-    
 	public AutoClicker() {
 		super("AutoClicker", 0, Category.COMBAT);
 		

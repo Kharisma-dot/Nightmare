@@ -54,6 +54,7 @@ import nightmare.Nightmare;
 import nightmare.event.impl.EventChat;
 import nightmare.event.impl.EventPostMotionUpdate;
 import nightmare.event.impl.EventPreMotionUpdate;
+import nightmare.event.impl.EventSlowDown;
 import nightmare.event.impl.EventUpdate;
 
 public class EntityPlayerSP extends AbstractClientPlayer
@@ -803,7 +804,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
         if (this.isUsingItem() && !this.isRiding())
         {
-        	if(Nightmare.instance.moduleManager.getModuleByName("NoSlow").isDisabled()) {
+        	EventSlowDown event = new EventSlowDown();
+        	
+        	event.call();
+        	
+        	if(!event.isCancelled()) {
                 this.movementInput.moveStrafe *= 0.2F;
                 this.movementInput.moveForward *= 0.2F;
                 this.sprintToggleTimer = 0;
