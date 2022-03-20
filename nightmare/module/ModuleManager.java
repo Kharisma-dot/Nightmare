@@ -53,6 +53,7 @@ import nightmare.module.world.ChestStealer;
 import nightmare.module.world.FastBreak;
 import nightmare.module.world.FastPlace;
 import nightmare.module.world.LightningTracker;
+import nightmare.module.world.StaffAnalyser;
 import nightmare.module.world.TimeChanger;
 import nightmare.module.world.Timer;
 
@@ -114,6 +115,7 @@ public class ModuleManager {
     	modules.add(new FastBreak());
     	modules.add(new FastPlace());
     	modules.add(new LightningTracker());
+    	modules.add(new StaffAnalyser());
     	modules.add(new TimeChanger());
     	modules.add(new Timer());
     	

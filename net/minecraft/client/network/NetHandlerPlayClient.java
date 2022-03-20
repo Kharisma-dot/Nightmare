@@ -208,6 +208,7 @@ import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+import nightmare.event.impl.EventRespawn;
 
 public class NetHandlerPlayClient implements INetHandlerPlayClient
 {
@@ -286,6 +287,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         this.gameController.playerController.setGameType(packetIn.getGameType());
         this.gameController.gameSettings.sendSettingsToServer();
         this.netManager.sendPacket(new C17PacketCustomPayload("MC|Brand", (new PacketBuffer(Unpooled.buffer())).writeString(ClientBrandRetriever.getClientModName())));
+        
+        EventRespawn event = new EventRespawn();
+        event.call();
     }
 
     /**

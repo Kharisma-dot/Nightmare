@@ -1,7 +1,8 @@
 package nightmare.module;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import nightmare.Nightmare;
 import nightmare.gui.notification.NotificationManager;
 import nightmare.utils.ChatUtils;
@@ -9,9 +10,20 @@ import nightmare.utils.ChatUtils;
 public class Module {
     protected static Minecraft mc = Minecraft.getMinecraft();
 
-    private String name, displayName;
+    @Getter
+    @Setter
+    private String name;
+    
+    @Setter
+    private String displayName;
+    
+    @Getter
+    @Setter
     private int key;
+    
+    @Getter
     private Category category;
+    
     protected boolean toggled;
 	public boolean visible = true;
 	
@@ -45,18 +57,6 @@ public class Module {
 			Nightmare.instance.config.save();
 		}
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public int getKey() {
-        return key;
-    }
-    public void setKey(int key) {
-        this.key = key;
-    }
     public boolean isToggled() {
         return toggled;
     }
@@ -65,9 +65,6 @@ public class Module {
     }
     public String getDisplayName() {
         return displayName == null ? name : displayName;
-    }
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 	public void setToggled(boolean toggled) {
 		this.toggled = toggled;
@@ -80,8 +77,5 @@ public class Module {
 		if (Nightmare.instance.config != null) {
 			Nightmare.instance.config.save();
 		}
-	}
-	public Category getCategory() {
-		return this.category;
 	}
 }

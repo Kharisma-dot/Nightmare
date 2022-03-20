@@ -76,8 +76,16 @@ public class AutoHypixel extends Module{
         }
 
         if (e.getPacket() instanceof C0EPacketClickWindow) {
+        	
             C0EPacketClickWindow packet = (C0EPacketClickWindow) e.getPacket();
-            String itemname = packet.getClickedItem().getDisplayName();
+            String itemname;
+            
+            if(packet.getClickedItem() == null) {
+            	return;
+            }
+            
+            itemname = packet.getClickedItem().getDisplayName();
+            
             if (packet.getClickedItem().getDisplayName().startsWith("\247a")) {
                 int itemID = Item.getIdFromItem(packet.getClickedItem().getItem());
                 if (itemID == 381 || itemID == 368) {

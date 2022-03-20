@@ -1,19 +1,14 @@
 package nightmare;
 
-import fr.litarvan.openauth.microsoft.MicrosoftAuthResult;
-import fr.litarvan.openauth.microsoft.MicrosoftAuthenticationException;
-import fr.litarvan.openauth.microsoft.MicrosoftAuthenticator;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Config;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.Session;
 import nightmare.clickgui.ClickGUI;
 import nightmare.command.CommandManager;
 import nightmare.config.ConfigManager;
 import nightmare.event.EventManager;
 import nightmare.event.EventTarget;
 import nightmare.event.impl.EventKey;
-import nightmare.event.impl.EventTick;
 import nightmare.fonts.api.FontManager;
 import nightmare.fonts.impl.SimpleFontManager;
 import nightmare.module.ModuleManager;
@@ -23,6 +18,7 @@ public class Nightmare {
 	
 	public static Nightmare instance = new Nightmare();
 	
+	@Getter
 	private String name = "Nightmare", version = "1.1";
 	
     public SettingsManager settingsManager;
@@ -33,8 +29,6 @@ public class Nightmare {
     
     public CommandManager commandManager = new CommandManager();
     public FontManager fontManager = SimpleFontManager.create();
-
-    private long playTime = 0;
     
 	public void startClient() {
 	    settingsManager = new SettingsManager();
@@ -63,20 +57,4 @@ public class Nightmare {
     	
     	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
     } 
-    
-    public String getName() {
-    	return this.name;
-    }
-    
-    public String getVersion() {
-    	return this.version;
-    }
-    
-    public long getPlayTime() {
-    	return this.playTime;
-    }
-    
-    private long setPlayTime(long time) {
-    	return this.playTime = time;
-    }
 }
