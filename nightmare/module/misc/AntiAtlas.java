@@ -8,8 +8,8 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.server.S02PacketChat;
 import nightmare.event.EventTarget;
-import nightmare.event.impl.EventLoadWorld;
 import nightmare.event.impl.EventReceivePacket;
+import nightmare.event.impl.EventRespawn;
 import nightmare.event.impl.EventUpdate;
 import nightmare.module.Category;
 import nightmare.module.Module;
@@ -25,7 +25,7 @@ public class AntiAtlas extends Module{
 	}
 
     @EventTarget
-    public void onWorldLoad(EventLoadWorld event) {
+    public void onWorldLoad(EventRespawn event) {
         user.clear();
         timer.reset();
     }
