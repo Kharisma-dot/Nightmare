@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import nightmare.module.combat.AimAssist;
 import nightmare.module.combat.AntiBot;
 import nightmare.module.combat.AutoClicker;
+import nightmare.module.combat.BowAimAssist;
 import nightmare.module.combat.HitBox;
 import nightmare.module.combat.KillAura;
 import nightmare.module.combat.Reach;
@@ -68,6 +69,7 @@ public class ModuleManager {
     	modules.add(new AntiBot());
     	modules.add(new AimAssist());
     	modules.add(new AutoClicker());
+    	modules.add(new BowAimAssist());
     	modules.add(new Reach());
     	modules.add(new HitBox());
     	modules.add(new Velocity());
