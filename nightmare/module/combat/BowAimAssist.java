@@ -42,7 +42,11 @@ public class BowAimAssist extends Module{
     @EventTarget
     public void onTick(EventTick event) {
     	
-        if (mc.thePlayer.inventory.getCurrentItem().getItem() != Items.bow || !mc.thePlayer.isUsingItem()) {
+    	if(Nightmare.instance.moduleManager.getModuleByName("Blink").isToggled() || Nightmare.instance.moduleManager.getModuleByName("Freecam").isToggled()) {
+    		return;
+    	}
+    	
+        if (mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() != Items.bow || !mc.thePlayer.isUsingItem()) {
             target = null;
             return;
         }
