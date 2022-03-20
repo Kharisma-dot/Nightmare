@@ -71,8 +71,10 @@ public class KillAura extends Module {
 
     @EventTarget
     public void onRespawn(EventRespawn event) {
-    	NotificationManager.show("Module", "Disable KillAura (AutoDisable)", getKey());
-    	this.setToggled(false);
+    	if(Nightmare.instance.settingsManager.getSettingByName(this, "AutoDisable").getValBoolean()) {
+        	NotificationManager.show("Module", "Disable KillAura (AutoDisable)", getKey());
+        	this.setToggled(false);
+    	}
     }
     	
     private void attack(Entity entity) {
