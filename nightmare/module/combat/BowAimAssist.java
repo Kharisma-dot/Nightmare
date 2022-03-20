@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemBow;
 import net.minecraft.util.MathHelper;
 import nightmare.Nightmare;
 import nightmare.event.EventTarget;
@@ -45,13 +46,12 @@ public class BowAimAssist extends Module{
     	if(Nightmare.instance.moduleManager.getModuleByName("Blink").isToggled() || Nightmare.instance.moduleManager.getModuleByName("Freecam").isToggled()) {
     		return;
     	}
-    	
-        if (mc.thePlayer.inventory.getCurrentItem().getItem() != null && mc.thePlayer.inventory.getCurrentItem().getItem() != Items.bow || !mc.thePlayer.isUsingItem()) {
-            target = null;
-            return;
-        }
 
-        target = this.getTarget();
+        if(mc.gameSettings.keyBindUseItem.isKeyDown() && mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemBow) {
+            target = this.getTarget();
+        }else {
+        	target = null;
+        }
 
         if (target == null) {
             return;

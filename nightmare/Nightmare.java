@@ -19,7 +19,7 @@ public class Nightmare {
 	public static Nightmare instance = new Nightmare();
 	
 	@Getter
-	private String name = "Nightmare", version = "1.1";
+	private String name = "Nightmare", version = "1.2";
 	
     public SettingsManager settingsManager;
     public EventManager eventManager;

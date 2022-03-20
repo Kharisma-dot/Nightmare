@@ -31,7 +31,6 @@ public class AutoClicker extends Module{
 	
 	@EventTarget
 	public void onTick(EventTick event) {
-		int key = mc.gameSettings.keyBindAttack.getKeyCode();
 		
 		if(Nightmare.instance.settingsManager.getSettingByName(this, "MinCPS").getValDouble() > Nightmare.instance.settingsManager.getSettingByName(this, "MaxCPS").getValDouble() - 1) {
 			Nightmare.instance.settingsManager.getSettingByName(this, "MinCPS").setValDouble(Nightmare.instance.settingsManager.getSettingByName(this, "MaxCPS").getValDouble() - 0.1);
@@ -39,7 +38,7 @@ public class AutoClicker extends Module{
 		
 		if (mc.gameSettings.keyBindAttack.isKeyDown() && (!Nightmare.instance.settingsManager.getSettingByName(this, "Weapons Only").getValBoolean() || mc.thePlayer.getHeldItem() != null && (mc.thePlayer.getHeldItem().getItem() instanceof ItemTool || mc.thePlayer.getHeldItem().getItem() instanceof ItemSword))) {
             if (timer.delay(1000 / ThreadLocalRandom.current().nextInt((int) Nightmare.instance.settingsManager.getSettingByName(this, "MinCPS").getValDouble(), (int) Nightmare.instance.settingsManager.getSettingByName(this, "MaxCPS").getValDouble() + 1))) {
-            	KeyBinding.onTick(key);
+            	KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
                 timer.reset();
             }
         }

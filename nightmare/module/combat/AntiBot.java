@@ -14,8 +14,10 @@ public class AntiBot extends Module{
 	
     @EventTarget
     public void onUpdate(EventUpdate event) {
-        for(Object entity : mc.theWorld.loadedEntityList)
-            if(((Entity)entity).isInvisible() && entity != mc.thePlayer)
+        for(Object entity : mc.theWorld.loadedEntityList) {
+            if(((Entity)entity).isInvisible() && entity != mc.thePlayer) {
                 mc.theWorld.removeEntity((Entity)entity);
+            }
+        }
     }
 }
