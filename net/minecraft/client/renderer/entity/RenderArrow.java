@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer.entity;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -7,12 +9,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import nightmare.Nightmare;
 
 public class RenderArrow extends Render<EntityArrow>
 {
     private static final ResourceLocation arrowTextures = new ResourceLocation("textures/entity/arrow.png");
-
+    
     public RenderArrow(RenderManager renderManagerIn)
     {
         super(renderManagerIn);
@@ -23,6 +25,10 @@ public class RenderArrow extends Render<EntityArrow>
      */
     public void doRender(EntityArrow entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+    	if(Nightmare.instance.moduleManager.getModuleByName("FPSBoost").isToggled() && Nightmare.instance.settingsManager.getSettingByName(Nightmare.instance.moduleManager.getModuleByName("FPSBoost"), "HideGroundArrow").getValBoolean() && entity.isInGround()) {
+    		return;
+    	}
+    	
         this.bindEntityTexture(entity);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.pushMatrix();

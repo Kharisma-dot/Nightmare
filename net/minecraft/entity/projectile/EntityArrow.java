@@ -1,6 +1,8 @@
 package net.minecraft.entity.projectile;
 
 import java.util.List;
+
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -32,6 +34,8 @@ public class EntityArrow extends Entity implements IProjectile
     private int zTile = -1;
     private Block inTile;
     private int inData;
+    
+    @Getter
     private boolean inGround;
 
     /** 1 if the player can pick up the arrow */
