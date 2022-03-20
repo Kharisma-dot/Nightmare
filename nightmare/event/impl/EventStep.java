@@ -1,11 +1,19 @@
 package nightmare.event.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import nightmare.event.Event;
 
 public class EventStep extends Event{
 	
+	@Getter
+	@Setter
 	private double stepHeight;
+	
+	@Getter
+	@Setter
 	private double realHeight;
+	
 	private boolean pre;
 
 	public EventStep(boolean state, double stepHeight, double realHeight) {
@@ -22,21 +30,5 @@ public class EventStep extends Event{
 
 	public boolean isPre() {
 		return this.pre;
-	}
-
-	public double getStepHeight() {
-		return this.stepHeight;
-	}
-
-	public void setStepHeight(double stepHeight) {
-		this.stepHeight = stepHeight;
-	}
-
-	public double getRealHeight() {
-		return this.realHeight;
-	}
-
-	public void setRealHeight(double realHeight) {
-		this.realHeight = realHeight;
 	}
 }

@@ -1,12 +1,20 @@
 package nightmare.event.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import nightmare.event.Event;
 
 public class EventPreMotionUpdate extends Event {
 
-    public float yaw;
-	public float pitch;
+	@Getter
+	@Setter
+    public float yaw, pitch;
+	
+	@Getter
+	@Setter
     private boolean ground;
+    
+    @Getter
     public double x, y, z;
 
     public EventPreMotionUpdate(float yaw, float pitch, boolean ground, double x, double y, double z) {
@@ -16,38 +24,5 @@ public class EventPreMotionUpdate extends Event {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    public double getX() {
-        return x;
-    }
-    
-    public double getY() {
-        return y;
-    }
-
-    public double getZ() {
-        return z;
-    }
-    
-    public float getYaw() {
-        return yaw;
-    }
-    public void setYaw(float yaw) {
-        this.yaw = yaw;
-    }
-
-    public float getPitch() {
-        return pitch;
-    }
-    public void setPitch(float pitch) {
-        this.pitch = pitch;
-    }
-
-    public boolean onGround() {
-        return ground;
-    }
-    public void setGround(boolean ground) {
-        this.ground = ground;
     }
 }
