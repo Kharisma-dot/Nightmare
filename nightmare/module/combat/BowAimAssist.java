@@ -14,10 +14,9 @@ import net.minecraft.init.Items;
 import net.minecraft.util.MathHelper;
 import nightmare.Nightmare;
 import nightmare.event.EventTarget;
-import nightmare.event.impl.EventPreMotionUpdate;
+import nightmare.event.impl.EventTick;
 import nightmare.module.Category;
 import nightmare.module.Module;
-import nightmare.module.ModuleManager;
 import nightmare.settings.Setting;
 import nightmare.utils.RotationUtils;
 import nightmare.utils.WorldUtils;
@@ -41,7 +40,7 @@ public class BowAimAssist extends Module{
 	}
 
     @EventTarget
-    public void onPreUpdate(EventPreMotionUpdate event) {
+    public void onTick(EventTick event) {
     	
         if (mc.thePlayer.inventory.getCurrentItem().getItem() != Items.bow || !mc.thePlayer.isUsingItem()) {
             target = null;
