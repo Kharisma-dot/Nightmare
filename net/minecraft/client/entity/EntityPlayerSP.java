@@ -246,17 +246,17 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
             if (this.ridingEntity == null) {
                 if (flag2 && flag3) {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(eventPreMotionUpdate.getX(), eventPreMotionUpdate.getY(), eventPreMotionUpdate.getZ(), eventPreMotionUpdate.getYaw(), eventPreMotionUpdate.getPitch(), eventPreMotionUpdate.onGround()));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(eventPreMotionUpdate.getX(), eventPreMotionUpdate.getY(), eventPreMotionUpdate.getZ(), eventPreMotionUpdate.getYaw(), eventPreMotionUpdate.getPitch(), eventPreMotionUpdate.isGround()));
                 } else if (flag2) {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(eventPreMotionUpdate.getX(), eventPreMotionUpdate.getY(), eventPreMotionUpdate.getZ(), eventPreMotionUpdate.onGround()));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(eventPreMotionUpdate.getX(), eventPreMotionUpdate.getY(), eventPreMotionUpdate.getZ(), eventPreMotionUpdate.isGround()));
                 } else if (flag3) {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(eventPreMotionUpdate.getYaw(), eventPreMotionUpdate.getPitch(), eventPreMotionUpdate.onGround()));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(eventPreMotionUpdate.getYaw(), eventPreMotionUpdate.getPitch(), eventPreMotionUpdate.isGround()));
                 } else {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer(eventPreMotionUpdate.onGround()));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer(eventPreMotionUpdate.isGround()));
                 }
 
             } else {
-                this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.motionX, -999.0D, this.motionZ, eventPreMotionUpdate.getYaw(), eventPreMotionUpdate.getPitch(), eventPreMotionUpdate.onGround()));
+                this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.motionX, -999.0D, this.motionZ, eventPreMotionUpdate.getYaw(), eventPreMotionUpdate.getPitch(), eventPreMotionUpdate.isGround()));
                 flag2 = false;
             }
 
