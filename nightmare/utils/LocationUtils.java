@@ -1,5 +1,6 @@
 package nightmare.utils;
 
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -7,11 +8,12 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
 public class LocationUtils {
-    private double x;
-    private double y;
-    private double z;
-    private float yaw;
-    private float pitch;
+	
+	@Getter
+    private double x, y, z;
+	
+	@Getter
+    private float yaw, pitch;
 
     public LocationUtils(final double x, final double y, final double z, final float yaw, final float pitch) {
         this.x = x;
@@ -85,17 +87,9 @@ public class LocationUtils {
         return Minecraft.getMinecraft().theWorld.getBlockState(this.toBlockPos()).getBlock();
     }
 
-    public double getX() {
-        return this.x;
-    }
-
     public LocationUtils setX(final double x) {
         this.x = x;
         return this;
-    }
-
-    public double getY() {
-        return this.y;
     }
 
     public LocationUtils setY(final double y) {
@@ -103,26 +97,14 @@ public class LocationUtils {
         return this;
     }
 
-    public double getZ() {
-        return this.z;
-    }
-
     public LocationUtils setZ(final double z) {
         this.z = z;
         return this;
     }
 
-    public float getYaw() {
-        return this.yaw;
-    }
-
     public LocationUtils setYaw(final float yaw) {
         this.yaw = yaw;
         return this;
-    }
-
-    public float getPitch() {
-        return this.pitch;
     }
 
     public LocationUtils setPitch(final float pitch) {

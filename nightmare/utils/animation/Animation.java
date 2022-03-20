@@ -1,9 +1,13 @@
 package nightmare.utils.animation;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Animation
 {
-    private float x;
-    private float y;
+	@Getter
+	@Setter
+    private float x, y;
     private long lastMS;
 
     public Animation(final float x, final float y)
@@ -29,25 +33,5 @@ public class Animation
 
         this.x = AnimationUtils.calculateCompensation(targetX, this.x, delta, deltaX);
         this.y = AnimationUtils.calculateCompensation(targetY, this.y, delta, deltaY);
-    }
-
-    public float getX()
-    {
-        return this.x;
-    }
-
-    public void setX(final float x)
-    {
-        this.x = x;
-    }
-
-    public float getY()
-    {
-        return this.y;
-    }
-
-    public void setY(final float y)
-    {
-        this.y = y;
     }
 }
