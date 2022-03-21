@@ -46,11 +46,7 @@ public class Checkbox extends Component {
 		Gui.drawRect(parent.frame.getX() + 4, parent.frame.getY() + offset + 5, parent.frame.getX() + 14, parent.frame.getY() + offset + 15, ColorUtils.getClientColor());
 		
 		if(op.getValBoolean()) {
-			if(vanilla) {
-				fr.drawString("✔", parent.frame.getX() + 5, parent.frame.getY() + offset + 6, -1, true);
-			}else {
-				Fonts.ICON.ICON_20.ICON_20.drawString("A", parent.frame.getX() + 4, parent.frame.getY() + offset + 8, -1);
-			}
+			Fonts.ICON.ICON_20.ICON_20.drawString("A", parent.frame.getX() + 4, parent.frame.getY() + offset + 8, -1);
 		}
 	}
 	
